@@ -19,6 +19,7 @@ class trxFlock : public ofVec3f {
 public:
     int boidNum;
     int generateNewTime;
+    float maxSpeed;
     ofVec3f target;
     ofVec3f position;
     int id;

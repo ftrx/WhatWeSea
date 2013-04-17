@@ -13,10 +13,9 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>*
     id = _id;
     position = ofVec3f(_x,_y,_z);
     myHarvesters = _harvesters;
-    //harvesters.push_back(trxHarvester(ofGetMouseX(),ofGetMouseY(),250));
-    //ofLoadImage(texture, "Thunfisch.png");
 	
 	boidNum = 200;
+    maxSpeed = 2.0f;
     color = ofColor(255,255,255);
 	target = ofVec3f(0, 0, 0);
 	
@@ -25,24 +24,13 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>*
 		createNewBoid();
 	}
 	
-	
-    
     // upload the data to the vbo
 	int total = (int)boids.size();
 	vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
 	vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
-    
-    // trx: only 1 shader can be loaded per time, so if we want to change shader we must load each shader subsequently
-    // load the shader
-	/*if(shader.load("shader")) {
-		printf("Shader is loaded\n");
-	}*/
 }
 
-void trxFlock::update(){
-    
-    //myHarvesters[0].position = ofVec3f(ofGetMouseX(),ofGetMouseY(),0);
-    
+void trxFlock::update(){    
     points.clear();
     sizes.clear();
     vector <BiologicalVehicle> tmp;
@@ -79,7 +67,7 @@ void trxFlock::draw(){
     glDepthMask(GL_FALSE);
 	
 	ofSetColor(color);
-	
+	//ofClear(255,255,255,255);
 	// this makes everything look glowy :)
 
 	
@@ -152,10 +140,10 @@ int trxFlock::returnID(){
 
 
 void trxFlock::createNewBoid(){
-    BiologicalVehicle v(position.x+ofRandom(-200,200),position.y+ofRandom(-200,200),position.z+ofRandom(-400, 400));
+    BiologicalVehicle v(position.x+ofRandom(-ofGetWidth()/2.0,ofGetWidth()/2.0),position.y+ofRandom(-ofGetHeight()/2.0,ofGetHeight()/2.0),position.z+ofRandom(-200, 200));
     v.velocity = ofVec3f(ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
-    v.maxSpeed = 2.0f;
+    v.maxSpeed = maxSpeed;
     v.maxForce = 0.5f;
     v.inSightDist = 140.0f;
     v.tooCloseDist = 40.0f;

@@ -6,6 +6,8 @@
 //--------------------------------------------------------------
 void testApp::setup()
 {
+    xml = trxXML();
+    xml.setup();
     debug = false;
 	ofBackground(20,20,40);
     //ofSetBackgroundAuto(true);
@@ -43,15 +45,28 @@ void testApp::setup()
     if(shader1.load("shader")) {
 		printf("Shader is loaded\n");
 	}
-    
-    for (int i=0; i < 6; i++)
+    cout << xml.flockNumber <<endl;
+    for (int i=0; i < xml.flockNumber; i++)
     {
-        ofTexture img;
-        string tmpString = "icons/" + imagePaths[i];
-        cout << tmpString << endl;
-        ofLoadImage(img,tmpString);
-        textures.push_back(img);
+        if(xml.flockNumber > 0){
+            ofTexture img;
+            string tmpString = "icons/" + xml.getTexture(i);
+            cout << tmpString << endl;
+            ofLoadImage(img,tmpString);
+            textures.push_back(img);
+        }
     }
+    
+    for (int i=0; i<xml.flockNumber; i++) {
+        trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,300.0,xml.getIntValue(i, "ID"),&harvesters);
+        //thisFlock.color = colors[i];
+        thisFlock.boidNum = xml.getIntValue(i, "START_BOIDS");
+        thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
+        thisFlock.texture = &textures.at(i);
+        myFlocks.push_back(thisFlock);
+        
+    }
+
     
 
     
@@ -176,6 +191,10 @@ void testApp::keyReleased(int key){
     switch (key) {
         case 'd':{
             debug = !debug;
+            break;
+        }
+        case 'f':{
+            ofToggleFullscreen();
             break;
         }
 

@@ -5,6 +5,7 @@
 #include "ofxTuio.h"
 #include "trxHarvester.h"
 #include "ofxBlur.h"
+#include "trxXML.h"
 
 
 class testApp : public ofBaseApp{
@@ -60,4 +61,6 @@ class testApp : public ofBaseApp{
     string imagePaths[6] = {"futter.png","Thunfisch.png","Shark.png","Turtle.png","Shrimps.png","Qualle.png"};
     
     ofxBlur blur;
+    
+    trxXML xml;
 };
