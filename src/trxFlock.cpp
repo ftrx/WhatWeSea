@@ -9,25 +9,31 @@
 #include "trxFlock.h"
 
 
-trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters){
+trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum){
     id = _id;
     position = ofVec3f(_x,_y,_z);
     myHarvesters = _harvesters;
-	
 	boidNum = 200;
+    startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
     color = ofColor(255,255,255);
 	target = ofVec3f(0, 0, 0);
 	
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < startBoidNum; i++)
 	{
 		createNewBoid();
 	}
-	
+	cout << startBoidNum << endl;
     // upload the data to the vbo
 	int total = (int)boids.size();
 	vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
 	vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
+}
+
+// Sort-Function
+bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
+{
+    return (point1.z < point2.z);
 }
 
 void trxFlock::update(){    
@@ -57,6 +63,9 @@ void trxFlock::update(){
     }
     
     // upload the data to the vbo
+    
+    std::sort( points.begin(), points.end(), sortOnZPosition);
+    
 	int total = (int)boids.size();
 	vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
 	vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
@@ -64,9 +73,9 @@ void trxFlock::update(){
 }
 
 void trxFlock::draw(){
-    glDepthMask(GL_FALSE);
+    
 	
-	ofSetColor(color);
+	//ofSetColor(255,0,0);
 	//ofClear(255,255,255,255);
 	// this makes everything look glowy :)
 
@@ -99,7 +108,8 @@ void trxFlock::draw(){
    
 	// check to see if the points are
 	// sizing to the right size
-		
+    
+
 	glDepthMask(GL_TRUE);
 	
 
@@ -147,8 +157,10 @@ void trxFlock::createNewBoid(){
     v.maxForce = 0.5f;
     v.inSightDist = 140.0f;
     v.tooCloseDist = 40.0f;
-    v.maxTrailSize= 20.0f;
+    v.maxTrailSize= 8;
+    v.myTypeID = id;
     boids.push_back(v);
     points.push_back(v.position);
     sizes.push_back(ofVec3f(190));
 }
+

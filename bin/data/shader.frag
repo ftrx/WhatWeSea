@@ -43,6 +43,6 @@ void main(void)
 
 
 
-   gl_FragColor = sum/2.0;
+   gl_FragColor = sum/2.0 * gl_Color *vec4(position.z/600.0,position.z/600.0,position.z/600.0,1.0);
 
    }

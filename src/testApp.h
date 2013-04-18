@@ -6,11 +6,16 @@
 #include "trxHarvester.h"
 #include "ofxBlur.h"
 #include "trxXML.h"
+#include "general.h"
 
 
 class testApp : public ofBaseApp{
 
 	public:
+        static const GLfloat boidVert[];
+        static const GLubyte boidIndices[];
+    
+    
 		void setup();
 		void update();
 		void draw();
@@ -26,9 +31,16 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 	
-	
-	ofCamera camera;
-    ofVbo vbo;
+	void drawAllBoids();
+    void drawOld();
+    void drawBoid(BiologicalVehicle * _tmpBoid);
+    drawBoidReturn getVertexData(BiologicalVehicle * tmpBoid);
+    
+	//ofCamera camera;
+    ofEasyCam camera;
+    ofVbo vbo2;
+
+    
     vector<trxFlock> myFlocks;
     ofImage background;
 	ofTexture texture1;
@@ -46,21 +58,31 @@ class testApp : public ofBaseApp{
     
     bool    isIDsame(trxFlock &flock,ofxTuioObject &tuio);
     
+    
+    vector<BiologicalVehicle *> getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks);
+    
     int startTime;
     int timeStamp;
     
     ofxTuioClient   tuioClient;
     
     
-    vector<trxHarvester> harvesters;
-    
+    vector<trxHarvester> harvesters;    
     vector<ofTexture> textures;
+    
+    vector<BiologicalVehicle *> allMyBoids;
     
     bool debug;
     
     string imagePaths[6] = {"futter.png","Thunfisch.png","Shark.png","Turtle.png","Shrimps.png","Qualle.png"};
     
-    ofxBlur blur;
+    
+    vector<ofVec3f> allVertex;
+    vector<ofIndexType> allIndex;
     
     trxXML xml;
+    
+    ofxBlur blur;
+    
+    
 };

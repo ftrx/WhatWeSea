@@ -18,6 +18,7 @@ class trxFlock : public ofVec3f {
     
 public:
     int boidNum;
+    int startBoidNum;
     int generateNewTime;
     float maxSpeed;
     ofVec3f target;
@@ -37,7 +38,7 @@ public:
     vector <ofVec3f> points;
     vector <ofVec3f> sizes;
 
-    trxFlock(float _x, float _y, float _z, int _id,vector <trxHarvester>* _harvesters);
+    trxFlock(float _x, float _y, float _z, int _id,vector <trxHarvester>* _harvesters, int _startBoidNum);
     void update();
     void draw();
     void drawCircles();

@@ -38,8 +38,9 @@ private:
 	int id;
 	
 	
+    
 public:
-	
+	int myTypeID; // ID of flock == fishType
 	ofVec3f position;
 	ofVec3f velocity;
 	vector<ofVec3f> trails;
@@ -53,7 +54,7 @@ public:
 		id = number++;
 		mass = 1.0f;
 		maxSpeed = 4.0f;
-		maxTrailSize = 10;
+		maxTrailSize = 4;
 		position.set(ofVec3f(_x, _y, _z));
 	}
 	

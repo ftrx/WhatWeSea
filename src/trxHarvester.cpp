@@ -23,6 +23,7 @@ void trxHarvester::update(){
 
 void trxHarvester::draw(){
     ofPushMatrix();
+    ofPushStyle();
     ofSetColor(255, 255, 255, 100);
     ofCircle(position,radius);
     
@@ -32,6 +33,7 @@ void trxHarvester::draw(){
     ofSetCircleResolution(100);
     ofCircle(position,radius);
     ofFill();
+    ofPopStyle();
     ofPopMatrix();
     
     }

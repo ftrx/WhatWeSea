@@ -32,7 +32,7 @@ int Vehicle::number = 0;
 void Vehicle::update()
 {
 	velocity.limit(maxSpeed);
-	position += velocity;
+	position += velocity;  // comment out to stand
 	
 	trails.push_back(position);
 	if (trails.size() > maxTrailSize) trails.erase(trails.begin());

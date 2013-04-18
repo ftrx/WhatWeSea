@@ -122,6 +122,7 @@
 		8046E4E41714459D009E9418 /* ofxBlur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBlur.cpp; sourceTree = "<group>"; };
 		8046E4E51714459D009E9418 /* ofxBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBlur.h; sourceTree = "<group>"; };
 		8046E4E7171445A8009E9418 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
+		80769A60172026C000EF663E /* general.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = general.h; sourceTree = "<group>"; };
 		80967402171EA07400B8F30C /* trxXML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxXML.cpp; sourceTree = "<group>"; };
 		80967403171EA07400B8F30C /* trxXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxXML.h; sourceTree = "<group>"; };
 		80967409171EC75300B8F30C /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
@@ -385,6 +386,7 @@
 				8027B871170AD617005032BF /* main.cpp */,
 				8027B875170AD617005032BF /* testApp.cpp */,
 				8027B876170AD617005032BF /* testApp.h */,
+				80769A60172026C000EF663E /* general.h */,
 				8027B872170AD617005032BF /* ofxBoids.h */,
 				8027B877170AD617005032BF /* trxFlock.cpp */,
 				8027B878170AD617005032BF /* trxFlock.h */,
