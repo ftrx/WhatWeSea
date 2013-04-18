@@ -69,7 +69,7 @@ class testApp : public ofBaseApp{
     
     vector<trxHarvester> harvesters;    
     vector<ofTexture> textures;
-    
+    vector<int> activeFlocks;
     vector<BiologicalVehicle *> allMyBoids;
     
     bool debug;
@@ -79,6 +79,7 @@ class testApp : public ofBaseApp{
     
     vector<ofVec3f> allVertex;
     vector<ofIndexType> allIndex;
+    vector<ofFloatColor> allColors;
     
     trxXML xml;
     

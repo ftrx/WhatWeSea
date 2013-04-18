@@ -16,7 +16,7 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>*
 	boidNum = 200;
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
-    color = ofColor(255,255,255);
+    color = ofColor(255,255,255,255);
 	target = ofVec3f(0, 0, 0);
 	
 	for (int i = 0; i < startBoidNum; i++)

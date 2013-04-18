@@ -114,6 +114,7 @@ void testApp::update()
 {
     allVertex.clear();
     allIndex.clear();
+    allColors.clear();
     tuioClient.getMessage();
     float timer = ofGetElapsedTimeMillis() - timeStamp;
     
@@ -159,6 +160,27 @@ void testApp::update()
                 ofVec3f((float)tmpBoid->trails.at(0).x-2.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z),
                 ofVec3f((float)tmpBoid->trails.at(0).x+2.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z)};
             
+            ofFloatColor vColor[6];
+            float alpha = 1.0;
+            if (activeFlocks.size() > 0) {
+               alpha = 0.2;
+                    for (int active=0; active<activeFlocks.size(); active++) {
+                        if (activeFlocks.at(active) == tmpBoid->myTypeID) {
+                            alpha = 1.0;
+                        }
+                        
+                    }
+                
+            }
+            
+            for (int col=0; col<6; col++) {
+                vColor[col].r = 1.0;
+                vColor[col].g = 1.0;
+                vColor[col].b = 1.0;
+                
+                vColor[col].a = alpha;
+            }
+            
             ofIndexType faces[] = {
                 0+i*VERTEXNUMBER, 1+i*VERTEXNUMBER, 2+i*VERTEXNUMBER,
                 1+i*VERTEXNUMBER, 2+i*VERTEXNUMBER, 3+i*VERTEXNUMBER,
@@ -167,6 +189,10 @@ void testApp::update()
             for (int j=0; j<VERTEXNUMBER; j++) {
                 allVertex.push_back(vecs[j]);
 
+            }
+            for (int j=0; j<6; j++) {
+                allColors.push_back(vColor[j]);
+                
             }
             for (int j=0; j<9; j++) {
                 allIndex.push_back(faces[j]);
@@ -179,9 +205,8 @@ void testApp::update()
     if (allVertex.size()>0) {
         //cout << "allVertex.size()" << allVertex.size() << endl;
         vbo2.setVertexData( &allVertex[0], allVertex.size(), GL_DYNAMIC_DRAW );
-        
+        vbo2.setColorData(&allColors[0], allColors.size(), GL_DYNAMIC_DRAW);
         vbo2.setIndexData( &allIndex[0], allIndex.size(), GL_DYNAMIC_DRAW );
-        
         //vbo2.drawElements( GL_TRIANGLES, allIndex.size());
        
     }
@@ -262,34 +287,27 @@ void testApp::keyReleased(int key){
 void testApp::tuioObjectAdded(ofxTuioObject & tuioObject){
     ofPoint loc = ofPoint(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight());
     
-    trxFlock thisFlock = trxFlock(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight(),ofRandom(0, 600.0f),tuioObject.getFiducialId(),&harvesters,xml.getIntValue(tuioObject.getFiducialId(), "START_BOIDS"));
-    thisFlock.texture = &textures.at(myFlocks.size());
-    myFlocks.push_back(thisFlock);
+   // trxFlock thisFlock = trxFlock(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight(),ofRandom(0, 600.0f),tuioObject.getFiducialId(),&harvesters,xml.getIntValue(tuioObject.getFiducialId(), "START_BOIDS"));
+    //thisFlock.texture = &textures.at(myFlocks.size());
+    //myFlocks.push_back(thisFlock);
     
-    
+    activeFlocks.push_back(tuioObject.getFiducialId());
     cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+    
 }
 
 void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject){
     
-    for (int i = 0; i < myFlocks.size(); i++) {
-        trxFlock *thisFlock = &myFlocks[i];
-        if (thisFlock->id == tuioObject.getFiducialId()) {
-            thisFlock->position = ofVec3f(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight(),thisFlock->position.z);
-            ofPoint loc = ofPoint(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight());
-            
-        }
-    }
     ofPoint loc = ofPoint(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight());
     cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
    
 }
 
 void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
-    for (int i = 0; i < myFlocks.size(); i++) {
+    for (int i = 0; i < activeFlocks.size(); i++) {
         trxFlock thisFlock = myFlocks[i];
         if (thisFlock.id == tuioObject.getFiducialId()) {
-            myFlocks.erase(myFlocks.begin()+i);
+            activeFlocks.erase(activeFlocks.begin()+i);
         }
     }
 
@@ -401,12 +419,14 @@ void testApp::drawAllBoids(){
     camera.begin();
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_ALPHA_TEST);
-    //shader1.begin();
+    ofEnableAlphaBlending();
+    shader1.begin();
     //shader1.setUniform1f("zPosition", ofMap(ofGetMouseX(), 0, ofGetWidth(), 0, 600));
     //textures[0].bind();
     vbo2.drawElements( GL_TRIANGLES, allIndex.size());
     //textures[0].unbind();
-    //shader1.end();
+    shader1.end();
+    ofDisableAlphaBlending();
     camera.end();
 }
 /*
