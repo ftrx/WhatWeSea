@@ -11,7 +11,8 @@
 #include <iostream>
 #include "ofMain.h"
 #include "trxHarvester.h"
-#include "BiologicalVehicle.h"
+#include "trxVehicle.h"
+#include "general.h"
 
 class trxFlock : public ofVec3f {
 
@@ -24,10 +25,10 @@ public:
     ofVec3f target;
     ofVec3f position;
     int id;
-    vector<BiologicalVehicle> boids;
+    vector<trxVehicle> boids;
     
     vector <trxHarvester> * myHarvesters;
-    
+    ofCamera * myCamera;
     ofColor color;
     
     ofVbo vbo;
@@ -42,7 +43,7 @@ public:
     void update();
     void draw();
     void drawCircles();
-    void removeDeathVehicle(BiologicalVehicle* _v);
+    void removeDeathVehicle(trxVehicle* _v);
     void drawInfo();
     void createNewBoid();
     int returnID();

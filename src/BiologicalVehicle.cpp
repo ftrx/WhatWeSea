@@ -37,3 +37,4 @@ bool BiologicalVehicle::isDead()
 {
 	return age > lifeSpan;
 }
+

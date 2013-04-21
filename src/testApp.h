@@ -33,11 +33,13 @@ class testApp : public ofBaseApp{
 	
 	void drawAllBoids();
     void drawOld();
-    void drawBoid(BiologicalVehicle * _tmpBoid);
-    drawBoidReturn getVertexData(BiologicalVehicle * tmpBoid);
+    void drawBoid(trxVehicle * _tmpBoid);
+    drawBoidReturn getVertexData(trxVehicle * tmpBoid);
+    bool isIDsame(trxFlock * flock);
+	ofCamera camera;
+    //ofEasyCam camera;
     
-	//ofCamera camera;
-    ofEasyCam camera;
+    ofRectangle viewMain;
     ofVbo vbo2;
 
     
@@ -57,9 +59,9 @@ class testApp : public ofBaseApp{
     
     
     bool    isIDsame(trxFlock &flock,ofxTuioObject &tuio);
+    void catchBoid(trxHarvester * _myHarverster);
     
-    
-    vector<BiologicalVehicle *> getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks);
+    vector<trxVehicle *> getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks);
     
     int startTime;
     int timeStamp;
@@ -70,7 +72,7 @@ class testApp : public ofBaseApp{
     vector<trxHarvester> harvesters;    
     vector<ofTexture> textures;
     vector<int> activeFlocks;
-    vector<BiologicalVehicle *> allMyBoids;
+    vector<trxVehicle *> allMyBoids;
     
     bool debug;
     
@@ -85,5 +87,7 @@ class testApp : public ofBaseApp{
     
     ofxBlur blur;
     
+    void updateMouseRay();
+    ofVec3f ray[2];
     
 };

@@ -35,10 +35,16 @@ void testApp::setup()
 	//ofHideCursor();
 	
     //ofDisableArbTex();
+    
+    
+    viewMain.x = 0;
+	viewMain.y = 0;
+	viewMain.width = ofGetWidth();
+	viewMain.height = ofGetHeight();
 	
     camera.setPosition(ofVec3f(ofGetWidth()/2.0,ofGetHeight()/2.0,1000));
     camera.lookAt(ofVec3f(ofGetWidth()/2.0,ofGetHeight()/2.0,0));
-    camera.setFov(60);
+    camera.setFov(90);
     camera.setNearClip(100.0);
     camera.setFarClip(-1000.0);
     //camera.setDistance(500);
@@ -75,12 +81,13 @@ void testApp::setup()
     }
     
     for (int i=0; i<xml.flockNumber; i++) {
-        trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,300.0,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
+        trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
         //thisFlock.color = colors[i];
         thisFlock.boidNum = xml.getIntValue(i, "MAX_BOIDS");
         thisFlock.startBoidNum = xml.getIntValue(i, "START_BOIDS");
         thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
         thisFlock.texture = &textures.at(i);
+        thisFlock.myCamera = &camera;
         myFlocks.push_back(thisFlock);
         
     }
@@ -112,6 +119,7 @@ void testApp::setup()
 //--------------------------------------------------------------
 void testApp::update()
 {
+    updateMouseRay();
     allVertex.clear();
     allIndex.clear();
     allColors.clear();
@@ -119,6 +127,11 @@ void testApp::update()
     float timer = ofGetElapsedTimeMillis() - timeStamp;
     
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    
+    for (int i=0; i<harvesters.size();i++){
+        catchBoid(&harvesters[i]);
+    }
+    
     
     // 16.66f is abaout 1000/60 so about 60FPS
     if(timer>15.0f){
@@ -133,7 +146,7 @@ void testApp::update()
     for (int i = 0; i<allMyBoids.size(); i++) {
         
         
-        BiologicalVehicle * tmpBoid = allMyBoids.at(i);
+        trxVehicle * tmpBoid = allMyBoids.at(i);
         /*
         if(tmpBoid->trails.size()> 3){
             //drawBoid(tmpBoid);
@@ -151,14 +164,17 @@ void testApp::update()
             }
         }
          */
-        if(tmpBoid->trails.size()> 7){
+        int maxTrail = tmpBoid->maxTrailSize;
+        int firstBone = int(maxTrail/8*6);
+        int secondBone = int(maxTrail/8*3);
+        if(tmpBoid->trails.size()>= maxTrail){
             ofVec3f vecs[] = {
                 ofVec3f((float)tmpBoid->position.x,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
-                ofVec3f((float)tmpBoid->trails.at(6).x-2.0f,  (float)tmpBoid->trails.at(6).y,  (float)tmpBoid->trails.at(6).z),
-                ofVec3f((float)tmpBoid->trails.at(6).x+2.0f,  (float)tmpBoid->trails.at(6).y,  (float)tmpBoid->trails.at(6).z),
-                ofVec3f((float)tmpBoid->trails.at(3).x,  (float)tmpBoid->trails.at(3).y,  (float)tmpBoid->trails.at(3).z),
-                ofVec3f((float)tmpBoid->trails.at(0).x-2.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z),
-                ofVec3f((float)tmpBoid->trails.at(0).x+2.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z)};
+                ofVec3f((float)tmpBoid->trails.at(firstBone).x-8.0f,  (float)tmpBoid->trails.at(firstBone).y,  (float)tmpBoid->trails.at(firstBone).z),
+                ofVec3f((float)tmpBoid->trails.at(firstBone).x+8.0f,  (float)tmpBoid->trails.at(firstBone).y,  (float)tmpBoid->trails.at(firstBone).z),
+                ofVec3f((float)tmpBoid->trails.at(secondBone).x,  (float)tmpBoid->trails.at(secondBone).y,  (float)tmpBoid->trails.at(secondBone).z),
+                ofVec3f((float)tmpBoid->trails.at(0).x-5.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z),
+                ofVec3f((float)tmpBoid->trails.at(0).x+5.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z)};
             
             ofFloatColor vColor[6];
             float alpha = 1.0;
@@ -174,10 +190,16 @@ void testApp::update()
             }
             
             for (int col=0; col<6; col++) {
-                vColor[col].r = 1.0;
-                vColor[col].g = 1.0;
-                vColor[col].b = 1.0;
-                
+                if (tmpBoid->caught) {
+                    vColor[col].r = 1.0;
+                    vColor[col].g = 0.0;
+                    vColor[col].b = 0.0;
+                }
+                else {
+                    vColor[col].r = 0.0;
+                    vColor[col].g = 1.0;
+                    vColor[col].b = 0.0;
+                }
                 vColor[col].a = alpha;
             }
             
@@ -224,9 +246,18 @@ void testApp::draw()
     //drawOld();
 
     drawAllBoids();
+    
+    for (int i = 0; i<myFlocks.size(); i++) {
+        
+        if (isIDsame(&myFlocks.at(i))) {
+            myFlocks[i].draw();
+        }
+        
+    }
 
     for (int i=0; i<harvesters.size(); i++) {
         harvesters.at(i).draw();
+        
     }
 
     
@@ -236,15 +267,22 @@ void testApp::draw()
         camera.begin();
         ofDrawGrid(1920, 10, true, true, true, true);
         for (int i = 0; i<myFlocks.size(); i++) {
-            
-            
             myFlocks[i].drawInfo();
+        }
+        for (int i=0; i<harvesters.size(); i++) {
+            harvesters.at(i).drawInfo();
             
         }
         
+        
+        
         camera.end();
         ofSetColor(255, 100);
+
+        
+        
         ofRect(0, 0, 250, 90);
+
         ofSetColor(0);
         string info = "FPS "+ofToString(ofGetFrameRate(), 0) + "\n";
         info += "Total Points "+ofToString(allMyBoids.size())+"\n";
@@ -292,21 +330,26 @@ void testApp::tuioObjectAdded(ofxTuioObject & tuioObject){
     //myFlocks.push_back(thisFlock);
     
     activeFlocks.push_back(tuioObject.getFiducialId());
-    cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
-    
+    if (myFlocks.size() > tuioObject.getFiducialId()) {
+        
+        myFlocks.at(tuioObject.getFiducialId()).position = ofVec3f(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight(),myFlocks.at(tuioObject.getFiducialId()).position.z);
+        cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+
+    }
 }
 
 void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject){
     
     ofPoint loc = ofPoint(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight());
-    cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
-   
+    if (myFlocks.size() > tuioObject.getFiducialId()) {
+        myFlocks.at(tuioObject.getFiducialId()).position = ofVec3f(tuioObject.getX()*ofGetWidth(),tuioObject.getY()*ofGetHeight(),myFlocks.at(tuioObject.getFiducialId()).position.z);
+        //cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
+    }
 }
 
 void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
     for (int i = 0; i < activeFlocks.size(); i++) {
-        trxFlock thisFlock = myFlocks[i];
-        if (thisFlock.id == tuioObject.getFiducialId()) {
+        if (activeFlocks[i] == tuioObject.getFiducialId()) {
             activeFlocks.erase(activeFlocks.begin()+i);
         }
     }
@@ -319,7 +362,7 @@ void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
 void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
 	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
     
-    harvesters.push_back(trxHarvester(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight(),0,tuioCursor.getSessionId()));
+    harvesters.push_back(trxHarvester(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight(),DEPTH,tuioCursor.getSessionId()));
 	cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
 }
 
@@ -335,14 +378,16 @@ void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
         }
     }
     
-	cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
+	//cout << "Point n" << tuioCursor.getSessionId() << " updated at " << loc << endl;
 }
 
 void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
     for (int i = 0; i < harvesters.size(); i++) {
-        trxHarvester thisHarvester = harvesters[i];
-        if (thisHarvester.id == tuioCursor.getSessionId()) {
+        trxHarvester * thisHarvester = &harvesters[i];
+        if (thisHarvester->id == tuioCursor.getSessionId()) {
+            thisHarvester->clearCatch();
             harvesters.erase(harvesters.begin()+i);
+            
         }
     }
 	ofPoint loc = ofPoint(tuioCursor.getX()*ofGetWidth(),tuioCursor.getY()*ofGetHeight());
@@ -399,8 +444,8 @@ void testApp::drawGrid(){
     
 }
 
-vector<BiologicalVehicle *> testApp::getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks){
-    vector<BiologicalVehicle *> allBoids;
+vector<trxVehicle *> testApp::getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks){
+    vector<trxVehicle *> allBoids;
     for(int i=0; i< _myFlocks->size(); i++)
     {
         trxFlock * tmpFlock = &_myFlocks->at(i);
@@ -428,6 +473,7 @@ void testApp::drawAllBoids(){
     shader1.end();
     ofDisableAlphaBlending();
     camera.end();
+    glDisable(GL_DEPTH_TEST);
 }
 /*
 void testApp::drawAllBoids(){
@@ -558,7 +604,7 @@ void testApp::drawOld(){
 }
 
 
-void testApp::drawBoid(BiologicalVehicle * tmpBoid){
+void testApp::drawBoid(trxVehicle * tmpBoid){
 
     
     ofVec3f verts[] = {
@@ -580,7 +626,7 @@ void testApp::drawBoid(BiologicalVehicle * tmpBoid){
 
 
 
-drawBoidReturn testApp::getVertexData(BiologicalVehicle * tmpBoid){
+drawBoidReturn testApp::getVertexData(trxVehicle * tmpBoid){
     
     drawBoidReturn ret;
     ofVec3f vecs[] = {
@@ -602,5 +648,51 @@ drawBoidReturn testApp::getVertexData(BiologicalVehicle * tmpBoid){
     
     return ret;
         
+}
+
+bool testApp::isIDsame(trxFlock * flock)
+{
+    bool ret = 0;
+    for (int i=0; i<activeFlocks.size(); i++) {
+        if (flock->id == activeFlocks[i]) {
+            ret = 1;
+            break;
+        }
+    }
+    return ret;
+}
+
+void testApp::updateMouseRay(){
+	// Define ray in screen space
+    if (harvesters.size()>0){
+	ray[0] = ofVec3f(harvesters[0].position.x, harvesters[0].position.y, harvesters[0].position.z);
+	ray[1] = ofVec3f(harvesters[0].position.x, harvesters[0].position.y, 0);
+    
+	// Transform ray into world space
+	ray[0] = camera.worldToScreen(ray[0], viewMain);
+	ray[1] = camera.worldToScreen(ray[1], viewMain);
+    }
+}
+
+void testApp::catchBoid(trxHarvester * _myHarverster)
+{
+    for (int i=0; i<allMyBoids.size(); i++){
+        trxVehicle * boid = allMyBoids.at(i);
+        ofVec3f bPos= boid->position;
+        ofVec3f hPos= ofVec3f (_myHarverster->position.x,ofGetHeight()-_myHarverster->position.y,0);
+        bPos = camera.worldToScreen(bPos, viewMain);
+        //hPos = camera.screenToWorld(hPos, viewMain);
+        float dist = hPos.distance(bPos);
+        if (dist <= _myHarverster->radius) {
+            _myHarverster->myCatch.push_back(boid);
+            boid->addTarget(&_myHarverster->position);
+            boid->caught = true;
+        }
+        if (dist <= 2*(_myHarverster->radius) && !boid->caught)
+        {
+            boid->fleeTargets.push_back(&_myHarverster->position);
+        }
+        
+    }
 }
 

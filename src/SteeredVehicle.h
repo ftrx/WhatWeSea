@@ -27,7 +27,7 @@
 
 #include "Vehicle.h"
 #include "ofMath.h"
-#include "trxHarvester.h"
+//#include "trxHarvester.h"
 
 class SteeredVehicle : public Vehicle {
 	
@@ -55,8 +55,6 @@ public:
 	float pathThreshold;
 	bool pathLoop;
 	int pathIndex;
-	
-	
 	SteeredVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : Vehicle(_x, _y, _z)
 	{
 		maxForce = 1.0f;
@@ -88,7 +86,7 @@ public:
 	bool tooClose(const ofVec3f& target);
 	
 	
-	template<typename Type> void flock(vector<Type>& vehicles,vector<trxHarvester>* myHarvesters)
+	template<typename Type> void flock(vector<Type>& vehicles)
 	{
 		ofVec3f averageVelocity;
 		ofVec3f averagePosition;
@@ -118,21 +116,9 @@ public:
 			averageVelocity *= 1.0f / inSightCnt;
 			steeringForce += averageVelocity - velocity;
 		}
-        
-        for (int i = 0; i < myHarvesters->size(); i++)
-		{
-            if (position.distance(myHarvesters->at(i).position) < myHarvesters->at(i).radius)
-            {
-                seek(myHarvesters->at(i).position);
-                if (position.distance(myHarvesters->at(i).position) < 10.0f)
-                {
-                    
-                }
-            }
-            
-			
-		}
 
+        
+        
 	}
 };
 

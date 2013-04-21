@@ -9,6 +9,7 @@
 
 #pragma once
 const int VERTEXNUMBER = 6;
+const int DEPTH = 600;
 
 struct drawBoidReturn {
     ofVec3f verts[VERTEXNUMBER];

@@ -10,7 +10,8 @@
 
 #include <iostream>
 #include "ofMain.h"
-//#include "BiologicalVehicle.h"
+#include "general.h"
+#include "trxVehicle.h"
 
 
 class trxHarvester: public ofVec3f {
@@ -31,6 +32,8 @@ public:
     ofImage myImage;
     ofTexture texture;
     
+    vector <trxVehicle *> myCatch;
+    
     vector <ofVec3f> points;
     vector <ofVec3f> sizes;
     
@@ -39,4 +42,5 @@ public:
     void draw();
     void drawInfo();
     void createNewBoid();
+    void clearCatch();
 };

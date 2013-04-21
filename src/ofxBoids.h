@@ -29,7 +29,7 @@
 #include "SteeredVehicle.h"
 #include "BiologicalVehicle.h"
 #include "trxFlock.h"
-//#include "trxHarvester.h"
+#include "trxVehicle.h"
 
 typedef Vehicle ofxVehicle;
 typedef SteeredVehicle ofxSteeredVehicle;

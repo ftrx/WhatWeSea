@@ -37,6 +37,7 @@ protected:
 public:
 	
 	float lifeSpan;
+    bool caught = false;
 	float remainingLifePer;	// range from 1.0 (birth) to 0.0 (death)
 	
 	

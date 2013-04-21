@@ -39,12 +39,12 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 void trxFlock::update(){    
     points.clear();
     sizes.clear();
-    vector <BiologicalVehicle> tmp;
+    vector <trxVehicle> tmp;
 	for (int i = 0; i < boids.size(); i++)
 	{
-		boids[i].flock(boids,myHarvesters);
+		boids[i].flock(boids);
 		boids[i].update();
-		boids[i].bounce(ofGetWidth(), ofGetHeight(), 600);
+		boids[i].bounce(ofGetWidth(), ofGetHeight(), DEPTH);
         boids[i].aging(0.005f);
         if (!boids[i].isDead())
         {
@@ -73,46 +73,22 @@ void trxFlock::update(){
 }
 
 void trxFlock::draw(){
+    ofPushStyle();
+    ofPushMatrix();
+    ofSetCircleResolution(100);
+    ofTranslate(position.x,ofGetHeight()-position.y,0);
+    ofEnableAlphaBlending();
+    ofSetColor(255, 255, 255, 50);
+    ofCircle(0,0,80);
+    ofSetColor(255, 255, 255);
+    ofNoFill();
+    ofSetLineWidth(3.0);
     
-	
-	//ofSetColor(255,0,0);
-	//ofClear(255,255,255,255);
-	// this makes everything look glowy :)
-
-	
-	// bind the shader and camera
-	// everything inside this function
-	// will be effected by the shader/camera
-	//shader.begin();
-	//camera->begin();
-	
-	// bind the texture so that when all the points
-	// are drawn they are replace with our dot image
-    
-
-	texture->bind();
-	vbo.draw(GL_POINTS, 0, (int)boids.size());
-	texture->unbind();
-
-	//camera->end();
-	//shader.end();
-
-	
-    
-    /*
-    ofColor(255,255,255);
-    for (int i=0; i<boids.size(); i++) {
-        ofCircle(ofPoint(boids[i].position),2);
-    }
-    */
-   
-	// check to see if the points are
-	// sizing to the right size
-    
-
-	glDepthMask(GL_TRUE);
-	
-
+    ofCircle(0,0,80);   
+    ofFill();
+    ofDisableAlphaBlending();
+    ofPopMatrix();
+    ofPopStyle();
 }
 
 void trxFlock::drawCircles(){
@@ -127,8 +103,15 @@ void trxFlock::drawInfo(){
     //harvesters[0].draw();
     ofPushMatrix();
     ofTranslate(position);
-
+    ofPushStyle();
+    ofColor(200,200,200,100);
+    ofSetLineWidth(2.0);
+    ofLine(0, 0, 0, 0, 0, DEPTH);
+    ofPopStyle();
+    
+    
 	ofSetColor(color);
+    
     string info = "Flockposition:"+ofToString(position)+"\n";
 	info += "Total Points "+ofToString(points.size())+"\n";
 	info += "Total Boids "+ofToString(boids.size())+"\n";
@@ -136,7 +119,7 @@ void trxFlock::drawInfo(){
     ofPopMatrix();
 }
 
-void trxFlock::removeDeathVehicle(BiologicalVehicle* _v){
+void trxFlock::removeDeathVehicle(trxVehicle* _v){
     
     
 
@@ -150,7 +133,7 @@ int trxFlock::returnID(){
 
 
 void trxFlock::createNewBoid(){
-    BiologicalVehicle v(position.x+ofRandom(-ofGetWidth()/2.0,ofGetWidth()/2.0),position.y+ofRandom(-ofGetHeight()/2.0,ofGetHeight()/2.0),position.z+ofRandom(-200, 200));
+    trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(100, DEPTH-100));
     v.velocity = ofVec3f(ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
     v.maxSpeed = maxSpeed;
