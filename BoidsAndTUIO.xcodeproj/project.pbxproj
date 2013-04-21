@@ -23,6 +23,7 @@
 		8027B882170AD617005032BF /* trxHarvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B879170AD617005032BF /* trxHarvester.cpp */; };
 		8027B883170AD617005032BF /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B87B170AD617005032BF /* Vehicle.cpp */; };
 		8046E4E61714459D009E9418 /* ofxBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8046E4E41714459D009E9418 /* ofxBlur.cpp */; };
+		808405A0172452AF0042B9EA /* trxVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8084059E172452AF0042B9EA /* trxVehicle.cpp */; };
 		80967404171EA07400B8F30C /* trxXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80967402171EA07400B8F30C /* trxXML.cpp */; };
 		80967410171EC75300B8F30C /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80967409171EC75300B8F30C /* tinyxml.cpp */; };
 		80967411171EC75300B8F30C /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8096740B171EC75300B8F30C /* tinyxmlerror.cpp */; };
@@ -123,6 +124,8 @@
 		8046E4E51714459D009E9418 /* ofxBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBlur.h; sourceTree = "<group>"; };
 		8046E4E7171445A8009E9418 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
 		80769A60172026C000EF663E /* general.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = general.h; sourceTree = "<group>"; };
+		8084059E172452AF0042B9EA /* trxVehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxVehicle.cpp; sourceTree = "<group>"; };
+		8084059F172452AF0042B9EA /* trxVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxVehicle.h; sourceTree = "<group>"; };
 		80967402171EA07400B8F30C /* trxXML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxXML.cpp; sourceTree = "<group>"; };
 		80967403171EA07400B8F30C /* trxXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxXML.h; sourceTree = "<group>"; };
 		80967409171EC75300B8F30C /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tinyxml.cpp; sourceTree = "<group>"; };
@@ -375,6 +378,8 @@
 			isa = PBXGroup;
 			children = (
 				8046E4E31714458F009E9418 /* ofxBlur */,
+				8084059F172452AF0042B9EA /* trxVehicle.h */,
+				8084059E172452AF0042B9EA /* trxVehicle.cpp */,
 				8027B86E170AD617005032BF /* BiologicalVehicle.cpp */,
 				8027B86F170AD617005032BF /* BiologicalVehicle.h */,
 				8027B873170AD617005032BF /* SteeredVehicle.cpp */,
@@ -579,6 +584,7 @@
 				80967411171EC75300B8F30C /* tinyxmlerror.cpp in Sources */,
 				80967412171EC75300B8F30C /* tinyxmlparser.cpp in Sources */,
 				80967413171EC75300B8F30C /* ofxXmlSettings.cpp in Sources */,
+				808405A0172452AF0042B9EA /* trxVehicle.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
