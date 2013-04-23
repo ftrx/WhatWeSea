@@ -17,6 +17,6 @@ float blurSize = ((abs(zPosition-position.z))/600.0)/200.0*8.0; // I've chosen t
 void main(void)
 {
 
-   gl_FragColor = gl_Color *vec4(position.z/600.0,position.z/600.0,position.z/600.0,1.0);
+   gl_FragColor = gl_Color *vec4(position.z/600.0,position.z/400.0,position.z/200.0,position.z/600.0);
 
    }

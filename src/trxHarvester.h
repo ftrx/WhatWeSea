@@ -24,7 +24,7 @@ public:
     
     ofVec3f target;
     ofVec3f position;
-    
+    ofVec3f unprojectedPosition;
     ofColor color;
     
     ofVbo vbo;
@@ -43,4 +43,5 @@ public:
     void drawInfo();
     void createNewBoid();
     void clearCatch();
+    ofVec3f screenPosition(ofCamera * cam);
 };

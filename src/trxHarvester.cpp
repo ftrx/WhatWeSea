@@ -42,30 +42,26 @@ void trxHarvester::draw(){
     }
 
 void trxHarvester::drawInfo(){
-    ofEnableAlphaBlending();
+    ofPushStyle();
+    //ofEnableAlphaBlending();
     ofPushMatrix();
-    ofTranslate(position);
+    ofTranslate(unprojectedPosition);
     ofColor(200,200,200,100);
     ofSetLineWidth(2.0);
     ofLine(0, 0, DEPTH-position.z, 0, 0, -DEPTH);
    
-    ofPushStyle();
     
     ofSetColor(255, 255, 255,50);
     ofSphere(0, 0, 0, radius);
-    
-    
-    
-    ofPopStyle();
-
-   
+     
     
 	ofSetColor(color);
     
     string info = "Harvesterposition:"+ofToString(position)+"\n";
     ofDrawBitmapString(info, 0,0);
     ofPopMatrix();
-    ofDisableAlphaBlending();
+    //ofDisableAlphaBlending();
+    ofPopStyle();
 }
 
 
@@ -81,4 +77,10 @@ void trxHarvester::clearCatch(){
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
     }
     myCatch.clear();
+}
+
+ofVec3f trxHarvester::screenPosition(ofCamera * cam){
+    ofVec3f hPos= ofVec3f (position.x,ofGetHeight()-position.y,0.370);
+    hPos = cam->screenToWorld(hPos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
+    return hPos;
 }

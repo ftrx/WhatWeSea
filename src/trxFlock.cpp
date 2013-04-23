@@ -9,14 +9,12 @@
 #include "trxFlock.h"
 
 
-trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum){
-    id = _id;
-    position = ofVec3f(_x,_y,_z);
+trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum) : trxObject(_x,_y,_z,_id){
+
     myHarvesters = _harvesters;
 	boidNum = 200;
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
-    color = ofColor(255,255,255,255);
 	target = ofVec3f(0, 0, 0);
 	
 	for (int i = 0; i < startBoidNum; i++)
@@ -66,9 +64,9 @@ void trxFlock::update(){
     
     std::sort( points.begin(), points.end(), sortOnZPosition);
     
-	int total = (int)boids.size();
-	vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
-	vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
+	//int total = (int)boids.size();
+	//vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
+	//vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
 
 }
 
@@ -77,15 +75,19 @@ void trxFlock::draw(){
     ofPushMatrix();
     ofSetCircleResolution(100);
     ofTranslate(position.x,ofGetHeight()-position.y,0);
+    ofRotate(rotation);
     ofEnableAlphaBlending();
-    ofSetColor(255, 255, 255, 50);
-    ofCircle(0,0,80);
-    ofSetColor(255, 255, 255);
-    ofNoFill();
-    ofSetLineWidth(3.0);
     
-    ofCircle(0,0,80);   
-    ofFill();
+    if(isActive){
+        ofSetColor(255, 255, 255, 50);
+        ofCircle(0,0,80);
+        ofSetColor(255, 255, 255);
+        ofNoFill();
+        ofSetLineWidth(3.0);
+        ofCircle(0,0,80);   
+        ofFill();
+        ofDrawBitmapString(title, 80,80);
+    }
     ofDisableAlphaBlending();
     ofPopMatrix();
     ofPopStyle();
@@ -100,19 +102,16 @@ void trxFlock::drawCircles(){
 }
 
 void trxFlock::drawInfo(){
-    //harvesters[0].draw();
+    
+    trxObject::drawInfo();
+    
     ofPushMatrix();
-    ofTranslate(position);
+    ofTranslate(position.x,position.y,position.z);
     ofPushStyle();
     ofColor(200,200,200,100);
-    ofSetLineWidth(2.0);
-    ofLine(0, 0, 0, 0, 0, DEPTH);
-    ofPopStyle();
+	ofSetColor(myColor);
     
-    
-	ofSetColor(color);
-    
-    string info = "Flockposition:"+ofToString(position)+"\n";
+    string info = "\n";
 	info += "Total Points "+ofToString(points.size())+"\n";
 	info += "Total Boids "+ofToString(boids.size())+"\n";
     ofDrawBitmapString(info, 0,0);
@@ -140,7 +139,7 @@ void trxFlock::createNewBoid(){
     v.maxForce = 0.5f;
     v.inSightDist = 140.0f;
     v.tooCloseDist = 40.0f;
-    v.maxTrailSize= 8;
+    v.maxTrailSize= 16;
     v.myTypeID = id;
     boids.push_back(v);
     points.push_back(v.position);

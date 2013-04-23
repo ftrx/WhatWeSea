@@ -12,30 +12,31 @@
 #include "ofMain.h"
 #include "trxHarvester.h"
 #include "trxVehicle.h"
+#include "trxObject.h"
 #include "general.h"
 
-class trxFlock : public ofVec3f {
+class trxFlock : public trxObject {
 
     
 public:
+
     int boidNum;
     int startBoidNum;
     int generateNewTime;
     float maxSpeed;
     ofVec3f target;
-    ofVec3f position;
-    int id;
+
     vector<trxVehicle> boids;
-    
+
     vector <trxHarvester> * myHarvesters;
     ofCamera * myCamera;
-    ofColor color;
     
     ofVbo vbo;
     ofShader shader;
     ofImage myImage;
     ofTexture  * texture;
 
+    vector<int> myConnections;
     vector <ofVec3f> points;
     vector <ofVec3f> sizes;
 

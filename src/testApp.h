@@ -4,6 +4,7 @@
 #include "ofxBoids.h"
 #include "ofxTuio.h"
 #include "trxHarvester.h"
+#include "trxConverter.h"
 #include "ofxBlur.h"
 #include "trxXML.h"
 #include "general.h"
@@ -44,9 +45,12 @@ class testApp : public ofBaseApp{
 
     
     vector<trxFlock> myFlocks;
+    vector<trxConverter> myConverters;
     ofImage background;
 	ofTexture texture1;
     ofShader shader1;
+    
+    
     
     void	tuioCursorAdded(ofxTuioCursor & tuioCursor);
 	void	tuioCursorRemoved(ofxTuioCursor & tuioCursor);
@@ -71,6 +75,7 @@ class testApp : public ofBaseApp{
     
     vector<trxHarvester> harvesters;    
     vector<ofTexture> textures;
+    vector<ofImage> icons;
     vector<int> activeFlocks;
     vector<trxVehicle *> allMyBoids;
     
@@ -88,6 +93,9 @@ class testApp : public ofBaseApp{
     ofxBlur blur;
     
     void updateMouseRay();
+    ofVec2f getCorrectedPosition(float _x, float _y);
     ofVec3f ray[2];
+    
+    ofVec3f screenPosition(ofVec3f _position, ofCamera * cam);
     
 };

@@ -20,9 +20,11 @@ public:
     trxXML(string _filename);
     void setup();
     
-    string getTexture(int _flockID);
+    string getString(int _flockID, string _tag);
     int getIntValue(int _flockID, string _tag);
     float getFloatValue(int _flockID, string _tag);
+    
+    vector<int> getConnections(int _flockID);
     
     ofxXmlSettings XML;
     ofTrueTypeFont TTF;
@@ -31,5 +33,6 @@ public:
     string filename;
     
     int flockNumber;
+    int converterNumber;
 
 };

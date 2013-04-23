@@ -22,6 +22,8 @@
 		8027B881170AD617005032BF /* trxFlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B877170AD617005032BF /* trxFlock.cpp */; };
 		8027B882170AD617005032BF /* trxHarvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B879170AD617005032BF /* trxHarvester.cpp */; };
 		8027B883170AD617005032BF /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B87B170AD617005032BF /* Vehicle.cpp */; };
+		803C5BB91725D47500EB9608 /* trxConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 803C5BB71725D47400EB9608 /* trxConverter.cpp */; };
+		803C5BBC17267FAB00EB9608 /* trxObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 803C5BBA17267FAB00EB9608 /* trxObject.cpp */; };
 		8046E4E61714459D009E9418 /* ofxBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8046E4E41714459D009E9418 /* ofxBlur.cpp */; };
 		808405A0172452AF0042B9EA /* trxVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8084059E172452AF0042B9EA /* trxVehicle.cpp */; };
 		80967404171EA07400B8F30C /* trxXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80967402171EA07400B8F30C /* trxXML.cpp */; };
@@ -120,6 +122,11 @@
 		8027B87A170AD617005032BF /* trxHarvester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxHarvester.h; sourceTree = "<group>"; };
 		8027B87B170AD617005032BF /* Vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vehicle.cpp; sourceTree = "<group>"; };
 		8027B87C170AD617005032BF /* Vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vehicle.h; sourceTree = "<group>"; };
+		803C5BB61725CB6F00EB9608 /* data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = data; path = bin/data; sourceTree = SOURCE_ROOT; };
+		803C5BB71725D47400EB9608 /* trxConverter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxConverter.cpp; sourceTree = "<group>"; };
+		803C5BB81725D47400EB9608 /* trxConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxConverter.h; sourceTree = "<group>"; };
+		803C5BBA17267FAB00EB9608 /* trxObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxObject.cpp; sourceTree = "<group>"; };
+		803C5BBB17267FAB00EB9608 /* trxObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxObject.h; sourceTree = "<group>"; };
 		8046E4E41714459D009E9418 /* ofxBlur.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxBlur.cpp; sourceTree = "<group>"; };
 		8046E4E51714459D009E9418 /* ofxBlur.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxBlur.h; sourceTree = "<group>"; };
 		8046E4E7171445A8009E9418 /* readme.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = readme.md; sourceTree = "<group>"; };
@@ -377,7 +384,9 @@
 		E4B69E1C0A3A1BDC003C02F2 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				803C5BB61725CB6F00EB9608 /* data */,
 				8046E4E31714458F009E9418 /* ofxBlur */,
+				8027B870170AD617005032BF /* core */,
 				8084059F172452AF0042B9EA /* trxVehicle.h */,
 				8084059E172452AF0042B9EA /* trxVehicle.cpp */,
 				8027B86E170AD617005032BF /* BiologicalVehicle.cpp */,
@@ -386,15 +395,18 @@
 				8027B874170AD617005032BF /* SteeredVehicle.h */,
 				8027B87B170AD617005032BF /* Vehicle.cpp */,
 				8027B87C170AD617005032BF /* Vehicle.h */,
+				8027B872170AD617005032BF /* ofxBoids.h */,
 				80238639170AF732000816DA /* ofxTuio */,
-				8027B870170AD617005032BF /* core */,
 				8027B871170AD617005032BF /* main.cpp */,
 				8027B875170AD617005032BF /* testApp.cpp */,
 				8027B876170AD617005032BF /* testApp.h */,
 				80769A60172026C000EF663E /* general.h */,
-				8027B872170AD617005032BF /* ofxBoids.h */,
+				803C5BBA17267FAB00EB9608 /* trxObject.cpp */,
+				803C5BBB17267FAB00EB9608 /* trxObject.h */,
 				8027B877170AD617005032BF /* trxFlock.cpp */,
 				8027B878170AD617005032BF /* trxFlock.h */,
+				803C5BB71725D47400EB9608 /* trxConverter.cpp */,
+				803C5BB81725D47400EB9608 /* trxConverter.h */,
 				80967402171EA07400B8F30C /* trxXML.cpp */,
 				80967403171EA07400B8F30C /* trxXML.h */,
 				8027B879170AD617005032BF /* trxHarvester.cpp */,
@@ -585,6 +597,8 @@
 				80967412171EC75300B8F30C /* tinyxmlparser.cpp in Sources */,
 				80967413171EC75300B8F30C /* ofxXmlSettings.cpp in Sources */,
 				808405A0172452AF0042B9EA /* trxVehicle.cpp in Sources */,
+				803C5BB91725D47500EB9608 /* trxConverter.cpp in Sources */,
+				803C5BBC17267FAB00EB9608 /* trxObject.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

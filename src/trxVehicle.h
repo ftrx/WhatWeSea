@@ -37,6 +37,7 @@ public:
             fleeTarget(fleeTargets[i]);
         }
         fleeTargets.clear();
+        //wander();
         
     }
     
