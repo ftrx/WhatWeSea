@@ -11,6 +11,7 @@
 
 trxObject::trxObject(float _x, float _y, float _z, int _id){
     isActive = false;
+    myActiveConnection = NULL;
     title = "";
     id = _id;
     position = ofVec3f(_x,_y,_z);
@@ -26,10 +27,9 @@ void trxObject::update(){
 
 void trxObject::draw(){
     ofPushStyle();
-    ofPushMatrix();
     ofSetCircleResolution(100);
-    ofTranslate(position.x,ofGetHeight()-position.y,0);
-    ofRotate(rotation);
+    
+    
     ofEnableAlphaBlending();
     
     if(isActive){
@@ -40,10 +40,10 @@ void trxObject::draw(){
         ofSetLineWidth(3.0);
         ofCircle(0,0,80);
         ofFill();
+        myIcon->draw(-40, -40, 0, 80, 80);
         ofDrawBitmapString(title, 80,80);
     }
     ofDisableAlphaBlending();
-    ofPopMatrix();
     ofPopStyle();
 }
 
@@ -60,7 +60,14 @@ void trxObject::drawInfo(){
     ofPopMatrix();
 }
 
-
+void trxObject::drawAsConnection(){
+    ofPushStyle();
+    ofEnableAlphaBlending();
+    ofSetColor(255, 255, 255, 50);
+    myIcon->draw(-40, -40, 0, 80, 80);
+    ofDisableAlphaBlending();
+    ofPopStyle();
+}
 int trxObject::returnID(){
     
     return id;

@@ -33,10 +33,8 @@ public:
     
     ofVbo vbo;
     ofShader shader;
-    ofImage myImage;
     ofTexture  * texture;
 
-    vector<int> myConnections;
     vector <ofVec3f> points;
     vector <ofVec3f> sizes;
 

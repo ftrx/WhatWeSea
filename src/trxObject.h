@@ -17,12 +17,13 @@ class trxObject : public ofVec3f {
     
 public:
     bool isActive;
+    int myActiveConnection;
     string title;
     ofVec3f position;
     ofVec3f unprojectedPosition;
     float rotation;
     int id;
-    ofImage myIcon;
+    ofImage * myIcon;
     ofColor myColor;
     
     vector<int> myConnections;
@@ -32,6 +33,7 @@ public:
     
     void update();
     void draw();
+    void drawAsConnection();
     void drawInfo();
 
     int returnID();

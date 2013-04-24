@@ -34,5 +34,6 @@ public:
     
     int flockNumber;
     int converterNumber;
+    int objectNumber;
 
 };

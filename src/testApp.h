@@ -46,6 +46,7 @@ class testApp : public ofBaseApp{
     
     vector<trxFlock> myFlocks;
     vector<trxConverter> myConverters;
+    vector<trxObject> myObjects;
     ofImage background;
 	ofTexture texture1;
     ofShader shader1;

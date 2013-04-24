@@ -68,37 +68,49 @@ void testApp::setup()
     if(shader1.load("shader")) {
 		printf("Shader is loaded\n");
 	}
-    cout << xml.flockNumber <<endl;
-    for (int i=0; i < xml.flockNumber; i++)
+    cout << xml.objectNumber <<endl;
+    for (int i=0; i < xml.objectNumber; i++)
     {
-        if(xml.flockNumber > 0){
-            ofTexture img;
-            string tmpString = "icons/" + xml.getString(i,"TEXTURE_PATH");
-            cout << tmpString << endl;
-            ofLoadImage(img,tmpString);
-            textures.push_back(img);
+        if(xml.objectNumber > 0){
+            ofTexture tex;
+            ofImage img;
+            string texPath = "icons/" + xml.getString(i,"TEXTURE_PATH");
+            string imgPath = "icon_figures/" + xml.getString(i,"ICON_PATH");
+            cout << texPath << endl;
+            cout << imgPath << endl;
+            ofLoadImage(tex,texPath);
+            textures.push_back(tex);
+            ofLoadImage(img,imgPath);
+            icons.push_back(img);
         }
     }
     
-    for (int i=0; i<xml.flockNumber; i++) {
-        trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
-        //thisFlock.color = colors[i];
-        thisFlock.title = xml.getString(i, "NAME");
-        thisFlock.boidNum = xml.getIntValue(i, "MAX_BOIDS");
-        thisFlock.startBoidNum = xml.getIntValue(i, "START_BOIDS");
-        thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
-        thisFlock.texture = &textures.at(i);
-        thisFlock.myCamera = &camera;
-        thisFlock.myConnections = xml.getConnections(i);
-        myFlocks.push_back(thisFlock);
-        
-    }
-    
-    for (int i=0; i<xml.converterNumber; i++) {
-        trxConverter thisConverter = trxConverter(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"));
-        //thisFlock.color = colors[i];
-        //thisConverter.title = xml.getString(i, "NAME");
-        myConverters.push_back(thisConverter);
+    for (int i=0; i<xml.objectNumber; i++) {
+        string type = xml.getString(i, "Type");
+        if ( type == "flock") {
+            trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
+            //thisFlock.color = colors[i];
+            thisFlock.title = xml.getString(i, "NAME");
+            thisFlock.boidNum = xml.getIntValue(i, "MAX_BOIDS");
+            thisFlock.startBoidNum = xml.getIntValue(i, "START_BOIDS");
+            thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
+            thisFlock.texture = &textures.at(i);
+            thisFlock.myIcon = &icons.at(i);
+            thisFlock.myCamera = &camera;
+            thisFlock.myConnections = xml.getConnections(i);
+            myFlocks.push_back(thisFlock);
+        }
+        else if(type == "converter")
+        {
+            trxConverter thisConverter = trxConverter(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"));
+            //thisFlock.color = colors[i];
+            //thisConverter.title = xml.getString(i, "NAME");
+            
+            thisConverter.title = xml.getString(i, "NAME");
+            thisConverter.myConnections = xml.getConnections(i);
+            thisConverter.myIcon = &icons.at(i);
+            myConverters.push_back(thisConverter);
+        }
         
     }
 
@@ -140,7 +152,9 @@ void testApp::update()
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
     
     for (int i=0; i<harvesters.size();i++){
-        catchBoid(&harvesters[i]);
+            catchBoid(&harvesters[i]);
+
+        
     }
     
     
@@ -276,8 +290,60 @@ void testApp::draw()
     drawAllBoids();
     
     for (int i = 0; i<myFlocks.size(); i++) {
+        ofPushMatrix();
+        if (myFlocks[i].isActive){
+            trxFlock * flock = &myFlocks[i];
+            ofTranslate(flock->position.x,ofGetHeight()-flock->position.y,0);
+            ofRotate(flock->rotation);
+            flock->draw();
+            int connectionSize = flock->myConnections.size();
+            for (int j = 0; j < connectionSize; j++) {
+                int index = flock->myConnections.at(j)-myFlocks.size();
+                trxConverter * converter = &myConverters.at(index);
+                if (!converter->isActive)
+                {
+                    ofPushMatrix();
+                    ofRotate(90.0*j);
+                    ofTranslate(200, 0);
+                    converter->drawAsConnection();
+                    ofPopMatrix();
+                }
+            }
+        }
+        ofPopMatrix();
         
-            myFlocks[i].draw();
+    }
+    for (int i = 0; i<myConverters.size(); i++) {
+        
+        ofPushMatrix();
+        if (myConverters[i].isActive){
+            trxConverter * converter = &myConverters[i];
+            ofTranslate(converter->position.x,ofGetHeight()-converter->position.y,0);
+            ofRotate(converter->rotation);
+            converter->draw();
+            int connectionSize = converter->myConnections.size();
+            for (int j = 0; j < connectionSize; j++) {
+                int index = converter->myConnections.at(j);
+                trxFlock * flock = &myFlocks.at(index);
+                if (!flock->isActive)
+                {
+                    int dist = 200;
+                    float x = dist*sin(ofDegToRad(90.0*i));
+                    float y = dist*cos(ofDegToRad(90.0*i));
+                    
+                    ofSetLineWidth(2.0);
+                    ofLine(0, 0, x, y);
+                    
+                    ofPushMatrix();
+                    ofRotate(90.0*j);
+                    ofTranslate(200, 0);
+                    flock->drawAsConnection();
+                    ofPopMatrix();
+                }
+            }
+        }
+        ofPopMatrix();
+
         
     }
 
@@ -357,14 +423,27 @@ void testApp::tuioObjectAdded(ofxTuioObject & tuioObject){
     //thisFlock.texture = &textures.at(myFlocks.size());
     //myFlocks.push_back(thisFlock);
     
-    activeFlocks.push_back(tuioObject.getFiducialId());
+    
     if (myFlocks.size() > tuioObject.getFiducialId()) {
         trxFlock * thisFlock = &myFlocks.at(tuioObject.getFiducialId());
         thisFlock->position = ofVec3f(loc.x,loc.y,myFlocks.at(tuioObject.getFiducialId()).position.z);
         thisFlock->isActive = true;
+        thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
-
+        activeFlocks.push_back(tuioObject.getFiducialId());
     }
+    if (tuioObject.getFiducialId() >= myFlocks.size()) {
+        int atPos = tuioObject.getFiducialId()-myFlocks.size();
+        trxConverter * thisConverter = &myConverters.at(atPos);
+        thisConverter->position = ofVec3f(loc.x,loc.y,myFlocks.at(atPos).position.z);
+        thisConverter->isActive = true;
+        thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
+        //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+        
+    }
+
+
+
 }
 
 void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject){
@@ -376,7 +455,16 @@ void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject){
         thisFlock->unprojectedPosition = screenPosition(thisFlock->position, &camera);
         thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
-        cout << "angle: " << tuioObject.getAngle() << endl;
+        //cout << "angle: " << tuioObject.getAngle() << endl;
+    }
+    if (tuioObject.getFiducialId() >= myFlocks.size()) {
+        int atPos = tuioObject.getFiducialId()-myFlocks.size();
+        trxConverter * thisConverter = &myConverters.at(atPos);
+        thisConverter->position = ofVec3f(loc.x,loc.y,myFlocks.at(atPos).position.z);
+        thisConverter->unprojectedPosition = screenPosition(thisConverter->position, &camera);
+        thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
+        //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+        
     }
 }
 
@@ -385,6 +473,13 @@ void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
     if (myFlocks.size() > tuioObject.getFiducialId()) {
         trxFlock * thisFlock = &myFlocks.at(tuioObject.getFiducialId());
         thisFlock->isActive = false;
+    }
+    if (tuioObject.getFiducialId() >= myFlocks.size()) {
+        int atPos = tuioObject.getFiducialId()-myFlocks.size();
+        trxConverter * thisConverter = &myConverters.at(atPos);
+        thisConverter->isActive = false;
+        //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+        
     }
     
     
@@ -725,7 +820,10 @@ void testApp::updateMouseRay(){
 void testApp::catchBoid(trxHarvester * _myHarverster)
 {
     for (int i=0; i<allMyBoids.size(); i++){
+        
         trxVehicle * boid = allMyBoids.at(i);
+        
+        if (_myHarverster->myCatch.size() < 20 && !boid->caught) {
         ofVec3f bPos= boid->position;
         ofVec3f hPos= ofVec3f (_myHarverster->position.x,ofGetHeight()-_myHarverster->position.y,0);
         bPos = camera.worldToScreen(bPos);
@@ -740,7 +838,7 @@ void testApp::catchBoid(trxHarvester * _myHarverster)
         {
             boid->fleeTargets.push_back(&_myHarverster->position);
         }
-        
+        }
     }
 }
 

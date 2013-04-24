@@ -18,6 +18,7 @@ public:
     
     trxConverter(float _x = 0.0, float _y = 0.0 , float _z = 0.0,int _id = NULL);
     
+    void draw();
 
 
 };

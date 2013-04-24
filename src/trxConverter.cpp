@@ -13,3 +13,8 @@ trxConverter::trxConverter(float _x, float _y, float _z,int _id): trxObject(_x,_
 
     
 }
+
+void trxConverter::draw(){
+    trxObject::draw();
+    
+    }

@@ -71,26 +71,9 @@ void trxFlock::update(){
 }
 
 void trxFlock::draw(){
-    ofPushStyle();
-    ofPushMatrix();
-    ofSetCircleResolution(100);
-    ofTranslate(position.x,ofGetHeight()-position.y,0);
-    ofRotate(rotation);
-    ofEnableAlphaBlending();
     
-    if(isActive){
-        ofSetColor(255, 255, 255, 50);
-        ofCircle(0,0,80);
-        ofSetColor(255, 255, 255);
-        ofNoFill();
-        ofSetLineWidth(3.0);
-        ofCircle(0,0,80);   
-        ofFill();
-        ofDrawBitmapString(title, 80,80);
-    }
-    ofDisableAlphaBlending();
-    ofPopMatrix();
-    ofPopStyle();
+    trxObject::draw();
+    
 }
 
 void trxFlock::drawCircles(){
