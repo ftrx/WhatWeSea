@@ -22,6 +22,7 @@ void trxHarvester::update(){
 }
 
 void trxHarvester::draw(){
+    
     ofPushMatrix();
     ofPushStyle();
     ofSetCircleResolution(100);

@@ -9,8 +9,11 @@
 #include "trxFlock.h"
 
 
+
 trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum) : trxObject(_x,_y,_z,_id){
 
+   // myConnectionSlot = &trxConnectionSlot(this);
+    
     myHarvesters = _harvesters;
 	boidNum = 200;
     startBoidNum = _startBoidNum;

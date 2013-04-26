@@ -27,7 +27,6 @@
 
 #include "Vehicle.h"
 #include "ofMath.h"
-//#include "trxHarvester.h"
 
 class SteeredVehicle : public Vehicle {
 	

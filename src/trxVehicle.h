@@ -18,7 +18,8 @@ protected:
 	
 public:
 	
-	vector <ofVec3f *> targets;
+	ofVec3f * target = NULL;
+    
     vector <ofVec3f *> fleeTargets;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
@@ -29,8 +30,13 @@ public:
 	{
         SteeredVehicle::flock(vehicles);
         
-        for (int i=0; i<targets.size(); i++) {
-            arriveTarget(targets[i]);
+        if (target) {
+            if(caught){
+                isCaughtAt(target);
+            }
+            else {
+                arriveTarget(target);
+            }
         }
         
         for (int i=0; i<fleeTargets.size(); i++) {
@@ -43,15 +49,18 @@ public:
     
     
     void arriveTarget(ofVec3f * _target);
-
+    void isCaughtAt(ofVec3f *_target);
     void fleeTarget(ofVec3f * _target);
     void addTarget(ofVec3f * _target){
-        targets.push_back(_target);
+        
+        if (!target){
+        target = _target;
+        }
     }
     
     
     void clearTargets(){
-        targets.clear();
+        target = 0;
     }
 };
 

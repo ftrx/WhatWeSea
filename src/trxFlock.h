@@ -15,6 +15,7 @@
 #include "trxObject.h"
 #include "general.h"
 
+
 class trxFlock : public trxObject {
 
     
@@ -29,7 +30,8 @@ public:
     vector<trxVehicle> boids;
 
     vector <trxHarvester> * myHarvesters;
-    ofCamera * myCamera;
+    
+    
     
     ofVbo vbo;
     ofShader shader;

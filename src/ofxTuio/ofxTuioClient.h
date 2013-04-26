@@ -236,6 +236,8 @@ public:
 			ofEllipse(blob->getX()*ofGetWidth(), blob->getY()*ofGetHeight(), 10.0, 10.0);
 			string str = "SessionId: "+ofToString((int)(blob->getSessionId()));
 			ofDrawBitmapString(str, blob->getX()*ofGetWidth()-10.0, blob->getY()*ofGetHeight()+25.0);
+            str = "X: "+ofToString((blob->getX())) +" Y:"+ofToString((blob->getY()) );
+			ofDrawBitmapString(str, ofGetWidth()/2.0, ofGetHeight()/2.0+100.0);
 		}
 	};
 
@@ -256,6 +258,7 @@ public:
 			ofDrawBitmapString(str, blob->getX()*ofGetWidth()-10.0, blob->getY()*ofGetHeight()+25.0);
 			str = "SessionId: "+ofToString((int)(blob->getSessionId()));
 			ofDrawBitmapString(str, blob->getX()*ofGetWidth()-10.0, blob->getY()*ofGetHeight()+40.0);
+           
 		}
 	};
 

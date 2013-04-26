@@ -28,14 +28,11 @@ void trxObject::update(){
 void trxObject::draw(){
     ofPushStyle();
     ofSetCircleResolution(100);
-    
-    
     ofEnableAlphaBlending();
-    
     if(isActive){
         ofSetColor(255, 255, 255, 50);
         ofCircle(0,0,80);
-        ofSetColor(255, 255, 255);
+        ofSetColor(255, 255, 255,255);
         ofNoFill();
         ofSetLineWidth(3.0);
         ofCircle(0,0,80);
@@ -50,6 +47,7 @@ void trxObject::draw(){
 
 
 void trxObject::drawInfo(){
+    ofPushStyle();
     ofPushMatrix();
     ofTranslate(position.x,position.y,position.z);
 	ofSetColor(myColor);
@@ -58,9 +56,11 @@ void trxObject::drawInfo(){
     string info = "Object: "+ title +" "+ ofToString(position)+"\n";
     ofDrawBitmapString(info, 0,0);
     ofPopMatrix();
+    ofPopStyle();
 }
 
 void trxObject::drawAsConnection(){
+    
     ofPushStyle();
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255, 50);

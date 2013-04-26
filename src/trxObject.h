@@ -11,13 +11,14 @@
 #include <iostream>
 #include "ofMain.h"
 #include "general.h"
+#include "trxConnectionSlot.h"
+
 
 class trxObject : public ofVec3f {
     
     
 public:
     bool isActive;
-    int myActiveConnection;
     string title;
     ofVec3f position;
     ofVec3f unprojectedPosition;
@@ -27,7 +28,9 @@ public:
     ofColor myColor;
     
     vector<int> myConnections;
-
+    trxConnectionSlot myActiveConnection;
+    
+    bool hasConnection = false;
     
     trxObject(float _x, float _y, float _z, int _id);
     
