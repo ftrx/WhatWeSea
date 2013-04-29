@@ -39,9 +39,7 @@ void trxObjectHandler::update()
         }
         timeStamp = ofGetElapsedTimeMillis();
     }
-    
-    
-    //blur.setScale(ofMap(mouseX, 0, ofGetWidth(), 1, 4));
+
     updateAllVertexes();
     
     if (allVertex.size()>0) {
@@ -58,69 +56,50 @@ void trxObjectHandler::update()
 void trxObjectHandler::draw()
 {
     ofPushStyle();
-    
+        //draw Connections
+    vector<int> objectsPositionArray;
+    objectsPositionArray.assign(maxID+1,0);
+    for(int i=0; i < myConnections.size(); i++){
+        trxConnectionSlot * thisSlot = &myConnections[i];
+        trxFlock * flock = thisSlot->myFlock;
+        trxConverter * converter = thisSlot->myConverter;
+        if(thisSlot != myActiveConnection)
+        {
+            thisSlot->drawPossibleConnection(objectsPositionArray.at(flock->id),objectsPositionArray.at(converter->id));
+            objectsPositionArray[flock->id]++;
+            objectsPositionArray[converter->id]++;
+            
+        }
+        else
+        {
+            thisSlot->draw();
+        }
+    }
+    //draw active Objects
     for (int i = 0; i<activeFlocks.size(); i++) {
         ofPushMatrix();
         trxFlock * flock = activeFlocks[i];
         ofTranslate(flock->position.x,ofGetHeight()-flock->position.y,0);
         ofRotate(flock->rotation);
         flock->draw();
-        for (int j=0; j<activeConverters.size(); j++) {
-            trxConverter * converter = activeConverters[j];
-            int dist = 200;
-            float x = dist*sin(ofDegToRad(90.0*i));
-            float y = dist*cos(ofDegToRad(90.0*i));
-                    
-            ofSetLineWidth(2.0);
-            ofLine(0, 0, x, y);
-            ofPushMatrix();
-            ofRotate(90.0*j);
-            ofTranslate(200, 0);
-            converter->drawAsConnection();
-            ofPopMatrix();
-              
-        }
         ofPopMatrix();
-        
     }
-    for (int i = 0; i<myConverters.size(); i++) {
-        
+    for (int i = 0; i<activeConverters.size(); i++) {
         ofPushMatrix();
-        if (myConverters[i].isActive){
-            trxConverter * converter = &myConverters[i];
-            ofTranslate(converter->position.x,ofGetHeight()-converter->position.y,0);
-            ofRotate(converter->rotation);
-            converter->draw();
-            int connectionSize = converter->myConnections.size();
-            for (int j = 0; j < connectionSize; j++) {
-                int index = converter->myConnections.at(j);
-                trxFlock * flock = &myFlocks.at(index);
-                if (!flock->isActive)
-                {
-                    int dist = 200;
-                    float x = dist*sin(ofDegToRad(90.0*i));
-                    float y = dist*cos(ofDegToRad(90.0*i));
-                    
-                    ofSetLineWidth(2.0);
-                    ofLine(0, 0, x, y);
-                    
-                    ofPushMatrix();
-                    ofRotate(90.0*j);
-                    ofTranslate(200, 0);
-                    flock->drawAsConnection();
-                    ofPopMatrix();
-                }
-            }
-        }
-        ofPopMatrix();    
+        trxConverter * converter = activeConverters[i];
+        ofTranslate(converter->position.x,ofGetHeight()-converter->position.y,0);
+        ofRotate(converter->rotation);
+        converter->draw();
+        ofPopMatrix();
     }
+
+
     
+    // draw harvester / finger-cursor
     for (int i=0; i<harvesters.size(); i++) {
         harvesters.at(i).draw();
         
     }
-
-    
     ofPopStyle();
 }
 
@@ -167,7 +146,6 @@ void trxObjectHandler::initXML()
     xml = trxXML();
     xml.setup();
 }
-
 void trxObjectHandler::generateObjects()
 {
     cout << xml.objectNumber <<endl;
@@ -186,7 +164,6 @@ void trxObjectHandler::generateObjects()
             icons.push_back(img);
         }
     }
-    
     for (int i=0; i<xml.objectNumber; i++) {
         string type = xml.getString(i, "Type");
         if ( type == "flock") {
@@ -200,8 +177,6 @@ void trxObjectHandler::generateObjects()
             thisFlock.myIcon = &icons.at(i);
             thisFlock.myConnections = xml.getConnections(i);
             myFlocks.push_back(thisFlock);
-            
-            
         }
         else if(type == "converter")
         {
@@ -217,8 +192,12 @@ void trxObjectHandler::generateObjects()
         }
     }
     for (int i=0; i<myFlocks.size(); i++) {
-        trxConnectionSlot thisSlot = trxConnectionSlot(&myFlocks[i]);
-        myConnections.push_back(thisSlot);
+        for (int j=0; j<myFlocks[i].myConnections.size(); j++) {
+            trxConnectionSlot thisSlot = trxConnectionSlot();
+            thisSlot.myFlock = &myFlocks[i];
+            thisSlot.myConverter = &myConverters[j];
+            myConnections.push_back(thisSlot);
+        }
     }
 }
 
@@ -280,6 +259,7 @@ void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
         activeConverters.push_back(thisConverter);
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
+    checkIfActiveSlot();
 }
 
 void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
@@ -301,6 +281,7 @@ void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
         thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
+    checkIfActiveSlot();
 }
 
 void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
@@ -314,7 +295,7 @@ void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
         int atPos = tuioObject.getFiducialId()-myFlocks.size();
         trxConverter * thisConverter = &myConverters.at(atPos);
         thisConverter->isActive = false;
-        //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
+        
     }
     for (int i = 0; i < activeFlocks.size(); i++) {
         if (activeFlocks[i]->id == tuioObject.getFiducialId()) {
@@ -326,6 +307,10 @@ void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
             activeConverters.erase(activeConverters.begin()+i);
         }
     }
+    cout << "Object n" << tuioObject.getSessionId() << " removed at " << loc << endl;
+    checkIfActiveSlot();
+    checkIfStillActiveSlot();
+    
 }
 
 void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
@@ -408,13 +393,14 @@ void  trxObjectHandler::updateAllVertexes(){
             }
             for (int col=0; col<6; col++) {
                 if (debug) {
-                    if (tmpBoid->caught) {
-                        
+                    if (tmpBoid->caught)
+                    {
                         vColor[col].r = 1.0;
                         vColor[col].g = 0.0;
                         vColor[col].b = 0.0;
                     }
-                    else {
+                    else
+                    {
                         vColor[col].r = 0.0;
                         vColor[col].g = 1.0;
                         vColor[col].b = 0.0;
@@ -422,13 +408,14 @@ void  trxObjectHandler::updateAllVertexes(){
                 }
                 else
                 {
-                    if (tmpBoid->caught) {
-                        
+                    if (tmpBoid->caught)
+                    {
                         vColor[col].r = 1.0;
                         vColor[col].g = 1.0;
                         vColor[col].b = 1.0;
                     }
-                    else {
+                    else
+                    {
                         vColor[col].r = 1.0;
                         vColor[col].g = 1.0;
                         vColor[col].b = 1.0;
@@ -455,6 +442,43 @@ void  trxObjectHandler::updateAllVertexes(){
                 
             }
             
+        }
+    }    
+}
+
+void trxObjectHandler::checkIfActiveSlot(){
+    
+    for (int i=0; i<myConnections.size(); i++) {
+        trxConnectionSlot * thisSlot = &myConnections[i];
+        if(thisSlot->myFlock->isActive && thisSlot->myConverter->isActive)
+        {
+            thisSlot->state = true;
+            if (myActiveConnection) {
+                float thisSlotDistance = thisSlot->myFlock->position.distance(thisSlot->myConverter->position);
+                float activeSloteDistance = myActiveConnection->myFlock->position.distance(myActiveConnection->myConverter->position);
+                if ( thisSlotDistance < activeSloteDistance) {
+                    myActiveConnection = thisSlot;
+                }
+            }
+            else
+            {
+                myActiveConnection = thisSlot;
+            }
+            
+        }
+        else
+        {
+            thisSlot->state = false;
+        }
+    }
+    
+    
+}
+
+void trxObjectHandler::checkIfStillActiveSlot(){
+    if (myActiveConnection) {
+        if (!myActiveConnection->myFlock->isActive || !myActiveConnection->myConverter->isActive) {
+            myActiveConnection = NULL;
         }
     }
 }

@@ -89,6 +89,7 @@ void testApp::draw()
         ofSetColor(0);
         string info = "FPS "+ofToString(ofGetFrameRate(), 0) + "\n";
         info += "Total Points "+ofToString(myObjectHandler.allMyBoids.size())+"\n";
+        info += "ofGetElapsedTimef() "+ofToString(ofGetElapsedTimef())+"\n";
         info += "Press 'd' to debug\n";
         ofDrawBitmapString(info, 20, 20);
         ofPopStyle();

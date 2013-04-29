@@ -54,6 +54,7 @@ public:
     
     int startTime;
     int timeStamp;
+    int maxID = 4;
     
     vector<ofTexture> textures;
     vector<ofImage> icons;
@@ -69,7 +70,7 @@ public:
     vector<trxVehicle *> allMyBoids;
     
     vector<trxConnectionSlot> myConnections;
-    trxConnectionSlot myActiveConnection;
+    trxConnectionSlot * myActiveConnection;
     
     //Grafix
     ofVbo vbo;
@@ -80,6 +81,9 @@ public:
     vector<ofFloatColor> allColors;
     
     void updateAllVertexes();
+    
+    void checkIfActiveSlot();
+    void checkIfStillActiveSlot();
     
     ofVec2f getCorrectedPosition(float _x, float _y);
     ofVec3f screenPosition(ofVec3f _position, ofCamera * cam);

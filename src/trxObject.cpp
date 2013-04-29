@@ -11,13 +11,18 @@
 
 trxObject::trxObject(float _x, float _y, float _z, int _id){
     isActive = false;
-    myActiveConnection = NULL;
     title = "";
     id = _id;
     position = ofVec3f(_x,_y,_z);
     unprojectedPosition = ofVec3f(_x,_y,_z);
     rotation = 0.0;
     myColor = ofColor(255,255,255,255);
+    
+    ofTrueTypeFont::setGlobalDpi(72);
+    
+	HelveticaNeueRoman18.loadFont("fonts/HelveticaRoman.ttf", 24, true, true);
+	HelveticaNeueRoman18.setLineHeight(28.0f);
+	HelveticaNeueRoman18.setLetterSpacing(1.037);
 }
 
 
@@ -38,7 +43,9 @@ void trxObject::draw(){
         ofCircle(0,0,80);
         ofFill();
         myIcon->draw(-40, -40, 0, 80, 80);
-        ofDrawBitmapString(title, 80,80);
+        
+		ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);
+		HelveticaNeueRoman18.drawString(title, 80, 80);
     }
     ofDisableAlphaBlending();
     ofPopStyle();
@@ -60,13 +67,8 @@ void trxObject::drawInfo(){
 }
 
 void trxObject::drawAsConnection(){
-    
-    ofPushStyle();
-    ofEnableAlphaBlending();
-    ofSetColor(255, 255, 255, 50);
     myIcon->draw(-40, -40, 0, 80, 80);
-    ofDisableAlphaBlending();
-    ofPopStyle();
+
 }
 int trxObject::returnID(){
     

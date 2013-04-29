@@ -11,7 +11,7 @@
 #include <iostream>
 #include "ofMain.h"
 #include "general.h"
-#include "trxConnectionSlot.h"
+
 
 
 class trxObject : public ofVec3f {
@@ -27,8 +27,9 @@ public:
     ofImage * myIcon;
     ofColor myColor;
     
+    ofTrueTypeFont	HelveticaNeueRoman18;
+    
     vector<int> myConnections;
-    trxConnectionSlot myActiveConnection;
     
     bool hasConnection = false;
     
