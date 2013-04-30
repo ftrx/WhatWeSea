@@ -41,4 +41,6 @@ public:
     float	signedNoiseData[400];
     int		nSignedNoiseData = 400;
     int radialNoiseCursor = 0.0;
+    
+    int getID(){return id;}
 };

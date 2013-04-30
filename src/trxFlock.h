@@ -44,8 +44,10 @@ public:
     void update();
     void draw();
     void drawCircles();
-    void removeDeathVehicle(trxVehicle* _v);
+    void removeDeadBoids();
+    void removeVehicles(vector<trxVehicle*> *_v);
     void drawInfo();
     void createNewBoid();
     int returnID();
+    int countDead();
 };

@@ -16,6 +16,7 @@
 #include "trxConnectionSlot.h"
 #include "trxXML.h"
 #include "ofxTuio.h"
+#include "trxStoryHandler.h"
 
 class trxObjectHandler {
     
@@ -54,7 +55,7 @@ public:
     
     int startTime;
     int timeStamp;
-    int maxID = 4;
+    int maxID = 11;
     
     vector<ofTexture> textures;
     vector<ofImage> icons;
@@ -71,6 +72,7 @@ public:
     
     vector<trxConnectionSlot> myConnections;
     trxConnectionSlot * myActiveConnection;
+    trxConnectionSlot * myLastActiveConnection;
     
     //Grafix
     ofVbo vbo;
@@ -87,6 +89,12 @@ public:
     
     ofVec2f getCorrectedPosition(float _x, float _y);
     ofVec3f screenPosition(ofVec3f _position, ofCamera * cam);
+    
+    trxFlock* getFlockWithID(int ID);
+    trxConverter* getConverterWithID(int ID);
+    
+    // StoryHandler
+    trxStoryHandler myStoryHandler;
     
 
 };

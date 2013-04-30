@@ -16,8 +16,6 @@ void trxVehicle::arriveTarget(ofVec3f * _target){
 
 void trxVehicle::isCaughtAt(ofVec3f * _target){
     
-    
-    
     position = *_target;
     //arrive(* _target);
     

@@ -14,6 +14,7 @@ trxObjectHandler::trxObjectHandler()
     initXML();
     generateObjects();
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    myStoryHandler = trxStoryHandler(&myFlocks,&myConverters,&myConnections);
     timeStamp = ofGetElapsedTimeMillis();
 }
 
@@ -28,7 +29,10 @@ void trxObjectHandler::update()
     float timer = ofGetElapsedTimeMillis() - timeStamp;
     
     for (int i=0; i<harvesters.size();i++){
+        harvesters[i].moveMyCatch(myCamera);    
+        harvesters[i].update();
         catchBoid(&harvesters[i]);
+        
     }
     
     
@@ -50,6 +54,7 @@ void trxObjectHandler::update()
         //vbo2.drawElements( GL_TRIANGLES, allIndex.size());
         
     }
+    myStoryHandler.update();
 
 }
 
@@ -65,9 +70,17 @@ void trxObjectHandler::draw()
         trxConverter * converter = thisSlot->myConverter;
         if(thisSlot != myActiveConnection)
         {
+            ofEnableAlphaBlending();
+            if (myActiveConnection) {
+                ofSetColor(255, 255, 255,50);
+            }
+            else {
+                ofSetColor(255, 255, 255,100);
+            }
             thisSlot->drawPossibleConnection(objectsPositionArray.at(flock->id),objectsPositionArray.at(converter->id));
             objectsPositionArray[flock->id]++;
             objectsPositionArray[converter->id]++;
+            ofDisableAlphaBlending();
             
         }
         else
@@ -101,6 +114,11 @@ void trxObjectHandler::draw()
         
     }
     ofPopStyle();
+    
+    
+    if (myActiveConnection) {
+        myStoryHandler.draw();
+    }
 }
 
 void trxObjectHandler::draw3D(){
@@ -144,13 +162,15 @@ void trxObjectHandler::drawAllBoids(){
 void trxObjectHandler::initXML()
 {
     xml = trxXML();
-    xml.setup();
+    xml.setup("Objects","Object");
 }
 void trxObjectHandler::generateObjects()
 {
     cout << xml.objectNumber <<endl;
     for (int i=0; i < xml.objectNumber; i++)
     {
+        xml.XML.pushTag("Objects");
+        xml.XML.pushTag("Object",i);
         if(xml.objectNumber > 0){
             ofTexture tex;
             ofImage img;
@@ -163,8 +183,13 @@ void trxObjectHandler::generateObjects()
             ofLoadImage(img,imgPath);
             icons.push_back(img);
         }
+        xml.XML.popTag();
+        xml.XML.popTag();
     }
     for (int i=0; i<xml.objectNumber; i++) {
+        
+        xml.XML.pushTag("Objects");
+        xml.XML.pushTag("Object",i);
         string type = xml.getString(i, "Type");
         if ( type == "flock") {
             trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,0,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
@@ -190,6 +215,8 @@ void trxObjectHandler::generateObjects()
             myConverters.push_back(thisConverter);
             
         }
+        xml.XML.popTag();
+        xml.XML.popTag();
     }
     for (int i=0; i<myFlocks.size(); i++) {
         for (int j=0; j<myFlocks[i].myConnections.size(); j++) {
@@ -206,9 +233,14 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
     for(int i=0; i< _myFlocks->size(); i++)
     {
         trxFlock * tmpFlock = &_myFlocks->at(i);
+        
         for (int j=0; j<tmpFlock->boids.size();j++)
         {
-            allBoids.push_back(&tmpFlock->boids.at(j));
+            trxVehicle * thisVehicle = &tmpFlock->boids.at(j);
+            // check if dead, when dead then do not draw
+            if (!thisVehicle->dead) {
+                allBoids.push_back(thisVehicle);
+            }
         }
     }
     return allBoids;
@@ -220,7 +252,7 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
         
         trxVehicle * boid = allMyBoids.at(i);
         
-        if (_myHarverster->myCatch.size() < 20 && !boid->caught) {
+        if (_myHarverster->myCatch.size() < 20 && !boid->caught && boid->myTypeID == myStoryHandler.myActiveTask->catchID && myStoryHandler.activeConnection) {
             ofVec3f bPos= boid->position;
             ofVec3f hPos= ofVec3f (_myHarverster->position.x,ofGetHeight()-_myHarverster->position.y,0);
             bPos = myCamera->worldToScreen(bPos);
@@ -229,6 +261,7 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
             if (dist <= _myHarverster->radius) {
                 _myHarverster->myCatch.push_back(boid);
                 boid->addTarget(&_myHarverster->unprojectedPosition);
+                //boid->addTargetMovment(&_myHarverster->movment);
                 boid->caught = true;
             }
             if (dist <= 2*(_myHarverster->radius) && !boid->caught)
@@ -236,24 +269,24 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
                 boid->fleeTargets.push_back(&_myHarverster->position);
             }
         }
+        
     }
 }
 
 void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
 {
-    ofPoint loc = ofPoint(getCorrectedPosition( tuioObject.getX(),tuioObject.getY()));    
-    if (myFlocks.size() > tuioObject.getFiducialId()) {
-        trxFlock * thisFlock = &myFlocks.at(tuioObject.getFiducialId());
-        thisFlock->position = ofVec3f(loc.x,loc.y,myFlocks.at(tuioObject.getFiducialId()).position.z);
+    ofPoint loc = ofPoint(getCorrectedPosition( tuioObject.getX(),tuioObject.getY()));
+    trxFlock * thisFlock = getFlockWithID(tuioObject.getFiducialId());
+    trxConverter * thisConverter = getConverterWithID(tuioObject.getFiducialId());
+    if (thisFlock) {
+        thisFlock->position = ofVec3f(loc.x,loc.y,thisFlock->position.z);
         thisFlock->isActive = true;
         thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
         activeFlocks.push_back(thisFlock);
     }
-    if (tuioObject.getFiducialId() >= myFlocks.size() && tuioObject.getFiducialId() < myFlocks.size()+myConverters.size()) {
-        int atPos = tuioObject.getFiducialId()-myFlocks.size();
-        trxConverter * thisConverter = &myConverters.at(atPos);
-        thisConverter->position = ofVec3f(loc.x,loc.y,myFlocks.at(atPos).position.z);
+    if (thisConverter) {
+        thisConverter->position = ofVec3f(loc.x,loc.y,thisConverter->position.z);
         thisConverter->isActive = true;
         thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         activeConverters.push_back(thisConverter);
@@ -265,18 +298,17 @@ void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
 void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
 {
     ofPoint loc = ofPoint(getCorrectedPosition( tuioObject.getX(),tuioObject.getY()));
-    if (myFlocks.size() > tuioObject.getFiducialId()) {
-        trxFlock * thisFlock = & myFlocks.at(tuioObject.getFiducialId());
-        thisFlock->position = ofVec3f(loc.x,loc.y,myFlocks.at(tuioObject.getFiducialId()).position.z);
+    trxFlock * thisFlock = getFlockWithID(tuioObject.getFiducialId());
+    trxConverter * thisConverter = getConverterWithID(tuioObject.getFiducialId());
+    if (thisFlock) {
+        thisFlock->position = ofVec3f(loc.x,loc.y,thisFlock->position.z);
         thisFlock->unprojectedPosition = screenPosition(thisFlock->position, myCamera);
         thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
         //cout << "angle: " << tuioObject.getAngle() << endl;
     }
-    if (tuioObject.getFiducialId() >= myFlocks.size() && tuioObject.getFiducialId() < myFlocks.size()+myConverters.size()) {
-        int atPos = tuioObject.getFiducialId()-myFlocks.size();
-        trxConverter * thisConverter = &myConverters.at(atPos);
-        thisConverter->position = ofVec3f(loc.x,loc.y,myFlocks.at(atPos).position.z);
+    if (thisConverter) {
+        thisConverter->position = ofVec3f(loc.x,loc.y,thisConverter->position.z);
         thisConverter->unprojectedPosition = screenPosition(thisConverter->position, myCamera);
         thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
@@ -287,24 +319,22 @@ void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
 void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
 {
     ofPoint loc = ofPoint(getCorrectedPosition( tuioObject.getX(),tuioObject.getY()));
-    if (myFlocks.size() > tuioObject.getFiducialId()) {
-        trxFlock * thisFlock = &myFlocks.at(tuioObject.getFiducialId());
+    trxFlock * thisFlock = getFlockWithID(tuioObject.getFiducialId());
+    trxConverter * thisConverter = getConverterWithID(tuioObject.getFiducialId());
+    if (thisFlock) {
         thisFlock->isActive = false;
-    }
-    if (tuioObject.getFiducialId() >= myFlocks.size() && tuioObject.getFiducialId() < myFlocks.size()+myConverters.size()) {
-        int atPos = tuioObject.getFiducialId()-myFlocks.size();
-        trxConverter * thisConverter = &myConverters.at(atPos);
-        thisConverter->isActive = false;
-        
-    }
-    for (int i = 0; i < activeFlocks.size(); i++) {
-        if (activeFlocks[i]->id == tuioObject.getFiducialId()) {
-            activeFlocks.erase(activeFlocks.begin()+i);
+        for (int i = 0; i < activeFlocks.size(); i++) {
+            if (activeFlocks[i]->id == thisFlock->id) {
+                activeFlocks.erase(activeFlocks.begin()+i);
+            }
         }
     }
-    for (int i = 0; i < activeConverters.size(); i++) {
-        if (activeConverters[i]->id == tuioObject.getFiducialId()) {
-            activeConverters.erase(activeConverters.begin()+i);
+    if (thisConverter) {
+        thisConverter->isActive = false;
+        for (int i = 0; i < activeConverters.size(); i++) {
+            if (activeConverters[i]->id == thisConverter->id) {
+                activeConverters.erase(activeConverters.begin()+i);
+            }
         }
     }
     cout << "Object n" << tuioObject.getSessionId() << " removed at " << loc << endl;
@@ -343,7 +373,8 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
     for (int i = 0; i < harvesters.size(); i++) {
         trxHarvester * thisHarvester = &harvesters[i];
         if (thisHarvester->id == tuioCursor.getSessionId()) {
-            thisHarvester->clearCatch();
+            //thisHarvester->clearCatch();
+            thisHarvester->removeBoids();
             harvesters.erase(harvesters.begin()+i);
         }
     }
@@ -447,7 +478,6 @@ void  trxObjectHandler::updateAllVertexes(){
 }
 
 void trxObjectHandler::checkIfActiveSlot(){
-    
     for (int i=0; i<myConnections.size(); i++) {
         trxConnectionSlot * thisSlot = &myConnections[i];
         if(thisSlot->myFlock->isActive && thisSlot->myConverter->isActive)
@@ -457,21 +487,27 @@ void trxObjectHandler::checkIfActiveSlot(){
                 float thisSlotDistance = thisSlot->myFlock->position.distance(thisSlot->myConverter->position);
                 float activeSloteDistance = myActiveConnection->myFlock->position.distance(myActiveConnection->myConverter->position);
                 if ( thisSlotDistance < activeSloteDistance) {
-                    myActiveConnection = thisSlot;
+                    if (myActiveConnection != thisSlot) {
+                        
+                        myActiveConnection = thisSlot;
+                    }
                 }
             }
             else
             {
                 myActiveConnection = thisSlot;
-            }
-            
+
+            }        
         }
         else
         {
             thisSlot->state = false;
         }
     }
-    
+    if(myActiveConnection != myLastActiveConnection){
+        myLastActiveConnection = myActiveConnection;
+        myStoryHandler.startStory(myActiveConnection);
+    }
     
 }
 
@@ -479,6 +515,29 @@ void trxObjectHandler::checkIfStillActiveSlot(){
     if (myActiveConnection) {
         if (!myActiveConnection->myFlock->isActive || !myActiveConnection->myConverter->isActive) {
             myActiveConnection = NULL;
+            myLastActiveConnection = NULL;
+            myStoryHandler.stopStory();
+            cout << "set activeConnection to NULL" << endl;
         }
     }
+}
+
+trxFlock* trxObjectHandler::getFlockWithID(int _id){
+    for (int i=0; i< myFlocks.size(); i++) {
+        trxFlock * thisFlock = & myFlocks.at(i);
+        if (thisFlock->id == _id) {
+            return thisFlock;
+        }
+    }
+    return NULL; 
+}
+
+trxConverter* trxObjectHandler::getConverterWithID(int _id){
+    for (int i=0; i< myConverters.size(); i++) {
+        trxConverter * thisConverter = & myConverters.at(i);
+        if (thisConverter->id == _id) {
+            return thisConverter;
+        }
+    }
+    return NULL;
 }

@@ -40,6 +40,7 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 void trxFlock::update(){    
     points.clear();
     sizes.clear();
+    //removeDeadBoids();
     vector <trxVehicle> tmp;
 	for (int i = 0; i < boids.size(); i++)
 	{
@@ -60,7 +61,7 @@ void trxFlock::update(){
     
     if (boids.size() < boidNum)
     {
-       createNewBoid();
+       //createNewBoid();
     }
     
     // upload the data to the vbo
@@ -104,22 +105,23 @@ void trxFlock::drawInfo(){
     ofPopMatrix();
 }
 
-void trxFlock::removeDeathVehicle(trxVehicle* _v){
-    
-    
+void trxFlock::removeVehicles(vector<trxVehicle*> *_v){
 
 }
 
-int trxFlock::returnID(){
+bool checkDead( trxVehicle &p ){return p.dead;}
 
-    return id;
+void trxFlock::removeDeadBoids(){
+    ofRemove(boids, checkDead);
 }
+
+int trxFlock::returnID(){return id;}
 
 
 
 void trxFlock::createNewBoid(){
     trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(100, DEPTH-100));
-    v.velocity = ofVec3f(ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f),ofRandom(0.1f,2.0f));
+    v.velocity = ofVec3f(ofRandom(0.1f,1.0f),ofRandom(0.1f,1.0f),ofRandom(0.1f,1.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
     v.maxSpeed = maxSpeed;
     v.maxForce = 0.5f;
@@ -132,3 +134,10 @@ void trxFlock::createNewBoid(){
     sizes.push_back(ofVec3f(190));
 }
 
+int trxFlock::countDead(){
+    int dead= 0;
+    for (int i=0; i<boids.size(); i++) {
+        if (boids[i].dead) { dead++;}
+    }
+    return dead;
+}

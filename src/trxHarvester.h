@@ -24,6 +24,8 @@ public:
     
     ofVec3f target;
     ofVec3f position;
+    ofVec3f lastPosition;
+    ofVec3f movment;
     ofVec3f unprojectedPosition;
     ofColor color;
     
@@ -43,5 +45,8 @@ public:
     void drawInfo();
     void createNewBoid();
     void clearCatch();
+    void removeBoids();
+    void moveMyCatch(ofCamera * cam);
+    
     ofVec3f screenPosition(ofCamera * cam);
 };

@@ -39,6 +39,7 @@ public:
     void draw();
     void drawAsConnection();
     void drawInfo();
+    void removeDeadBoids();
 
     int returnID();
 };

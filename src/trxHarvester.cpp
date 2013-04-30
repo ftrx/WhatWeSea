@@ -13,12 +13,14 @@
 trxHarvester::trxHarvester(float _x, float _y, float _z,int _id){
     id = _id;
     position.set(ofVec3f(_x,_y,_z));
+    lastPosition.set(position);
     
 }
 
 void trxHarvester::update(){
     
-       
+    movment = position-lastPosition;
+    lastPosition = position;
 }
 
 void trxHarvester::draw(){
@@ -80,8 +82,25 @@ void trxHarvester::clearCatch(){
     myCatch.clear();
 }
 
-ofVec3f trxHarvester::screenPosition(ofCamera * cam){
-    ofVec3f hPos= ofVec3f (position.x,ofGetHeight()-position.y,0.370);
-    hPos = cam->screenToWorld(hPos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
-    return hPos;
+void trxHarvester::moveMyCatch(ofCamera * cam){
+    for (int i = 0; i < myCatch.size(); i++) {
+        trxVehicle * boid = myCatch[i];
+    }
 }
+
+ofVec3f trxHarvester::screenPosition(ofCamera * cam){
+    ofVec3f pos= ofVec3f (position.x,ofGetHeight()-position.y,0.370);
+    pos = cam->screenToWorld(pos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
+    return pos;
+}
+
+void trxHarvester::removeBoids(){
+    for (int i=0; i<myCatch.size(); i++) {
+        trxVehicle * boid = myCatch.at(i);
+        boid->dead = true;
+        boid->clearTargets(); /// !!! fast target eraser, but delets all targets
+    }
+    myCatch.clear();
+
+}
+

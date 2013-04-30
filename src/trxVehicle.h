@@ -19,6 +19,9 @@ protected:
 public:
 	
 	ofVec3f * target = NULL;
+    ofVec3f targetMovment;
+    bool caught = false;
+    bool dead = false;
     
     vector <ofVec3f *> fleeTargets;
 	
@@ -33,6 +36,13 @@ public:
         if (target) {
             if(caught){
                 isCaughtAt(target);
+                //position += targetMovment;
+                
+                for (int i=0; i< trails.size(); i++) {
+                    trails[i] += targetMovment;
+                }
+                
+                arriveTarget(target);
             }
             else {
                 arriveTarget(target);
@@ -56,6 +66,13 @@ public:
         if (!target){
         target = _target;
         }
+    }
+    void addTargetMovment(ofVec3f * _targetMovement){
+     /*
+        if (!targetMovment){
+            targetMovment = *_targetMovement;
+        }
+      */
     }
     
     

@@ -18,7 +18,7 @@ class trxXML {
 public:
     trxXML();
     trxXML(string _filename);
-    void setup();
+    void setup(string _category, string _items);
     
     string getString(int _flockID, string _tag);
     int getIntValue(int _flockID, string _tag);
