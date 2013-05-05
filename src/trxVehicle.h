@@ -23,10 +23,13 @@ public:
     bool caught = false;
     bool dead = false;
     
+    vector<ofVec3f> bones;
+    float bonelength = 10.0;
+    
     vector <ofVec3f *> fleeTargets;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
-        
+        bones.assign(4, ofVec3f(_x,_y,_z));
 	}
     
     template<typename Type> void flock(vector<Type>& vehicles)
@@ -36,13 +39,14 @@ public:
         if (target) {
             if(caught){
                 isCaughtAt(target);
-                //position += targetMovment;
+                position += targetMovment;
                 
                 for (int i=0; i< trails.size(); i++) {
                     trails[i] += targetMovment;
+                    //trails[i] = position;
                 }
                 
-                arriveTarget(target);
+                //arriveTarget(target);
             }
             else {
                 arriveTarget(target);
@@ -57,27 +61,22 @@ public:
         
     }
     
-    
+    void update();
     void arriveTarget(ofVec3f * _target);
     void isCaughtAt(ofVec3f *_target);
     void fleeTarget(ofVec3f * _target);
     void addTarget(ofVec3f * _target){
-        
         if (!target){
         target = _target;
         }
     }
     void addTargetMovment(ofVec3f * _targetMovement){
-     /*
-        if (!targetMovment){
-            targetMovment = *_targetMovement;
-        }
-      */
+        position += *_targetMovement;
     }
     
     
     void clearTargets(){
-        target = 0;
+        target = NULL;
     }
 };
 

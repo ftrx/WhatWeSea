@@ -19,8 +19,18 @@ trxHarvester::trxHarvester(float _x, float _y, float _z,int _id){
 
 void trxHarvester::update(){
     
-    movment = position-lastPosition;
-    lastPosition = position;
+    movment = unprojectedPosition-lastPosition;
+    lastPosition = unprojectedPosition;
+    
+    if(myCatch.size() >0)
+    {
+        for (int i=0; i<myCatch.size(); i++) {
+            trxVehicle * boid = myCatch[i];
+            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+            boid->addTargetMovment(&boidMovement);
+        }
+    }
+    
 }
 
 void trxHarvester::draw(){
@@ -28,7 +38,7 @@ void trxHarvester::draw(){
     ofPushMatrix();
     ofPushStyle();
     ofSetCircleResolution(100);
-    ofTranslate(position.x,ofGetHeight()-position.y,0);
+    ofTranslate(position.x,position.y,0);
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255, 100);
     ofCircle(0,0,radius);
@@ -55,7 +65,7 @@ void trxHarvester::drawInfo(){
    
     
     ofSetColor(255, 255, 255,50);
-    ofSphere(0, 0, 0, radius);
+    ofSphere(0, 0, 0, 20.0);
      
     
 	ofSetColor(color);
@@ -65,6 +75,9 @@ void trxHarvester::drawInfo(){
     ofPopMatrix();
     //ofDisableAlphaBlending();
     ofPopStyle();
+    
+   
+    
 }
 
 
@@ -87,9 +100,18 @@ void trxHarvester::moveMyCatch(ofCamera * cam){
         trxVehicle * boid = myCatch[i];
     }
 }
+ofVec3f trxHarvester::movmentToBoidZ(ofCamera * cam, ofVec3f _pos){
+    ofVec3f pos= _pos;
+    
+    pos = cam->screenToWorld(pos);
+    pos *= ofMap(_pos.z, 0, 900.0, 1.0f, 0.0f);
+    pos.z = 0;
+    return pos;
+}
+
 
 ofVec3f trxHarvester::screenPosition(ofCamera * cam){
-    ofVec3f pos= ofVec3f (position.x,ofGetHeight()-position.y,0.370);
+    ofVec3f pos= ofVec3f (position.x,position.y,0.666666);
     pos = cam->screenToWorld(pos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
     return pos;
 }
@@ -103,4 +125,18 @@ void trxHarvester::removeBoids(){
     myCatch.clear();
 
 }
+
+void trxHarvester::moveBoidsToTarget(ofVec3f * _target){
+    for (int i=0; i<myCatch.size(); i++) {
+        trxVehicle * boid = myCatch.at(i);
+        boid->maxSpeed = 8.0f;
+        boid->dead = true;
+        boid->clearTargets(); /// !!! fast target eraser, but delets all targets
+        boid->addTarget(_target);
+    }
+    myCatch.clear();
+    
+}
+
+
 

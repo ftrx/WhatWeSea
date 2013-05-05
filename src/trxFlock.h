@@ -47,6 +47,8 @@ public:
     void removeDeadBoids();
     void removeVehicles(vector<trxVehicle*> *_v);
     void drawInfo();
+    
+    void generateBoids();
     void createNewBoid();
     int returnID();
     int countDead();

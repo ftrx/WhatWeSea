@@ -12,8 +12,8 @@ void testApp::setup()
     background.loadImage("background.jpg");
     
 	ofSetFrameRate(60);
-	ofSetVerticalSync(false);
-	ofEnableSmoothing();
+	//ofSetVerticalSync(true);
+	//ofEnableSmoothing();
         
     viewMain.x = 0;
 	viewMain.y = 0;
@@ -24,7 +24,7 @@ void testApp::setup()
     camera.lookAt(ofVec3f(ofGetWidth()/2.0,ofGetHeight()/2.0,0));
     camera.setFov(90);
     camera.setNearClip(100.0);
-    camera.setFarClip(-1000.0);
+    camera.setFarClip(1000.0);
     
     
     
@@ -190,18 +190,6 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 
 }
 
-
-void testApp::updateMouseRay(){
-	// Define ray in screen space
-    
-    ofVec2f mouse = ofVec2f(ofGetMouseX(),ofGetMouseY());
-    
-    ray[0] = ofVec3f(mouse.x, mouse.y, 0.777);
-    ray[1] = ofVec3f(mouse.x, mouse.y, 0.370);
-
-    ray[0] = camera.screenToWorld(ray[0]);
-	ray[1] = camera.screenToWorld(ray[1]);
-}
 
 
 

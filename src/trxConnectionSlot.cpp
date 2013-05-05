@@ -48,8 +48,8 @@ void trxConnectionSlot::draw()
     ofPushStyle();
     ofSetLineWidth(2.0);
     ofSetColor(255, 255, 255,255);
-    drawWobbleLine(myFlock->position.x, ofGetHeight()-myFlock->position.y, myConverter->position.x, ofGetHeight()-myConverter->position.y);
-    //ofLine(myFlock->position.x, ofGetHeight()-myFlock->position.y, myConverter->position.x, ofGetHeight()-myConverter->position.y);
+    drawWobbleLine(myFlock->position.x, myFlock->position.y, myConverter->position.x, myConverter->position.y);
+    //ofLine(myFlock->position.x, myFlock->position.y, myConverter->position.x, myConverter->position.y);
     ofPopStyle();
 }
 
@@ -67,7 +67,7 @@ void trxConnectionSlot::drawPossibleConnection(int flockPosition, int converterP
         
         ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()+id),ofSignedNoise(ofGetElapsedTimef()+2+2*id),0)*maxAmplitude;
         ofPushMatrix();
-        ofTranslate(myFlock->position.x,ofGetHeight()-myFlock->position.y,0);
+        ofTranslate(myFlock->position.x,myFlock->position.y,0);
         ofTranslate(randomWiggle);
         ofRotate(myFlock->rotation+90.0*flockPosition);
         //ofLine(0,0, dist, 0);
@@ -79,7 +79,7 @@ void trxConnectionSlot::drawPossibleConnection(int flockPosition, int converterP
     {
         ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()+id),ofSignedNoise(ofGetElapsedTimef()+2+2*id),0)*maxAmplitude;
         ofPushMatrix();
-        ofTranslate(myConverter->position.x,ofGetHeight()-myConverter->position.y,0);
+        ofTranslate(myConverter->position.x,myConverter->position.y,0);
         ofTranslate(randomWiggle);
         ofRotate(myConverter->rotation+90.0*converterPosition);
         drawWobbleLine(0,0, dist, 0);

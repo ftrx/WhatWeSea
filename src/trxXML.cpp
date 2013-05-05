@@ -31,18 +31,45 @@ void trxXML::setup(string _category, string _items){
 }
 
 
+
+typedef struct{
+    string character;
+    string code;
+}charSubstitution;
+
+void subsChars(string & origString){
+    charSubstitution chars[]={
+        {"à","\xE0"}, {"á","\xE1"}, {"â","\xE2"}, {"ã","\xE3"}, {"ä","\xE4"}, {"æ","\xE6"},
+        {"ò","\xF2"}, {"ó","\xF3"} ,{"ô","\xF4"}, {"õ","\xF5"}, {"ö","\xF6"},
+        {"ù","\xF9"}, {"ú","\xFA"}, {"û","\xFB"}, {"ü","\xFC"},
+        {"è","\xE8"}, {"é","\xE9"}, {"ê","\xEA"}, {"ë","\xEB"},
+        {"ì","\xEC"}, {"í","\xED"}, {"î","\xEE"}, {"ï","\xEF"},
+        {"ç","\xE7"}, {"Ç","\xC7"}
+    };
+    
+    for(int i=0; i<24; i++){
+        
+        while(origString.find(chars[i].character)!=string::npos){
+            origString = origString.substr(0,origString.find(chars[i].character)) + chars[i].code + origString.substr(origString.find(chars[i].character)+2);
+            
+        }
+    };
+}
+
+
+
 string trxXML::getString(int _flockID, string _tag){
-    string texturePath;
+    string text;
     //we push into the _flockID Flock tag
     //this temporarirly treats the tag as
     //the document root.
 
-        texturePath = XML.getValue(_tag, "");
+        text = XML.getValue(_tag, "");
     //cout << texturePath << endl;
     //this pops us out of the STROKE tag
     //sets the root back to the xml document
-
-    return texturePath;
+    subsChars(text);
+    return text;
 }
 
 int trxXML::getIntValue(int _flockID, string _tag){
@@ -69,7 +96,6 @@ float trxXML::getFloatValue(int _flockID, string _tag){
     //cout << texturePath << endl;
     //this pops us out of the STROKE tag
     //sets the root back to the xml document
-
     return value;
 }
 
@@ -87,5 +113,3 @@ vector<int> trxXML::getConnections(int _flockID){
 
     return connections;
 }
-
-

@@ -19,16 +19,8 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>*
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
 	target = ofVec3f(0, 0, 0);
-	
-	for (int i = 0; i < startBoidNum; i++)
-	{
-		createNewBoid();
-	}
 	cout << startBoidNum << endl;
-    // upload the data to the vbo
-	int total = (int)boids.size();
-	vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
-	vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
+  
 }
 
 // Sort-Function
@@ -38,8 +30,8 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 }
 
 void trxFlock::update(){    
-    points.clear();
-    sizes.clear();
+    //points.clear();
+    //sizes.clear();
     //removeDeadBoids();
     vector <trxVehicle> tmp;
 	for (int i = 0; i < boids.size(); i++)
@@ -47,12 +39,12 @@ void trxFlock::update(){
 		boids[i].flock(boids);
 		boids[i].update();
 		boids[i].bounce(ofGetWidth(), ofGetHeight(), DEPTH);
-        boids[i].aging(0.005f);
+        //boids[i].aging(0.005f);
         if (!boids[i].isDead())
         {
             tmp.push_back(boids[i]);
-            points.push_back(boids[i].position);
-            sizes.push_back(ofVec3f(190*boids[i].remainingLifePer));
+            //points.push_back(boids[i].position);
+            //sizes.push_back(ofVec3f(190*boids[i].remainingLifePer));
             
         }
         
@@ -117,7 +109,12 @@ void trxFlock::removeDeadBoids(){
 
 int trxFlock::returnID(){return id;}
 
-
+void trxFlock::generateBoids(){
+    for (int i = 0; i < startBoidNum; i++)
+	{
+		createNewBoid();
+	}
+}
 
 void trxFlock::createNewBoid(){
     trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(100, DEPTH-100));

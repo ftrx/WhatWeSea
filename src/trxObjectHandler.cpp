@@ -29,7 +29,7 @@ void trxObjectHandler::update()
     float timer = ofGetElapsedTimeMillis() - timeStamp;
     
     for (int i=0; i<harvesters.size();i++){
-        harvesters[i].moveMyCatch(myCamera);    
+       // harvesters[i].moveMyCatch(myCamera);
         harvesters[i].update();
         catchBoid(&harvesters[i]);
         
@@ -92,7 +92,7 @@ void trxObjectHandler::draw()
     for (int i = 0; i<activeFlocks.size(); i++) {
         ofPushMatrix();
         trxFlock * flock = activeFlocks[i];
-        ofTranslate(flock->position.x,ofGetHeight()-flock->position.y,0);
+        ofTranslate(flock->position.x,flock->position.y,0);
         ofRotate(flock->rotation);
         flock->draw();
         ofPopMatrix();
@@ -100,7 +100,7 @@ void trxObjectHandler::draw()
     for (int i = 0; i<activeConverters.size(); i++) {
         ofPushMatrix();
         trxConverter * converter = activeConverters[i];
-        ofTranslate(converter->position.x,ofGetHeight()-converter->position.y,0);
+        ofTranslate(converter->position.x,converter->position.y,0);
         ofRotate(converter->rotation);
         converter->draw();
         ofPopMatrix();
@@ -131,6 +131,7 @@ void trxObjectHandler::draw3D(){
         for (int i=0; i<harvesters.size(); i++) {
             harvesters.at(i).drawInfo();
             
+            
         }
     }
 
@@ -154,8 +155,6 @@ void trxObjectHandler::drawAllBoids(){
 
 
 }
-
-
 
 
 /// XML - STUFF
@@ -219,6 +218,7 @@ void trxObjectHandler::generateObjects()
         xml.XML.popTag();
     }
     for (int i=0; i<myFlocks.size(); i++) {
+        myFlocks[i].generateBoids();
         for (int j=0; j<myFlocks[i].myConnections.size(); j++) {
             trxConnectionSlot thisSlot = trxConnectionSlot();
             thisSlot.myFlock = &myFlocks[i];
@@ -238,9 +238,9 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
         {
             trxVehicle * thisVehicle = &tmpFlock->boids.at(j);
             // check if dead, when dead then do not draw
-            if (!thisVehicle->dead) {
+            //if (!thisVehicle->dead) {
                 allBoids.push_back(thisVehicle);
-            }
+            //}
         }
     }
     return allBoids;
@@ -251,25 +251,29 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
     for (int i=0; i<allMyBoids.size(); i++){
         
         trxVehicle * boid = allMyBoids.at(i);
-        
-        if (_myHarverster->myCatch.size() < 20 && !boid->caught && boid->myTypeID == myStoryHandler.myActiveTask->catchID && myStoryHandler.activeConnection) {
-            ofVec3f bPos= boid->position;
-            ofVec3f hPos= ofVec3f (_myHarverster->position.x,ofGetHeight()-_myHarverster->position.y,0);
-            bPos = myCamera->worldToScreen(bPos);
-            //hPos = camera.screenToWorld(hPos, viewMain);
-            float dist = hPos.distance(bPos);
-            if (dist <= _myHarverster->radius) {
-                _myHarverster->myCatch.push_back(boid);
-                boid->addTarget(&_myHarverster->unprojectedPosition);
-                //boid->addTargetMovment(&_myHarverster->movment);
-                boid->caught = true;
-            }
-            if (dist <= 2*(_myHarverster->radius) && !boid->caught)
-            {
-                boid->fleeTargets.push_back(&_myHarverster->position);
+        ofVec3f bPos= boid->position;
+        ofVec3f hPos= ofVec3f (_myHarverster->position.x,_myHarverster->position.y,0);
+        bPos = myCamera->worldToScreen(bPos);
+        //hPos = camera.screenToWorld(hPos, viewMain);
+        float dist = hPos.distance(bPos);
+        if (myStoryHandler.myActiveTask &&!myStoryHandler.showMessage) {
+            if (_myHarverster->myCatch.size() < myStoryHandler.myActiveTask->catchSize && !boid->caught && boid->myTypeID == myStoryHandler.myActiveTask->catchID) {
+                if (dist <= _myHarverster->radius) {
+                    _myHarverster->myCatch.push_back(boid);
+                    boid->addTarget(&_myHarverster->unprojectedPosition);
+                    //boid->addTargetMovment(&_myHarverster->movment);
+                    boid->caught = true;
+                }
             }
         }
         
+        if (dist <= 2*(_myHarverster->radius) && !boid->caught)
+        {
+            boid->fleeTargets.push_back(&_myHarverster->unprojectedPosition);
+        }
+    
+
+
     }
 }
 
@@ -337,7 +341,7 @@ void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
             }
         }
     }
-    cout << "Object n" << tuioObject.getSessionId() << " removed at " << loc << endl;
+    //cout << "Object n" << tuioObject.getSessionId() << " removed at " << loc << endl;
     checkIfActiveSlot();
     checkIfStillActiveSlot();
     
@@ -374,11 +378,21 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
         trxHarvester * thisHarvester = &harvesters[i];
         if (thisHarvester->id == tuioCursor.getSessionId()) {
             //thisHarvester->clearCatch();
-            thisHarvester->removeBoids();
+            //thisHarvester->removeBoids();
+            thisHarvester->moveBoidsToTarget(&myStoryHandler.myActiveTask->targetPosition);
             harvesters.erase(harvesters.begin()+i);
         }
     }
-	
+    if (myStoryHandler.showMessage) {
+        //cout << "location: " << loc << endl;
+        //cout << "buttonPos : " << myStoryHandler.messageButton.position << endl;
+        if (myStoryHandler.messageButton.clickOverButton(loc)) {
+            //cout << " message closed" << endl;
+            myStoryHandler.closeMessage();
+        }
+    }
+
+
 	//cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
 }
 
@@ -400,21 +414,19 @@ ofVec3f trxObjectHandler::screenPosition(ofVec3f _position, ofCamera * cam){
 void  trxObjectHandler::updateAllVertexes(){
     for (int i = 0; i<allMyBoids.size(); i++) {
         trxVehicle * tmpBoid = allMyBoids.at(i);
-        int maxTrail = tmpBoid->maxTrailSize;
-        int firstBone = int(maxTrail/8*6);
-        int secondBone = int(maxTrail/8*3);
-        if(tmpBoid->trails.size()>= maxTrail){
+        
+        if(tmpBoid->bones.size()>= 4){
             ofVec3f vecs[] = {
                 ofVec3f((float)tmpBoid->position.x,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
-                ofVec3f((float)tmpBoid->trails.at(firstBone).x-5.0f,  (float)tmpBoid->trails.at(firstBone).y,  (float)tmpBoid->trails.at(firstBone).z),
-                ofVec3f((float)tmpBoid->trails.at(firstBone).x+5.0f,  (float)tmpBoid->trails.at(firstBone).y,  (float)tmpBoid->trails.at(firstBone).z),
-                ofVec3f((float)tmpBoid->trails.at(secondBone).x,  (float)tmpBoid->trails.at(secondBone).y,  (float)tmpBoid->trails.at(secondBone).z),
-                ofVec3f((float)tmpBoid->trails.at(0).x-3.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z),
-                ofVec3f((float)tmpBoid->trails.at(0).x+3.0f,  (float)tmpBoid->trails.at(0).y,  (float)tmpBoid->trails.at(0).z)};
+                ofVec3f((float)tmpBoid->bones.at(1).x-5.0f,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
+                ofVec3f((float)tmpBoid->bones.at(1).x+5.0f,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
+                ofVec3f((float)tmpBoid->bones.at(2).x,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
+                ofVec3f((float)tmpBoid->bones.at(3).x-3.0f,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z),
+                ofVec3f((float)tmpBoid->bones.at(3).x+3.0f,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z)};
             
             ofFloatColor vColor[6];
             float alpha = 1.0;
-            if (activeFlocks.size() > 0) {
+            if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
                 alpha = 0.2;
                 for (int active=0; active<activeFlocks.size(); active++) {
                     if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
@@ -422,6 +434,15 @@ void  trxObjectHandler::updateAllVertexes(){
                     }
                 }
             }
+            
+            if (myStoryHandler.myActiveTask) {
+                alpha = 0.2;
+                if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
+                    alpha = 1.0;
+                }
+
+            }
+            
             for (int col=0; col<6; col++) {
                 if (debug) {
                     if (tmpBoid->caught)
@@ -477,15 +498,23 @@ void  trxObjectHandler::updateAllVertexes(){
     }    
 }
 
+// Method to check if this there an active Connection when an new Object is placed on the table, or if there is a connection which has a shorter Distance between flock & converter, when an object is moved
 void trxObjectHandler::checkIfActiveSlot(){
+    //check all Connections (even the not active)
     for (int i=0; i<myConnections.size(); i++) {
         trxConnectionSlot * thisSlot = &myConnections[i];
+        
+        //if both members (flock&converter) of an aconnection ar active (on the Table) then set the state of the connection to active
         if(thisSlot->myFlock->isActive && thisSlot->myConverter->isActive)
         {
             thisSlot->state = true;
+            
+            //check if theres an running(active) connection
             if (myActiveConnection) {
+                //if there is an running connection, then check which connection is shorter (nearest distance)
                 float thisSlotDistance = thisSlot->myFlock->position.distance(thisSlot->myConverter->position);
                 float activeSloteDistance = myActiveConnection->myFlock->position.distance(myActiveConnection->myConverter->position);
+                //if the new connections distances ar shorter, then check if its not the existing connection, if not, set it to the existing.
                 if ( thisSlotDistance < activeSloteDistance) {
                     if (myActiveConnection != thisSlot) {
                         
@@ -493,17 +522,21 @@ void trxObjectHandler::checkIfActiveSlot(){
                     }
                 }
             }
+            
+            //if there is no existing connection then set this one to active
             else
             {
                 myActiveConnection = thisSlot;
 
             }        
         }
+        // if one member is not active the connection state should be false
         else
         {
             thisSlot->state = false;
         }
     }
+    // prevents multiple storystarting when only the existing connection is moved
     if(myActiveConnection != myLastActiveConnection){
         myLastActiveConnection = myActiveConnection;
         myStoryHandler.startStory(myActiveConnection);
@@ -511,8 +544,12 @@ void trxObjectHandler::checkIfActiveSlot(){
     
 }
 
+// Method is called on a removed Object
+// It checks if the current active Connection ist still viable
 void trxObjectHandler::checkIfStillActiveSlot(){
+    //only needed when an active Connection
     if (myActiveConnection) {
+        //if the current Connection is not valid (either the Flock or the Converter was removed from the Table) reset all, and stop the current Story.
         if (!myActiveConnection->myFlock->isActive || !myActiveConnection->myConverter->isActive) {
             myActiveConnection = NULL;
             myLastActiveConnection = NULL;

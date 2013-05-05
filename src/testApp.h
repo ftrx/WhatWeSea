@@ -26,7 +26,7 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 
-    bool debug = true;
+    bool debug = false;
     
 	ofCamera camera;
     //ofEasyCam camera;
@@ -52,11 +52,6 @@ class testApp : public ofBaseApp{
     
 
     ofxTuioClient   tuioClient;
-    
-    
-    void updateMouseRay();
-
-    ofVec3f ray[2];
     
 
     

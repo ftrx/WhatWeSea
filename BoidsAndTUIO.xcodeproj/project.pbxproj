@@ -16,6 +16,7 @@
 		67fe4c7b15c2f0478c8126c28fa6aad0 /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3b361208cd4107e479f04e7bce6d93aa /* NetworkingUtils.cpp */; };
 		72a929d3561b8232a182abfcbb325491 /* ofxOscBundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 65eefa3da3526e9cdd9c21f90d9b5684 /* ofxOscBundle.cpp */; };
 		80097A74172E6F0400B1C020 /* trxStoryHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80097A72172E6F0400B1C020 /* trxStoryHandler.cpp */; };
+		80128D5917315B2D0067CE14 /* trxStoryButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80128D5717315B2D0067CE14 /* trxStoryButton.cpp */; };
 		8027B87D170AD617005032BF /* BiologicalVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B86E170AD617005032BF /* BiologicalVehicle.cpp */; };
 		8027B87E170AD617005032BF /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B871170AD617005032BF /* main.cpp */; };
 		8027B87F170AD617005032BF /* SteeredVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B873170AD617005032BF /* SteeredVehicle.cpp */; };
@@ -107,6 +108,8 @@
 		7689f8a0f3d0b7635a8c310487cd0928 /* ofxOscArg.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.h; fileEncoding = 30; name = ofxOscArg.h; path = ../../../addons/ofxOsc/src/ofxOscArg.h; sourceTree = SOURCE_ROOT; };
 		80097A72172E6F0400B1C020 /* trxStoryHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxStoryHandler.cpp; sourceTree = "<group>"; };
 		80097A73172E6F0400B1C020 /* trxStoryHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxStoryHandler.h; sourceTree = "<group>"; };
+		80128D5717315B2D0067CE14 /* trxStoryButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxStoryButton.cpp; sourceTree = "<group>"; };
+		80128D5817315B2D0067CE14 /* trxStoryButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxStoryButton.h; sourceTree = "<group>"; };
 		8027B86E170AD617005032BF /* BiologicalVehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BiologicalVehicle.cpp; sourceTree = "<group>"; };
 		8027B86F170AD617005032BF /* BiologicalVehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BiologicalVehicle.h; sourceTree = "<group>"; };
 		8027B871170AD617005032BF /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -409,6 +412,8 @@
 				8027B876170AD617005032BF /* testApp.h */,
 				80097A72172E6F0400B1C020 /* trxStoryHandler.cpp */,
 				80097A73172E6F0400B1C020 /* trxStoryHandler.h */,
+				80128D5717315B2D0067CE14 /* trxStoryButton.cpp */,
+				80128D5817315B2D0067CE14 /* trxStoryButton.h */,
 				8034BC421727CA0800682AE8 /* trxObjectHandler.cpp */,
 				8034BC431727CA0900682AE8 /* trxObjectHandler.h */,
 				8034BC461729134500682AE8 /* trxConnectionSlot.cpp */,
@@ -615,6 +620,7 @@
 				8034BC441727CA0900682AE8 /* trxObjectHandler.cpp in Sources */,
 				8034BC481729134500682AE8 /* trxConnectionSlot.cpp in Sources */,
 				80097A74172E6F0400B1C020 /* trxStoryHandler.cpp in Sources */,
+				80128D5917315B2D0067CE14 /* trxStoryButton.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

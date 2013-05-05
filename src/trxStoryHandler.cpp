@@ -22,7 +22,8 @@ trxStoryHandler::trxStoryHandler(vector<trxFlock> *_allFLocks,vector<trxConverte
     
     xml = trxXML("stories.xml");
     xml.setup("stories", "story");
-    
+    myActiveTask = NULL;
+    myActiveStory = NULL;
     allFlocks = _allFLocks;
     allConverters = _allConverters;
     allConnectionSlots = _allConnections;
@@ -31,54 +32,122 @@ trxStoryHandler::trxStoryHandler(vector<trxFlock> *_allFLocks,vector<trxConverte
 
 void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
     
-    activeConnection = _activeConnection;
-    myActiveStory = getStoryWithConnection(activeConnection);
-    myActiveTask = &myActiveStory->myTasks.at(0);
-    activeFlock = activeConnection->myFlock;
-    cout << "start new Story:" << activeConnection->getID() << endl;
-    catchedQuantity = 0;    
+    stopStory(); // stop any current running Story
+    
+    if (getStoryWithConnection(_activeConnection)) {
+        myActiveStory = getStoryWithConnection(_activeConnection);
+        activeConnection = _activeConnection;
+        //myActiveStory = getStoryWithConnection(activeConnection);
+        if(myActiveStory->myTasks.size() > 0)
+        {
+            myActiveTask = &myActiveStory->myTasks.at(0);
+            activeFlock = getFlockWithID(myActiveTask->catchID);
+        }
+        
+        activeConverter = myActiveStory->myStoryConverter;
+        cout << "start new Story:" << myActiveStory->description << endl;
+        catchedQuantity = 0;
+        myActiveStory->finished = false;
+        idleTimer = ofGetElapsedTimeMillis(); // Timer for resetting the Story (or end it)
+    }
+        
 }
 
 void trxStoryHandler::stopStory(){
-    myActiveTask->finished = false;
-    catchedQuantity = 0;
-    activeFlock->removeDeadBoids();
-    activeFlock= NULL;
-    activeConnection = NULL;
+    if (myActiveStory) {
+        cout << "stop Story:" << myActiveStory->description << endl;
+        if(myActiveTask)
+        {
+            
+            myActiveTask = NULL;
+        }
+        for (int i=0; i<myActiveStory->myTasks.size(); i++) {
+            myActiveStory->myTasks.at(i).finished = false;
+        }
+        catchedQuantity = 0;
+        activeFlock->removeDeadBoids();
+        showMessage = false;
+        myActiveStory = NULL;
+    }
+    
 }
 
 void trxStoryHandler::update()
 {
-    if (activeConnection) {
-        catchedQuantity = activeFlock->countDead();
-        if (catchedQuantity >= myActiveTask->quantity) {
-            myActiveTask->finished = true;
+    if (myActiveStory) {
+        if (myActiveTask) {
+            if (!showMessage) {
+                catchedQuantity = activeFlock->countDead();
+                if (catchedQuantity >= myActiveTask->quantity) {
+                    finishTask();
+                }
+            }
+        }
+        else {
+            if (!showMessage) {
+                finishStory();
+            }
         }
     }
+ 
+    if(myActiveStory){ resetStoryAfterTimeout(IDLETIME);}
 }
 
 
+
+
+trxStoryHandler::task * trxStoryHandler::nextTask(){
+    catchedQuantity = 0;
+    if(myActiveTask->no < myActiveStory->myTasks.size()-1){
+        int newNo = myActiveTask->no + 1;
+        return &myActiveStory->myTasks.at(newNo);
+    }
+    else return NULL;
+    
+}
+
+void trxStoryHandler::finishTask(){
+    if (myActiveTask)
+    {
+        cout << "Task Finished" << endl;
+        myActiveTask->finished = true;
+        activeFlock->removeDeadBoids();
+        messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
+        showMessage = true;
+    }
+}
+
+void trxStoryHandler::finishStory(){
+    
+     myActiveStory->finished = true;
+     messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
+     showMessage = true;
+    
+}
+
 void trxStoryHandler::draw(){
-    if (activeConnection == myActiveStory->myConnection) {
-        ofPushMatrix();
-        ofTranslate(activeConnection->myConverter->position.x,ofGetHeight()-activeConnection->myConverter->position.y);
-        ofRotate(activeConnection->myConverter->rotation);
-        
-        activeConnection->drawWobbleLine(0, 0, 200.0, 200.0);
-        ofTranslate(200.0, 200.0);
-        drawTarget();
-        
-        ofTranslate(80, -80);
-        drawTaskMessage(myActiveTask->taskMessage);
-        ofTranslate(0, 10);
-        drawProgressBar(catchedQuantity);
-        ofPopMatrix();
+    if (myActiveStory) {
+        if (myActiveTask) {
+            ofPushMatrix();
+            ofTranslate(activeConverter->position.x,activeConverter->position.y);
+            ofRotate(activeConnection->myConverter->rotation);
+            activeConnection->drawWobbleLine(0, 0, 200.0, 200.0);
+            ofTranslate(myActiveTask->targetPosition);
+            drawTarget();
+            ofTranslate(80, -80);
+            drawTaskMessage(myActiveTask->taskMessage);
+            ofTranslate(0, 10);
+            drawProgressBar(catchedQuantity);
+            ofPopMatrix();
+            if (myActiveTask->finished) {
+                drawMessage("Task Finished Message");
+            }
+        }
+        if (myActiveStory->finished) {
+           drawMessage("Story Finished Message");
+        }
     }
-    if (myActiveTask->finished) {
-        
-        drawMessage("Finished");
-        
-    }
+   
 }
 
 
@@ -87,6 +156,7 @@ void trxStoryHandler::drawTaskMessage(string _message){
 }
 
 void trxStoryHandler::drawMessage(string _message){
+    
     ofEnableAlphaBlending();
     ofSetColor(0, 0, 0,100);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
@@ -95,8 +165,11 @@ void trxStoryHandler::drawMessage(string _message){
     ofPushMatrix();
     ofTranslate(ofGetWidth()/2.0, ofGetHeight()/2.0);
     HelveticaNeueRoman36.drawString(_message, 0, 0);
+
     ofPopMatrix();
     ofDisableAlphaBlending();
+    
+    messageButton.draw();
 }
 
 void trxStoryHandler::drawProgressBar(int _currentQuantity){
@@ -114,7 +187,7 @@ void trxStoryHandler::drawTarget(){
     ofPushStyle();
     ofNoFill();
     ofSetLineWidth(4.0);
-        ofCircle(0, 0, myActiveTask->targetSize);
+    ofCircle(0, 0, myActiveTask->targetSize);
     ofPopStyle();
 }
 
@@ -129,14 +202,19 @@ void trxStoryHandler::generateStories(){
         thisStory.myStoryConverter = getConverterWithID(xml.getIntValue(i, "converter"));
         thisStory.myConnection = getConnectionSlotWithID(thisStory.myStoryFlock, thisStory.myStoryConverter);
         thisStory.finalMessage = xml.getString(i, "finalMessage");
+        thisStory.description = xml.getString(i, "description");
         
 
         int numberOfTasks = xml.XML.getNumTags("task");
         for (int taskN=0; taskN < numberOfTasks; taskN++) {
             xml.XML.pushTag("task",taskN);
             task thisTask;
+            thisTask.no = xml.getIntValue(taskN, "no");
             thisTask.catchID = xml.getIntValue(taskN, "catchID");
+            thisTask.catchSize = xml.getIntValue(taskN, "catchSize");
             thisTask.taskMessage = xml.getString(taskN, "taskMessage");
+            thisTask.quantity = xml.getIntValue(taskN, "quantity");
+            thisTask.targetSize = xml.getFloatValue(taskN, "targetSize");
             thisStory.myTasks.push_back(thisTask);
             xml.XML.popTag();
         }
@@ -187,4 +265,34 @@ trxStoryHandler::story * trxStoryHandler::getStoryWithConnection(trxConnectionSl
         }
     }
     return NULL;
+}
+
+
+void trxStoryHandler::resetStoryAfterTimeout (int _idletime = IDLETIME){
+    if (ofGetElapsedTimeMillis()-idleTimer > _idletime) {
+        if(myActiveStory){
+            cout << "Timeout! StoppedStory" << endl;
+            startStory(activeConnection);
+        }
+        idleTimer = ofGetElapsedTimeMillis();
+        
+    }
+}
+
+void trxStoryHandler::closeMessage(){
+    showMessage = false;
+    
+    if (myActiveTask)
+    {
+        if (myActiveTask->finished) {
+            myActiveTask = nextTask();
+            if (myActiveTask) {
+                activeFlock = getFlockWithID(myActiveTask->catchID);
+            }
+            
+        }
+    }
+    if (myActiveStory->finished) {
+        startStory(activeConnection);
+    }
 }
