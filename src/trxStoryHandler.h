@@ -17,6 +17,7 @@
 #include "trxConverter.h"
 #include "trxXML.h"
 #include "trxStoryButton.h"
+#include "trxOscController.h"
 
 
 class trxStoryHandler {
@@ -37,6 +38,7 @@ class trxStoryHandler {
     
     struct story {
         bool finished = false;
+        int topicNumber = NULL;
         vector<task> myTasks;
         trxConnectionSlot * myConnection;
         trxFlock * myStoryFlock;
@@ -58,20 +60,27 @@ class trxStoryHandler {
     vector<trxConverter> * allConverters;
     vector<trxConnectionSlot> * allConnectionSlots;
     
+    ofVec3f myTargetPosition;
+    ofVec3f myScreenTargetPosition;
+    ofVec3f myLastScreenTargetPosition;
+    ofVec3f myScreenTargetMovement;
+    
     int catchedQuantity;
     
     bool showMessage = false;
     trxStoryButton messageButton;
     
     trxStoryHandler();
-    trxStoryHandler(vector<trxFlock> * _allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections);
+    void setup(vector<trxFlock> * _allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections);
     void generateStories();
     
     void startStory(trxConnectionSlot * _activeConnection);
     void stopStory();
     void draw();
+    void drawDebug();
     void update();
     
+    void updateMyLastTargetScreenPosition();
     
     task * nextTask();
     void finishTask();
@@ -91,9 +100,10 @@ class trxStoryHandler {
     void drawMessage(string _message);
     void closeMessage();
     
+    void updateTargetPosition ();
     
-    
-    
+    void changeAction(int _actionNumber);
+    void changeTopic(int _topicNumber);
         
     vector<story> myStories;
     
@@ -102,6 +112,8 @@ class trxStoryHandler {
     story * myActiveStory;
     task * myActiveTask;
     
+    bool runningAction = false;
+    
     
     trxFlock* getFlockWithID(int ID);
     trxConverter* getConverterWithID(int ID);
@@ -109,4 +121,7 @@ class trxStoryHandler {
     trxConnectionSlot* getConnectionSlotWithID(trxFlock * _flock, trxConverter * _converter);
     story * getStoryWithConnection(trxConnectionSlot * _connection);
     
+    trxOscController myOsc;
+    
+
 };

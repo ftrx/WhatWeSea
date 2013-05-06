@@ -13,6 +13,7 @@ trxObject::trxObject(float _x, float _y, float _z, int _id){
     isActive = false;
     title = "";
     id = _id;
+    
     position = ofVec3f(_x,_y,_z);
     unprojectedPosition = ofVec3f(_x,_y,_z);
     rotation = 0.0;
@@ -20,14 +21,14 @@ trxObject::trxObject(float _x, float _y, float _z, int _id){
     
     ofTrueTypeFont::setGlobalDpi(72);
     
-	HelveticaNeueRoman18.loadFont("fonts/HelveticaRoman.ttf", 24, true, true);
+	HelveticaNeueRoman18.loadFont("fonts/NewsGot-Med.otf", 24, true, true);
 	HelveticaNeueRoman18.setLineHeight(28.0f);
 	HelveticaNeueRoman18.setLetterSpacing(1.037);
 }
 
 
 void trxObject::update(){
-    
+
 }
 
 void trxObject::draw(){
@@ -45,7 +46,7 @@ void trxObject::draw(){
         myIcon->draw(-40, -40, 0, 80, 80);
         
 		ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);
-		HelveticaNeueRoman18.drawString(title, 80, 80);
+		HelveticaNeueRoman18.drawString(title, -bounds.width/2.0, 110);
     }
     ofDisableAlphaBlending();
     ofPopStyle();
@@ -56,7 +57,7 @@ void trxObject::draw(){
 void trxObject::drawInfo(){
     ofPushStyle();
     ofPushMatrix();
-    ofTranslate(position.x,position.y,position.z);
+    ofTranslate(unprojectedPosition);
 	ofSetColor(myColor);
     ofCircle(0, 0, 10);
     
@@ -74,4 +75,12 @@ int trxObject::returnID(){
     
     return id;
 }
+
+ofVec3f trxObject::screenPosition(ofVec3f _position, ofCamera * cam){
+    ofVec3f pos= ofVec3f (_position.x,_position.y,0.666666);
+    pos = cam->screenToWorld(pos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
+    return pos;
+}
+
+
 

@@ -28,7 +28,9 @@ public:
     ofVec3f target;
 
     vector<trxVehicle> boids;
-
+    vector<trxVehicle> deadBoids;
+    
+    
     vector <trxHarvester> * myHarvesters;
     
     
@@ -45,6 +47,7 @@ public:
     void draw();
     void drawCircles();
     void removeDeadBoids();
+        void sortDeadsOut();
     void removeVehicles(vector<trxVehicle*> *_v);
     void drawInfo();
     
@@ -52,4 +55,5 @@ public:
     void createNewBoid();
     int returnID();
     int countDead();
+    int countOnWay();
 };

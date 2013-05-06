@@ -34,22 +34,19 @@ void trxFlock::update(){
     //sizes.clear();
     //removeDeadBoids();
     vector <trxVehicle> tmp;
+
 	for (int i = 0; i < boids.size(); i++)
 	{
 		boids[i].flock(boids);
 		boids[i].update();
 		boids[i].bounce(ofGetWidth(), ofGetHeight(), DEPTH);
-        //boids[i].aging(0.005f);
-        if (!boids[i].isDead())
-        {
-            tmp.push_back(boids[i]);
-            //points.push_back(boids[i].position);
-            //sizes.push_back(ofVec3f(190*boids[i].remainingLifePer));
-            
-        }
+
+
+
+        
         
 	}
-    boids = tmp;
+
     
     if (boids.size() < boidNum)
     {
@@ -85,7 +82,7 @@ void trxFlock::drawInfo(){
     trxObject::drawInfo();
     
     ofPushMatrix();
-    ofTranslate(position.x,position.y,position.z);
+    ofTranslate(unprojectedPosition);
     ofPushStyle();
     ofColor(200,200,200,100);
 	ofSetColor(myColor);
@@ -105,6 +102,12 @@ bool checkDead( trxVehicle &p ){return p.dead;}
 
 void trxFlock::removeDeadBoids(){
     ofRemove(boids, checkDead);
+
+}
+
+void trxFlock::sortDeadsOut(){
+
+    
 }
 
 int trxFlock::returnID(){return id;}
@@ -124,7 +127,7 @@ void trxFlock::createNewBoid(){
     v.maxForce = 0.5f;
     v.inSightDist = 140.0f;
     v.tooCloseDist = 40.0f;
-    v.maxTrailSize= 16;
+    v.maxTrailSize= 0;
     v.myTypeID = id;
     boids.push_back(v);
     points.push_back(v.position);
@@ -137,4 +140,12 @@ int trxFlock::countDead(){
         if (boids[i].dead) { dead++;}
     }
     return dead;
+}
+
+int trxFlock::countOnWay(){
+    int onWay= 0;
+    for (int i=0; i<boids.size(); i++) {
+        if (boids[i].onWay) { onWay++;}
+    }
+    return onWay;
 }

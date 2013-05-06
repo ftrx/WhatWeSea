@@ -9,16 +9,17 @@
 #include "trxStoryHandler.h"
 
 trxStoryHandler::trxStoryHandler() {
-}
-
-trxStoryHandler::trxStoryHandler(vector<trxFlock> *_allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections) {
     ofTrueTypeFont::setGlobalDpi(72);
-	HelveticaNeueRoman18.loadFont("fonts/HelveticaRoman.ttf", 24, true, true);
+	HelveticaNeueRoman18.loadFont("fonts/NewsGot-Reg.otf", 24, true, true);
 	HelveticaNeueRoman18.setLineHeight(28.0f);
 	HelveticaNeueRoman18.setLetterSpacing(1.037);
-    HelveticaNeueRoman36.loadFont("fonts/HelveticaRoman.ttf", 36, true, true);
+    HelveticaNeueRoman36.loadFont("fonts/NewsGot-Reg.otf", 36, true, true);
 	HelveticaNeueRoman36.setLineHeight(40.0f);
 	HelveticaNeueRoman36.setLetterSpacing(1.037);
+}
+
+void trxStoryHandler::setup(vector<trxFlock> *_allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections) {
+
     
     xml = trxXML("stories.xml");
     xml.setup("stories", "story");
@@ -28,6 +29,7 @@ trxStoryHandler::trxStoryHandler(vector<trxFlock> *_allFLocks,vector<trxConverte
     allConverters = _allConverters;
     allConnectionSlots = _allConnections;
     generateStories();
+    //myOsc.setup();
 }
 
 void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
@@ -36,18 +38,22 @@ void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
     
     if (getStoryWithConnection(_activeConnection)) {
         myActiveStory = getStoryWithConnection(_activeConnection);
+        myOsc.sendOscTopic(myActiveStory->topicNumber);
+        myOsc.sendOscAction(2);
         activeConnection = _activeConnection;
         //myActiveStory = getStoryWithConnection(activeConnection);
         if(myActiveStory->myTasks.size() > 0)
         {
             myActiveTask = &myActiveStory->myTasks.at(0);
             activeFlock = getFlockWithID(myActiveTask->catchID);
+            
         }
         
         activeConverter = myActiveStory->myStoryConverter;
         cout << "start new Story:" << myActiveStory->description << endl;
         catchedQuantity = 0;
         myActiveStory->finished = false;
+        
         idleTimer = ofGetElapsedTimeMillis(); // Timer for resetting the Story (or end it)
     }
         
@@ -74,10 +80,14 @@ void trxStoryHandler::stopStory(){
 
 void trxStoryHandler::update()
 {
+    int onWayQuantity = 0;
+    updateMyLastTargetScreenPosition();
     if (myActiveStory) {
         if (myActiveTask) {
+            updateTargetPosition();
             if (!showMessage) {
                 catchedQuantity = activeFlock->countDead();
+                onWayQuantity = activeFlock->countOnWay();
                 if (catchedQuantity >= myActiveTask->quantity) {
                     finishTask();
                 }
@@ -89,7 +99,11 @@ void trxStoryHandler::update()
             }
         }
     }
- 
+    if (onWayQuantity == catchedQuantity && catchedQuantity > 0 && !runningAction) {
+        changeAction(2);
+        cout<< "retour zu boot"<<endl;
+        runningAction = true;
+    }
     if(myActiveStory){ resetStoryAfterTimeout(IDLETIME);}
 }
 
@@ -98,6 +112,7 @@ void trxStoryHandler::update()
 
 trxStoryHandler::task * trxStoryHandler::nextTask(){
     catchedQuantity = 0;
+    activeFlock->removeDeadBoids();
     if(myActiveTask->no < myActiveStory->myTasks.size()-1){
         int newNo = myActiveTask->no + 1;
         return &myActiveStory->myTasks.at(newNo);
@@ -111,7 +126,7 @@ void trxStoryHandler::finishTask(){
     {
         cout << "Task Finished" << endl;
         myActiveTask->finished = true;
-        activeFlock->removeDeadBoids();
+        //activeFlock->removeDeadBoids();
         messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
         showMessage = true;
     }
@@ -131,10 +146,10 @@ void trxStoryHandler::draw(){
             ofPushMatrix();
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
             ofRotate(activeConnection->myConverter->rotation);
-            activeConnection->drawWobbleLine(0, 0, 200.0, 200.0);
+            activeConnection->drawWobbleLine(0, 0, myActiveTask->targetPosition.x,myActiveTask->targetPosition.y);
             ofTranslate(myActiveTask->targetPosition);
             drawTarget();
-            ofTranslate(80, -80);
+            ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);
             ofTranslate(0, 10);
             drawProgressBar(catchedQuantity);
@@ -148,6 +163,23 @@ void trxStoryHandler::draw(){
         }
     }
    
+}
+
+void trxStoryHandler::drawDebug()
+{
+    if (myActiveTask) {
+
+        
+        ofPushMatrix();
+        ofPushStyle();
+        
+        ofTranslate(myScreenTargetPosition);
+        ofSetColor(255, 0, 0);
+        ofCircle(0, 0, 20);
+        ofPopStyle();
+        
+        ofPopMatrix();
+    }
 }
 
 
@@ -203,7 +235,7 @@ void trxStoryHandler::generateStories(){
         thisStory.myConnection = getConnectionSlotWithID(thisStory.myStoryFlock, thisStory.myStoryConverter);
         thisStory.finalMessage = xml.getString(i, "finalMessage");
         thisStory.description = xml.getString(i, "description");
-        
+        thisStory.topicNumber = xml.getIntValue(i, "topicNumber");
 
         int numberOfTasks = xml.XML.getNumTags("task");
         for (int taskN=0; taskN < numberOfTasks; taskN++) {
@@ -295,4 +327,30 @@ void trxStoryHandler::closeMessage(){
     if (myActiveStory->finished) {
         startStory(activeConnection);
     }
+}
+void trxStoryHandler::updateTargetPosition(){
+    
+    ofVec3f rotPos = myActiveTask->targetPosition;
+    rotPos.rotate(activeConverter->rotation, ofVec3f(0, 0, 1));
+    rotPos +=activeConverter->position;
+    
+    myTargetPosition = rotPos;
+    
+    
+}
+
+void trxStoryHandler::updateMyLastTargetScreenPosition()
+{
+    myScreenTargetMovement = myScreenTargetPosition- myLastScreenTargetPosition;
+    myLastScreenTargetPosition = myScreenTargetPosition;
+}
+
+void trxStoryHandler::changeAction(int _actionNumber){
+    int currentAction = myActiveTask->no*2+_actionNumber;
+    myOsc.sendOscAction(currentAction);
+}
+
+void trxStoryHandler::changeTopic(int _topicNumber){
+
+    myOsc.sendOscTopic(_topicNumber);
 }

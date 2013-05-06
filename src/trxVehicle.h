@@ -21,6 +21,7 @@ public:
 	ofVec3f * target = NULL;
     ofVec3f targetMovment;
     bool caught = false;
+    bool onWay = false;
     bool dead = false;
     
     vector<ofVec3f> bones;
@@ -34,19 +35,47 @@ public:
     
     template<typename Type> void flock(vector<Type>& vehicles)
 	{
-        SteeredVehicle::flock(vehicles);
+        ofVec3f averageVelocity;
+		ofVec3f averagePosition;
+		int inSightCnt = 0;
+		
+		averageVelocity.set(velocity);
+		
+		for (int i = 0; i < vehicles.size(); i++)
+		{
+			if (vehicles[i].getId() == getId()) continue;
+            if (vehicles[i].caught != caught) continue;
+			if (!inSight(vehicles[i].position)) continue;
+			
+			averageVelocity += vehicles[i].velocity;
+			averagePosition += vehicles[i].position;
+			inSightCnt++;
+			
+			if (tooClose(vehicles[i].position))
+			{
+				flee(vehicles[i].position);
+			}
+            
+		}
+		
+		if (inSightCnt > 0)
+		{
+			averagePosition *= 1.0f / inSightCnt;
+			seek(averagePosition);
+			averageVelocity *= 1.0f / inSightCnt;
+			steeringForce += averageVelocity - velocity;
+		}
+        
         
         if (target) {
             if(caught){
                 isCaughtAt(target);
                 position += targetMovment;
-                
+                /*
                 for (int i=0; i< trails.size(); i++) {
                     trails[i] += targetMovment;
-                    //trails[i] = position;
-                }
-                
-                //arriveTarget(target);
+                }*/
+
             }
             else {
                 arriveTarget(target);
@@ -57,8 +86,11 @@ public:
             fleeTarget(fleeTargets[i]);
         }
         fleeTargets.clear();
-        //wander();
         
+        if (dead)
+        {
+        //wander();
+        }
     }
     
     void update();
@@ -78,6 +110,8 @@ public:
     void clearTargets(){
         target = NULL;
     }
+
+
 };
 
 

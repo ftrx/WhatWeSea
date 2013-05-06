@@ -33,6 +33,13 @@ void trxVehicle::isCaughtAt(ofVec3f * _target){
     
     //position = *_target;
     arrive(* _target);
+    float dist = position.distance(*_target);
+    if (dist <= 50.0 && onWay){
+        maxSpeed = 2.0f;
+        tooCloseDist = 1.0f;
+        wanderDistance = 1.0f;
+        dead=true;
+    }
     
 }
 

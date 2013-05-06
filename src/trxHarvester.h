@@ -46,7 +46,7 @@ public:
     void createNewBoid();
     void clearCatch();
     void removeBoids();
-    void moveBoidsToTarget(ofVec3f * _target);
+    void moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment);
     void moveMyCatch(ofCamera * cam);
     
     ofVec3f screenPosition(ofCamera * cam);

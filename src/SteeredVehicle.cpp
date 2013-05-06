@@ -92,7 +92,7 @@ void SteeredVehicle::arrive(const ofVec3f& target)
 	if (dist > arrivalThreshold) desiredVelocity *= maxSpeed;
 	else desiredVelocity *= (float)maxSpeed * dist / arrivalThreshold;
 	
-	steeringForce += 40* desiredVelocity - velocity;
+	steeringForce += desiredVelocity - velocity;
 }
 
 void SteeredVehicle::pursue(const Vehicle& target)

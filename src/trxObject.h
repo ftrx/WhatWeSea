@@ -20,6 +20,7 @@ class trxObject : public ofVec3f {
 public:
     bool isActive;
     string title;
+    int topicNumber = NULL;
     ofVec3f position;
     ofVec3f unprojectedPosition;
     float rotation;
@@ -40,6 +41,10 @@ public:
     void drawAsConnection();
     void drawInfo();
     void removeDeadBoids();
+    
+
+    
+    ofVec3f screenPosition(ofVec3f _position,ofCamera * cam);
 
     int returnID();
 };

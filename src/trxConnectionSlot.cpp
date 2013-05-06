@@ -13,12 +13,7 @@ trxConnectionSlot::trxConnectionSlot()
     id = number++;
 }
 
-trxConnectionSlot::trxConnectionSlot(trxFlock * _myFlock)
-{
-    myFlock = _myFlock;
-    id = number++;
-    
-}
+
 
 bool trxConnectionSlot::isConnectionActive(){
     return state;

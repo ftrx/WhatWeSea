@@ -11,9 +11,9 @@ void testApp::setup()
     //ofSetBackgroundAuto(true);
     background.loadImage("background.jpg");
     
-	ofSetFrameRate(60);
+	//ofSetFrameRate(90);
 	//ofSetVerticalSync(true);
-	//ofEnableSmoothing();
+	ofEnableSmoothing();
         
     viewMain.x = 0;
 	viewMain.y = 0;
@@ -32,7 +32,7 @@ void testApp::setup()
 		printf("Shader is loaded\n");
 	}
     
-
+    
     tuioClient.start(3333);
     //----- Eventlistener
     //finger
@@ -43,7 +43,7 @@ void testApp::setup()
     ofAddListener(tuioClient.objectAdded,this,&testApp::tuioObjectAdded);
 	ofAddListener(tuioClient.objectRemoved,this,&testApp::tuioObjectRemoved);
 	ofAddListener(tuioClient.objectUpdated,this,&testApp::tuioObjectUpdated);
-
+     
     
 }
 

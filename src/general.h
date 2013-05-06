@@ -14,6 +14,10 @@ const int DEPTH = 600; // Depth of the virtual water
 const int IDLETIME = 90*1000; // Time after which the Story is resetting
 
 
+#define trx_HOST "localhost"
+#define trx_PORT 12000
+
+
 // OFFSET for the touchtable
 /*
 const float SCREEN_X_MIN = -0.05;

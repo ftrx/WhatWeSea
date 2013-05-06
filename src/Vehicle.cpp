@@ -34,8 +34,8 @@ void Vehicle::update()
 	velocity.limit(maxSpeed);
 	position += velocity;  // comment out to stand
 	
-	trails.push_back(position);
-	if (trails.size() > maxTrailSize) trails.erase(trails.begin());
+	//trails.push_back(position);
+	//if (trails.size() > maxTrailSize) trails.erase(trails.begin());
 }
 /*
 void Vehicle::bounce(int w, int h, int d)

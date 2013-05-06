@@ -126,13 +126,15 @@ void trxHarvester::removeBoids(){
 
 }
 
-void trxHarvester::moveBoidsToTarget(ofVec3f * _target){
+void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
         boid->maxSpeed = 8.0f;
-        boid->dead = true;
+
+        boid->onWay = true;
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
         boid->addTarget(_target);
+        boid->addTargetMovment(_movment);
     }
     myCatch.clear();
     

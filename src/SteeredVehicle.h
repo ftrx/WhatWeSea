@@ -106,6 +106,7 @@ public:
 			{
 				flee(vehicles[i].position);
 			}
+             
 		}
 		
 		if (inSightCnt > 0)

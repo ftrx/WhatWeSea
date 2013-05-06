@@ -17,6 +17,7 @@
 #include "trxXML.h"
 #include "ofxTuio.h"
 #include "trxStoryHandler.h"
+#include "ofxOsc.h"
 
 class trxObjectHandler {
     
@@ -57,6 +58,8 @@ public:
     int timeStamp;
     int maxID = 11;
     
+    bool firstCatch;
+    
     vector<ofTexture> textures;
     vector<ofImage> icons;
     
@@ -95,6 +98,6 @@ public:
     
     // StoryHandler
     trxStoryHandler myStoryHandler;
-    
+
 
 };
