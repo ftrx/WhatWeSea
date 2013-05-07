@@ -27,6 +27,7 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
 
     bool debug = false;
+    bool lightning = false;
     
 	ofCamera camera;
     //ofEasyCam camera;
@@ -40,6 +41,7 @@ class testApp : public ofBaseApp{
 	ofTexture texture1;
     ofShader shader1;
     
+    ofLight light;
     
     
     void	tuioCursorAdded(ofxTuioCursor & tuioCursor);

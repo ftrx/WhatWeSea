@@ -44,7 +44,10 @@ void testApp::setup()
 	ofAddListener(tuioClient.objectRemoved,this,&testApp::tuioObjectRemoved);
 	ofAddListener(tuioClient.objectUpdated,this,&testApp::tuioObjectUpdated);
      
-    
+//    light.disable();
+//    ofEnableLighting();
+ //   light.setPointLight();
+  //  light.setPosition(ofGetWidth(),ofGetHeight(),900);
 }
 
 //--------------------------------------------------------------
@@ -61,15 +64,19 @@ void testApp::update()
 void testApp::draw()
 {
     ofSetColor(255, 255, 255);
-
+    
     background.draw(0,0, ofGetWidth(), ofGetHeight());
     
     //drawOld();
-
+    
     camera.begin();
+    
     shader1.begin();
+
     myObjectHandler.drawAllBoids();
+//    if(lightning) light.draw();
     shader1.end();
+
     myObjectHandler.draw3D();
     camera.end();
     
@@ -119,6 +126,18 @@ void testApp::keyReleased(int key){
 
             break;
         }
+        case 'l':{
+            lightning = !lightning;
+            if (lightning){
+                light.enable();
+            }
+            else{
+                light.disable();
+            }
+            
+            break;
+        }
+
 
         default:
             break;
@@ -157,7 +176,7 @@ void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-
+    light.setPosition(600,ofGetMouseY(),ofGetMouseX());
 }
 
 //--------------------------------------------------------------

@@ -46,3 +46,20 @@ void trxVehicle::isCaughtAt(ofVec3f * _target){
 void trxVehicle::fleeTarget(ofVec3f * _target){
     flee(* _target);
 }
+
+
+void trxVehicle::evade(trxVehicle& target)
+{
+	float lookAheadTime = (float)position.distance(target.position) / maxSpeed;
+	
+	ofVec3f targetVelocity;
+	targetVelocity.set(target.velocity);
+	targetVelocity *= lookAheadTime;
+	
+	ofVec3f predictedTarget;
+	predictedTarget.set(target.position);
+	predictedTarget -= targetVelocity;
+	
+	flee(predictedTarget);
+
+}

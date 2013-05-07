@@ -29,7 +29,7 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
     return (point1.z < point2.z);
 }
 
-void trxFlock::update(){    
+void trxFlock::update(){
     //points.clear();
     //sizes.clear();
     //removeDeadBoids();
@@ -120,13 +120,13 @@ void trxFlock::generateBoids(){
 }
 
 void trxFlock::createNewBoid(){
-    trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(100, DEPTH-100));
-    v.velocity = ofVec3f(ofRandom(0.1f,1.0f),ofRandom(0.1f,1.0f),ofRandom(0.1f,1.0f));
+    trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(50, DEPTH-50));
+    v.velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
     v.maxSpeed = maxSpeed;
     v.maxForce = 0.5f;
-    v.inSightDist = 140.0f;
-    v.tooCloseDist = 40.0f;
+    v.inSightDist = sightDistance;
+    v.tooCloseDist = tooCloseDistance;
     v.maxTrailSize= 0;
     v.myTypeID = id;
     boids.push_back(v);

@@ -14,6 +14,7 @@ trxObjectHandler::trxObjectHandler()
     initXML();
     generateObjects();
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    generatePredators();
     myStoryHandler.setup(&myFlocks,&myConverters,&myConnections);
     timeStamp = ofGetElapsedTimeMillis();
 }
@@ -140,25 +141,32 @@ void trxObjectHandler::draw3D(){
         }
         myStoryHandler.drawDebug();
     }
-
+    
 }
 
 
 void trxObjectHandler::drawAllBoids(){
 
-    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_DEPTH_TEST);
+    ofPushStyle();
     glEnable(GL_ALPHA_TEST);
     ofEnableAlphaBlending();
+    //ofEnableBlendMode(OF_BLENDMODE_ADD);
 
+    /*
     //shader1.setUniform1f("zPosition", ofMap(ofGetMouseX(), 0, ofGetWidth(), 0, 600));
     //textures[0].bind();
     vbo.drawElements( GL_TRIANGLES, allIndex.size());
+    
     //textures[0].unbind();
-
+     */
+    
+    drawAllVertexes();
+    //ofDisableBlendMode();
     ofDisableAlphaBlending();
-    glDisable(GL_DEPTH_TEST);
+    //glDisable(GL_DEPTH_TEST);
     glDisable(GL_ALPHA_TEST);
-
+    ofPopStyle();
 
 }
 
@@ -179,13 +187,15 @@ void trxObjectHandler::generateObjects()
         if(xml.objectNumber > 0){
             ofTexture tex;
             ofImage img;
-            string texPath = "icons/" + xml.getString(i,"TEXTURE_PATH");
+            string texPath = "textures/" + xml.getString(i,"TEXTURE_PATH");
             string imgPath = "icon_figures/" + xml.getString(i,"ICON_PATH");
             cout << texPath << endl;
             cout << imgPath << endl;
-            ofLoadImage(tex,texPath);
+            ofImage texImage;
+            texImage.loadImage(texPath);
+            tex = texImage.getTextureReference();
             textures.push_back(tex);
-            ofLoadImage(img,imgPath);
+            img.loadImage(imgPath);
             icons.push_back(img);
         }
         xml.XML.popTag();
@@ -203,6 +213,8 @@ void trxObjectHandler::generateObjects()
             thisFlock.boidNum = xml.getIntValue(i, "MAX_BOIDS");
             thisFlock.startBoidNum = xml.getIntValue(i, "START_BOIDS");
             thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
+            thisFlock.sightDistance = xml.getFloatValue(i, "sightDistance");
+            thisFlock.tooCloseDistance = xml.getFloatValue(i, "tooCloseDistance");
             thisFlock.topicNumber = xml.getIntValue(i, "topicNumber");
             thisFlock.texture = &textures.at(i);
             thisFlock.myIcon = &icons.at(i);
@@ -532,6 +544,129 @@ void  trxObjectHandler::updateAllVertexes(){
         }
     }    
 }
+// Sort-Function
+bool sortOnZPosition(trxVehicle * boid1, trxVehicle * boid2)
+{
+    return (boid1->position.z < boid2->position.z);
+}
+
+void trxObjectHandler::drawAllVertexes(){
+    
+    std::sort( allMyBoids.begin(), allMyBoids.end(), sortOnZPosition);
+    
+    for (int i = 0; i<allMyBoids.size(); i++) {
+        trxVehicle * tmpBoid = allMyBoids.at(i);
+        float width = tmpBoid->bonelength*3.0/2.0;
+        if(tmpBoid->bones.size()>= 4){
+            ofVec3f vecs[] = {
+                ofVec3f((float)tmpBoid->position.x-width,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
+                ofVec3f((float)tmpBoid->position.x+width,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
+                ofVec3f((float)tmpBoid->bones.at(1).x-width,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
+                ofVec3f((float)tmpBoid->bones.at(1).x+width,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
+                ofVec3f((float)tmpBoid->bones.at(2).x-width,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
+                ofVec3f((float)tmpBoid->bones.at(2).x+width,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
+                ofVec3f((float)tmpBoid->bones.at(3).x-width,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z),
+                ofVec3f((float)tmpBoid->bones.at(3).x+width,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z)};
+            
+
+            ofColor color = ofColor(255,255,255,255);
+            if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
+                color.a = 0.2*255;
+                for (int active=0; active<activeFlocks.size(); active++) {
+                    if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
+                        color.a = 255;
+                    }
+                }
+            }
+            
+            if (myStoryHandler.myActiveTask) {
+                color.a = 0.2*255;
+                if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
+                    color.a = 255;
+                }
+                
+            }
+            for (int col=0; col<6; col++) {
+                if (debug) {
+                    if (tmpBoid->caught)
+                    {
+                        color.r = 255;
+                        color.g = 255;
+                        color.b = 0;
+                        if (tmpBoid->dead) {
+                            color.r = 255;
+                            color.g = 0;
+                            color.b = 0;
+                        }
+                    }
+                    
+                    else
+                    {
+                        color.r = 0;
+                        color.g = 255;
+                        color.b = 0;
+                    }
+                }
+                else
+                {
+                    if (tmpBoid->caught)
+                    {
+                        color.r = 255;
+                        color.g = 255;
+                        color.b = 255;
+                    }
+                    else
+                    {
+                        color.r = 255;
+                        color.g = 255;
+                        color.b = 255;
+                    }
+                }
+            }
+            
+            //ofEnableArbTex();
+            //ofEnableNormalizedTexCoords();
+            ofSetColor(color);
+            
+            textures[tmpBoid->myTypeID].bind();
+            
+            float imgWstep = 1.0/4.0;
+            float imgHstep = 1.0/4.0;
+            
+            glBegin(GL_TRIANGLE_STRIP);
+            
+
+            glTexCoord2f(0,0);
+            glVertex3f(vecs[0].x,vecs[0].y,vecs[0].z);
+            glTexCoord2f(101,0);
+            glVertex3f(vecs[1].x,vecs[1].y,vecs[1].z);
+            glTexCoord2f(0,60);
+            glVertex3f(vecs[2].x,vecs[2].y,vecs[2].z);
+            glTexCoord2f(101,60);
+            glVertex3f(vecs[3].x,vecs[3].y,vecs[3].z);
+            glTexCoord2f(0,120);
+            glVertex3f(vecs[4].x,vecs[4].y,vecs[4].z);
+            glTexCoord2f(101,120);
+            glVertex3f(vecs[5].x,vecs[5].y,vecs[5].z);
+            glTexCoord2f(0,200);
+            glVertex3f(vecs[6].x,vecs[6].y,vecs[6].z);
+            glTexCoord2f(101,200);
+            glVertex3f(vecs[7].x,vecs[7].y,vecs[7].z);
+
+        
+            glEnd();
+             
+            //ofSetColor(255, 255, 255);
+            //ofBox(tmpBoid->position,100);
+            textures[tmpBoid->myTypeID].unbind();
+            
+            
+        }
+    }    
+
+    
+    
+}
 
 // Method to check if this there an active Connection when an new Object is placed on the table, or if there is a connection which has a shorter Distance between flock & converter, when an object is moved
 void trxObjectHandler::checkIfActiveSlot(){
@@ -612,4 +747,22 @@ trxConverter* trxObjectHandler::getConverterWithID(int _id){
         }
     }
     return NULL;
+}
+
+void trxObjectHandler::generatePredators(){
+    for (int i=0; i<allMyBoids.size();i++)
+    {
+        if (allMyBoids[i]->myTypeID == 3) {
+            myPredators.push_back(allMyBoids[i]);
+        }
+    }
+    for (int i=0; i<allMyBoids.size();i++)
+    {
+        if (allMyBoids[i]->myTypeID != 3) {
+            allMyBoids[i]->predators=myPredators;
+        }
+        else {
+           // allMyBoids[i]->prey=myPredators;
+        }
+    }
 }

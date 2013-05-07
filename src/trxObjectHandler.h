@@ -72,6 +72,7 @@ public:
     vector<trxConverter *> activeConverters;
     
     vector<trxVehicle *> allMyBoids;
+    vector<trxVehicle *> myPredators;
     
     vector<trxConnectionSlot> myConnections;
     trxConnectionSlot * myActiveConnection;
@@ -87,6 +88,8 @@ public:
     
     void updateAllVertexes();
     
+    void drawAllVertexes();
+    
     void checkIfActiveSlot();
     void checkIfStillActiveSlot();
     
@@ -99,5 +102,5 @@ public:
     // StoryHandler
     trxStoryHandler myStoryHandler;
 
-
+    void generatePredators();
 };

@@ -17,8 +17,9 @@ protected:
 	
 	
 public:
-	
+	int myTypeID; // ID of flock == fishType
 	ofVec3f * target = NULL;
+
     ofVec3f targetMovment;
     bool caught = false;
     bool onWay = false;
@@ -28,6 +29,8 @@ public:
     float bonelength = 10.0;
     
     vector <ofVec3f *> fleeTargets;
+    vector <trxVehicle *> predators;
+    vector <trxVehicle *> prey;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
         bones.assign(4, ofVec3f(_x,_y,_z));
@@ -44,6 +47,7 @@ public:
 		for (int i = 0; i < vehicles.size(); i++)
 		{
 			if (vehicles[i].getId() == getId()) continue;
+
             if (vehicles[i].caught != caught) continue;
 			if (!inSight(vehicles[i].position)) continue;
 			
@@ -85,6 +89,17 @@ public:
         for (int i=0; i<fleeTargets.size(); i++) {
             fleeTarget(fleeTargets[i]);
         }
+        
+        for (int i=0; i<predators.size(); i++){
+            if (!inSight(predators[i]->position)) continue;
+            evade(*predators[i]);
+        }
+        for (int i=0; i<prey.size(); i++){
+            if (!inSight(prey[i]->position)) continue;
+            pursue(*prey[i]);
+        }
+        
+        
         fleeTargets.clear();
         
         if (dead)
@@ -102,6 +117,9 @@ public:
         target = _target;
         }
     }
+    void addPredator(trxVehicle * _target){
+        predators.push_back(_target);
+    }
     void addTargetMovment(ofVec3f * _targetMovement){
         position += *_targetMovement;
     }
@@ -110,7 +128,7 @@ public:
     void clearTargets(){
         target = NULL;
     }
-
+    void evade(trxVehicle& target);
 
 };
 

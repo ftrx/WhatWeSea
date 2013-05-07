@@ -40,7 +40,7 @@ private:
 	
     
 public:
-	int myTypeID; // ID of flock == fishType
+	
 	ofVec3f position;
 	ofVec3f velocity;
 	vector<ofVec3f> trails;

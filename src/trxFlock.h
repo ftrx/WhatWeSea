@@ -25,6 +25,8 @@ public:
     int startBoidNum;
     int generateNewTime;
     float maxSpeed;
+    float sightDistance;
+    float tooCloseDistance;
     ofVec3f target;
 
     vector<trxVehicle> boids;
