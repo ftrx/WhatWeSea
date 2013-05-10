@@ -58,13 +58,13 @@ void subsChars(string & origString){
 
 
 
-string trxXML::getString(int _flockID, string _tag){
+string trxXML::getString(string _default="", string _tag=""){
     string text;
     //we push into the _flockID Flock tag
     //this temporarirly treats the tag as
     //the document root.
 
-        text = XML.getValue(_tag, "");
+        text = XML.getValue(_tag, _default);
     //cout << texturePath << endl;
     //this pops us out of the STROKE tag
     //sets the root back to the xml document
@@ -72,13 +72,13 @@ string trxXML::getString(int _flockID, string _tag){
     return text;
 }
 
-int trxXML::getIntValue(int _flockID, string _tag){
+int trxXML::getIntValue(int _default=0, string _tag=""){
     int value;
     //we push into the _flockID Flock tag
     //this temporarirly treats the tag as
     //the document root.
 
-    value = XML.getValue(_tag, 0);
+    value = XML.getValue(_tag, _default);
     //cout << texturePath << endl;
     //this pops us out of the STROKE tag
     //sets the root back to the xml document
@@ -86,13 +86,13 @@ int trxXML::getIntValue(int _flockID, string _tag){
     return value;
 }
 
-float trxXML::getFloatValue(int _flockID, string _tag){
+float trxXML::getFloatValue(float _default=0.0, string _tag=""){
     float value;
     //we push into the _flockID Flock tag
     //this temporarirly treats the tag as
     //the document root.
 
-    value = XML.getValue(_tag, 0.0);
+    value = XML.getValue(_tag, _default);
     //cout << texturePath << endl;
     //this pops us out of the STROKE tag
     //sets the root back to the xml document

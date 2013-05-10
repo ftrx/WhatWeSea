@@ -14,6 +14,8 @@
 
 
 
+
+
 class trxObject : public ofVec3f {
     
     
@@ -27,6 +29,8 @@ public:
     int id;
     ofImage * myIcon;
     ofColor myColor;
+    
+
     
     ofTrueTypeFont	HelveticaNeueRoman18;
     

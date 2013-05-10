@@ -29,16 +29,18 @@ void trxStoryHandler::setup(vector<trxFlock> *_allFLocks,vector<trxConverter> * 
     allConverters = _allConverters;
     allConnectionSlots = _allConnections;
     generateStories();
+    
+    myFloatingMessageController.setup();
     //myOsc.setup();
 }
 
 void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
     
     stopStory(); // stop any current running Story
-    
+
     if (getStoryWithConnection(_activeConnection)) {
         myActiveStory = getStoryWithConnection(_activeConnection);
-        myOsc.sendOscTopic(myActiveStory->topicNumber);
+        changeTopic(myActiveStory->topicNumber);
         myOsc.sendOscAction(2);
         activeConnection = _activeConnection;
         //myActiveStory = getStoryWithConnection(activeConnection);
@@ -64,7 +66,6 @@ void trxStoryHandler::stopStory(){
         cout << "stop Story:" << myActiveStory->description << endl;
         if(myActiveTask)
         {
-            
             myActiveTask = NULL;
         }
         for (int i=0; i<myActiveStory->myTasks.size(); i++) {
@@ -105,6 +106,30 @@ void trxStoryHandler::update()
         runningAction = true;
     }
     if(myActiveStory){ resetStoryAfterTimeout(IDLETIME);}
+    
+    
+    
+    if (ofGetElapsedTimeMillis() > messageTimer + 10000 ) {
+        myFloatingMessageController.newRandomFact();
+        messageTimer = ofGetElapsedTimeMillis();
+    }
+    
+    if (activeFlock || activeConverter){
+        
+        int flockID = NULL;
+        int converterID = NULL;
+        
+        if (activeFlock) {
+            flockID = activeFlock->id;
+        }
+        if (activeConverter) {
+            converterID = activeConverter->id;
+        }
+        
+       // myFloatingMessageController.changeTopic(flockID, converterID);
+    }
+    
+    myFloatingMessageController.update();
 }
 
 
@@ -127,8 +152,9 @@ void trxStoryHandler::finishTask(){
         cout << "Task Finished" << endl;
         myActiveTask->finished = true;
         //activeFlock->removeDeadBoids();
-        messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
-        showMessage = true;
+        //messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
+        //showMessage = true;
+        closeMessage();
     }
 }
 
@@ -148,21 +174,28 @@ void trxStoryHandler::draw(){
             ofRotate(activeConnection->myConverter->rotation);
             activeConnection->drawWobbleLine(0, 0, myActiveTask->targetPosition.x,myActiveTask->targetPosition.y);
             ofTranslate(myActiveTask->targetPosition);
-            drawTarget();
+            //drawTarget();
+            drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, 12);
             ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);
-            ofTranslate(0, 10);
-            drawProgressBar(catchedQuantity);
+            
+            //drawProgressBar(catchedQuantity);
+            
             ofPopMatrix();
             if (myActiveTask->finished) {
-                drawMessage("Task Finished Message");
+                //drawMessage("Task Finished Message");
             }
         }
         if (myActiveStory->finished) {
            drawMessage("Story Finished Message");
         }
     }
+    myFloatingMessageController.draw();
    
+}
+
+void trxStoryHandler::draw3D(){
+  //  myFloatingMessageController.draw();
 }
 
 void trxStoryHandler::drawDebug()
@@ -214,6 +247,40 @@ void trxStoryHandler::drawProgressBar(int _currentQuantity){
     ofRect(0, 0, ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, length), height);
     ofPopStyle();
 }
+void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _currentQuantity, int _numberOfSectors){
+
+    ofPushStyle();
+    ofSetLineWidth(0);
+    
+    ofFill();
+    
+    float radius = _radius;
+    float barHeight = _barHeight;
+    float sectorSpace = 5.0;
+    float sectorSize = (360.0/_numberOfSectors);
+    
+    for (int i=0; i<_numberOfSectors; i++) {
+        int progress = int(ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, _numberOfSectors)+0.5);
+        ofColor color= ofColor(0, 82, 144);
+        if (i<progress) {
+            color= ofColor(255, 255, 255);
+        }
+        
+        
+        ofPath progressCircle;
+        
+        progressCircle.setColor(color);
+        progressCircle.setArcResolution(40);
+        progressCircle.arc(ofPoint(0,0), radius, radius, sectorSpace/2.0+i*sectorSize, (i+1)*sectorSize-sectorSpace/2.0, true);
+        progressCircle.arc(ofPoint(0,0), radius-barHeight, radius-barHeight, (i+1)*sectorSize-sectorSpace/2.0, sectorSpace/2.0+i*sectorSize,false);
+        progressCircle.close();
+        progressCircle.draw();
+    }
+
+    
+    ofPopStyle();
+
+}
 
 void trxStoryHandler::drawTarget(){
     ofPushStyle();
@@ -230,23 +297,23 @@ void trxStoryHandler::generateStories(){
         story thisStory;
         xml.XML.pushTag("stories");
         xml.XML.pushTag("story",i);
-        thisStory.myStoryFlock = getFlockWithID(xml.getIntValue(i, "flock"));
-        thisStory.myStoryConverter = getConverterWithID(xml.getIntValue(i, "converter"));
+        thisStory.myStoryFlock = getFlockWithID(xml.getIntValue(NULL, "flock"));
+        thisStory.myStoryConverter = getConverterWithID(xml.getIntValue(NULL, "converter"));
         thisStory.myConnection = getConnectionSlotWithID(thisStory.myStoryFlock, thisStory.myStoryConverter);
-        thisStory.finalMessage = xml.getString(i, "finalMessage");
-        thisStory.description = xml.getString(i, "description");
+        thisStory.finalMessage = xml.getString("", "finalMessage");
+        thisStory.description = xml.getString("no Description found", "description");
         thisStory.topicNumber = xml.getIntValue(i, "topicNumber");
 
         int numberOfTasks = xml.XML.getNumTags("task");
         for (int taskN=0; taskN < numberOfTasks; taskN++) {
             xml.XML.pushTag("task",taskN);
             task thisTask;
-            thisTask.no = xml.getIntValue(taskN, "no");
-            thisTask.catchID = xml.getIntValue(taskN, "catchID");
-            thisTask.catchSize = xml.getIntValue(taskN, "catchSize");
-            thisTask.taskMessage = xml.getString(taskN, "taskMessage");
-            thisTask.quantity = xml.getIntValue(taskN, "quantity");
-            thisTask.targetSize = xml.getFloatValue(taskN, "targetSize");
+            thisTask.no = xml.getIntValue(NULL, "no");
+            thisTask.catchID = xml.getIntValue(NULL, "catchID");
+            thisTask.catchSize = xml.getIntValue(10, "catchSize");
+            thisTask.taskMessage = xml.getString("No Task Message", "taskMessage");
+            thisTask.quantity = xml.getIntValue(1, "quantity");
+            thisTask.targetSize = xml.getFloatValue(40.0, "targetSize");
             thisStory.myTasks.push_back(thisTask);
             xml.XML.popTag();
         }
@@ -353,4 +420,7 @@ void trxStoryHandler::changeAction(int _actionNumber){
 void trxStoryHandler::changeTopic(int _topicNumber){
 
     myOsc.sendOscTopic(_topicNumber);
+    myFloatingMessageController.changeTopic(_topicNumber);
 }
+
+

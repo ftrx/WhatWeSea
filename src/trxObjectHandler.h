@@ -23,6 +23,8 @@ class trxObjectHandler {
     
 public:
     
+    bool threadStarted=false;
+    
     trxObjectHandler();
     void update();
     void draw();
@@ -73,6 +75,7 @@ public:
     
     vector<trxVehicle *> allMyBoids;
     vector<trxVehicle *> myPredators;
+    vector<trxVehicle *> myPrey;
     
     vector<trxConnectionSlot> myConnections;
     trxConnectionSlot * myActiveConnection;
@@ -82,9 +85,6 @@ public:
     ofVbo vbo;
     ofCamera * myCamera;
     
-    vector<ofVec3f> allVertex;
-    vector<ofIndexType> allIndex;
-    vector<ofFloatColor> allColors;
     
     void updateAllVertexes();
     
@@ -103,4 +103,7 @@ public:
     trxStoryHandler myStoryHandler;
 
     void generatePredators();
+    
+    int newPreyCounter;
+    void randomPrey();
 };

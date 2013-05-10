@@ -14,19 +14,25 @@
 #include "trxVehicle.h"
 #include "trxObject.h"
 #include "general.h"
-
+class trxFlockUpdater;
 
 class trxFlock : public trxObject {
 
     
 public:
-
+    
     int boidNum;
     int startBoidNum;
     int generateNewTime;
+    
+    
     float maxSpeed;
     float sightDistance;
     float tooCloseDistance;
+    float length;
+    int numberOfBones;
+    
+    
     ofVec3f target;
 
     vector<trxVehicle> boids;
@@ -35,6 +41,7 @@ public:
     
     vector <trxHarvester> * myHarvesters;
     
+    trxFlockUpdater * flockUpdater;
     
     
     ofVbo vbo;
@@ -49,7 +56,7 @@ public:
     void draw();
     void drawCircles();
     void removeDeadBoids();
-        void sortDeadsOut();
+    void sortDeadsOut();
     void removeVehicles(vector<trxVehicle*> *_v);
     void drawInfo();
     

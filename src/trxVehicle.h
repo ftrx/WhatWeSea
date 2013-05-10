@@ -26,14 +26,19 @@ public:
     bool dead = false;
     
     vector<ofVec3f> bones;
-    float bonelength = 10.0;
+    vector<ofVec3f> boneNormals;
+    vector<ofVec3f> vertexes;
+    // size of the vehicle
+    float length = 40.0;
+    int numberOfBones = 4;
+    float bonelength = length/(numberOfBones-1);
     
     vector <ofVec3f *> fleeTargets;
     vector <trxVehicle *> predators;
     vector <trxVehicle *> prey;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
-        bones.assign(4, ofVec3f(_x,_y,_z));
+        
 	}
     
     template<typename Type> void flock(vector<Type>& vehicles)
@@ -92,11 +97,11 @@ public:
         
         for (int i=0; i<predators.size(); i++){
             if (!inSight(predators[i]->position)) continue;
-            evade(*predators[i]);
+            if(!caught) evade(*predators[i]);
         }
         for (int i=0; i<prey.size(); i++){
-            if (!inSight(prey[i]->position)) continue;
-            pursue(*prey[i]);
+            //if (!inSight(prey[i]->position)) continue;
+            if(!caught) pursue(*prey[i]);
         }
         
         
@@ -119,6 +124,11 @@ public:
     }
     void addPredator(trxVehicle * _target){
         predators.push_back(_target);
+    }
+    
+    void addPrey(trxVehicle * _target){
+        prey.clear();
+        prey.push_back(_target);
     }
     void addTargetMovment(ofVec3f * _targetMovement){
         position += *_targetMovement;

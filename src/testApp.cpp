@@ -80,6 +80,14 @@ void testApp::draw()
     myObjectHandler.draw3D();
     camera.end();
     
+    
+    int health = ofMap(myObjectHandler.myFlocks.at(4).boids.size(), 0, myObjectHandler.allMyBoids.size(), 0, 100);
+    
+    ofEnableAlphaBlending();
+    ofSetColor(25, 0, 0, health);
+    ofRect(0, 0, ofGetWidth(), ofGetHeight());
+    ofDisableAlphaBlending();
+    
     myObjectHandler.draw();
     
     if(debug)

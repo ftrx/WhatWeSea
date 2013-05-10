@@ -7,7 +7,7 @@
 //
 
 #include "trxObjectHandler.h"
-
+#include "trxFlockUpdater.h"
 
 trxObjectHandler::trxObjectHandler()
 {
@@ -17,17 +17,29 @@ trxObjectHandler::trxObjectHandler()
     generatePredators();
     myStoryHandler.setup(&myFlocks,&myConverters,&myConnections);
     timeStamp = ofGetElapsedTimeMillis();
+    newPreyCounter = 0;
 }
 
 
 void trxObjectHandler::update()
 {
-    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
-    allVertex.clear();
-    allIndex.clear();
-    allColors.clear();
+    
+    int jellyFishes = myFlocks.at(4).boids.size();
+    int numberOfBoids = allMyBoids.size();
+    int difference = numberOfBoids - jellyFishes;
+    
+    if (numberOfBoids < 1500) {
+        for (int i=0; i< 1500-numberOfBoids; i++) {
+            myFlocks.at(4).createNewBoid();
+        }
+        
+    }
+   
+    
+    
     
     float timer = ofGetElapsedTimeMillis() - timeStamp;
+    
     
     for (int i=0; i<harvesters.size();i++){
        // harvesters[i].moveMyCatch(myCamera);
@@ -38,23 +50,26 @@ void trxObjectHandler::update()
     
     
     // 16.66f is about 1000/60 so about 60FPS
-    if(timer>16.6f){
+    //if(timer>16.6f){
         for (int i = 0; i<myFlocks.size(); i++) {
             myFlocks[i].update();
         }
         timeStamp = ofGetElapsedTimeMillis();
-    }
-
-    updateAllVertexes();
-    
-    if (allVertex.size()>0) {
-        //cout << "allVertex.size()" << allVertex.size() << endl;
-        vbo.setVertexData( &allVertex[0], allVertex.size(), GL_DYNAMIC_DRAW );
-        vbo.setColorData(&allColors[0], allColors.size(), GL_DYNAMIC_DRAW);
-        vbo.setIndexData( &allIndex[0], allIndex.size(), GL_DYNAMIC_DRAW );
-        //vbo2.drawElements( GL_TRIANGLES, allIndex.size());
+     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    randomPrey();
+    //}
+    /*
+    if (!threadStarted) {
         
+        for (int i =0; i< myFlocks.size(); i++) {
+            myFlocks[i].flockUpdater->startThread(true,true);
+        }
+        !threadStarted;
     }
+     */
+    //updateAllVertexes();
+    
+    
     myStoryHandler.update();
     if (myStoryHandler.myActiveTask) {
         myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
@@ -121,14 +136,14 @@ void trxObjectHandler::draw()
     ofPopStyle();
     
     
-    if (myActiveConnection) {
-        myStoryHandler.draw();
-    }
+
+    myStoryHandler.draw();
+
 }
 
 void trxObjectHandler::draw3D(){
     //drawAllBoids();
-    
+    myStoryHandler.draw3D();
     if(debug){
         for (int i = 0; i<myFlocks.size(); i++) {
             myFlocks[i].drawInfo();
@@ -187,8 +202,8 @@ void trxObjectHandler::generateObjects()
         if(xml.objectNumber > 0){
             ofTexture tex;
             ofImage img;
-            string texPath = "textures/" + xml.getString(i,"TEXTURE_PATH");
-            string imgPath = "icon_figures/" + xml.getString(i,"ICON_PATH");
+            string texPath = "textures/" + xml.getString("","TEXTURE_PATH");
+            string imgPath = "icon_figures/" + xml.getString("","ICON_PATH");
             cout << texPath << endl;
             cout << imgPath << endl;
             ofImage texImage;
@@ -205,17 +220,19 @@ void trxObjectHandler::generateObjects()
         
         xml.XML.pushTag("Objects");
         xml.XML.pushTag("Object",i);
-        string type = xml.getString(i, "Type");
+        string type = xml.getString("", "Type");
         if ( type == "flock") {
-            trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(i, "START_BOIDS"));
+            trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(0, "START_BOIDS"));
             //thisFlock.color = colors[i];
-            thisFlock.title = xml.getString(i, "NAME");
-            thisFlock.boidNum = xml.getIntValue(i, "MAX_BOIDS");
-            thisFlock.startBoidNum = xml.getIntValue(i, "START_BOIDS");
-            thisFlock.maxSpeed = xml.getFloatValue(i, "MAX_SPEED");
-            thisFlock.sightDistance = xml.getFloatValue(i, "sightDistance");
-            thisFlock.tooCloseDistance = xml.getFloatValue(i, "tooCloseDistance");
-            thisFlock.topicNumber = xml.getIntValue(i, "topicNumber");
+            thisFlock.title = xml.getString("noTitle", "NAME");
+            thisFlock.boidNum = xml.getIntValue(0, "MAX_BOIDS");
+            thisFlock.startBoidNum = xml.getIntValue(0, "START_BOIDS");
+            thisFlock.maxSpeed = xml.getFloatValue(2.0, "MAX_SPEED");
+            thisFlock.numberOfBones = xml.getIntValue(4, "numberOfBones");
+            thisFlock.length = xml.getFloatValue(40.0, "length");
+            thisFlock.sightDistance = xml.getFloatValue(100.0, "sightDistance");
+            thisFlock.tooCloseDistance = xml.getFloatValue(40.0, "tooCloseDistance");
+            thisFlock.topicNumber = xml.getIntValue(NULL, "topicNumber");
             thisFlock.texture = &textures.at(i);
             thisFlock.myIcon = &icons.at(i);
             thisFlock.myConnections = xml.getConnections(i);
@@ -227,7 +244,7 @@ void trxObjectHandler::generateObjects()
             //thisFlock.color = colors[i];
             //thisConverter.title = xml.getString(i, "NAME");
             
-            thisConverter.title = xml.getString(i, "NAME");
+            thisConverter.title = xml.getString("noTitle", "NAME");
             thisConverter.myConnections = xml.getConnections(i);
             thisConverter.myIcon = &icons.at(i);
             myConverters.push_back(thisConverter);
@@ -452,98 +469,6 @@ ofVec3f trxObjectHandler::screenPosition(ofVec3f _position, ofCamera * cam){
 }
 
 
-void  trxObjectHandler::updateAllVertexes(){
-    for (int i = 0; i<allMyBoids.size(); i++) {
-        trxVehicle * tmpBoid = allMyBoids.at(i);
-        
-        if(tmpBoid->bones.size()>= 4){
-            ofVec3f vecs[] = {
-                ofVec3f((float)tmpBoid->position.x,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
-                ofVec3f((float)tmpBoid->bones.at(1).x-5.0f,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
-                ofVec3f((float)tmpBoid->bones.at(1).x+5.0f,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
-                ofVec3f((float)tmpBoid->bones.at(2).x,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
-                ofVec3f((float)tmpBoid->bones.at(3).x-3.0f,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z),
-                ofVec3f((float)tmpBoid->bones.at(3).x+3.0f,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z)};
-            
-            ofFloatColor vColor[6];
-            float alpha = 1.0;
-            if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
-                alpha = 0.2;
-                for (int active=0; active<activeFlocks.size(); active++) {
-                    if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
-                        alpha = 1.0;
-                    }
-                }
-            }
-            
-            if (myStoryHandler.myActiveTask) {
-                alpha = 0.2;
-                if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
-                    alpha = 1.0;
-                }
-
-            }
-            
-            for (int col=0; col<6; col++) {
-                if (debug) {
-                    if (tmpBoid->caught)
-                    {
-                        vColor[col].r = 1.0;
-                        vColor[col].g = 1.0;
-                        vColor[col].b = 0.0;
-                        if (tmpBoid->dead) {
-                            vColor[col].r = 1.0;
-                            vColor[col].g = 0.0;
-                            vColor[col].b = 0.0;
-                        }
-                    }
-                    
-                    else
-                    {
-                        vColor[col].r = 0.0;
-                        vColor[col].g = 1.0;
-                        vColor[col].b = 0.0;
-                    }
-                }
-                else
-                {
-                    if (tmpBoid->caught)
-                    {
-                        vColor[col].r = 1.0;
-                        vColor[col].g = 1.0;
-                        vColor[col].b = 1.0;
-                    }
-                    else
-                    {
-                        vColor[col].r = 1.0;
-                        vColor[col].g = 1.0;
-                        vColor[col].b = 1.0;
-                    }
-                }
-                vColor[col].a = alpha;
-            }
-            
-            ofIndexType faces[] = {
-                0+i*VERTEXNUMBER, 1+i*VERTEXNUMBER, 2+i*VERTEXNUMBER,
-                1+i*VERTEXNUMBER, 2+i*VERTEXNUMBER, 3+i*VERTEXNUMBER,
-                3+i*VERTEXNUMBER, 4+i*VERTEXNUMBER, 5+i*VERTEXNUMBER };
-            
-            for (int j=0; j<VERTEXNUMBER; j++) {
-                allVertex.push_back(vecs[j]);
-                
-            }
-            for (int j=0; j<6; j++) {
-                allColors.push_back(vColor[j]);
-                
-            }
-            for (int j=0; j<9; j++) {
-                allIndex.push_back(faces[j]);
-                
-            }
-            
-        }
-    }    
-}
 // Sort-Function
 bool sortOnZPosition(trxVehicle * boid1, trxVehicle * boid2)
 {
@@ -556,112 +481,83 @@ void trxObjectHandler::drawAllVertexes(){
     
     for (int i = 0; i<allMyBoids.size(); i++) {
         trxVehicle * tmpBoid = allMyBoids.at(i);
-        float width = tmpBoid->bonelength*3.0/2.0;
-        if(tmpBoid->bones.size()>= 4){
-            ofVec3f vecs[] = {
-                ofVec3f((float)tmpBoid->position.x-width,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
-                ofVec3f((float)tmpBoid->position.x+width,  (float)tmpBoid->position.y,  (float)tmpBoid->position.z),
-                ofVec3f((float)tmpBoid->bones.at(1).x-width,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
-                ofVec3f((float)tmpBoid->bones.at(1).x+width,  (float)tmpBoid->bones.at(1).y,  (float)tmpBoid->bones.at(1).z),
-                ofVec3f((float)tmpBoid->bones.at(2).x-width,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
-                ofVec3f((float)tmpBoid->bones.at(2).x+width,  (float)tmpBoid->bones.at(2).y,  (float)tmpBoid->bones.at(2).z),
-                ofVec3f((float)tmpBoid->bones.at(3).x-width,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z),
-                ofVec3f((float)tmpBoid->bones.at(3).x+width,  (float)tmpBoid->bones.at(3).y,  (float)tmpBoid->bones.at(3).z)};
-            
-
-            ofColor color = ofColor(255,255,255,255);
-            if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
-                color.a = 0.2*255;
-                for (int active=0; active<activeFlocks.size(); active++) {
-                    if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
-                        color.a = 255;
-                    }
-                }
-            }
-            
-            if (myStoryHandler.myActiveTask) {
-                color.a = 0.2*255;
-                if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
+        
+        ofColor color = ofColor(255,255,255,255);
+        if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
+            color.a = 0.2*255;
+            for (int active=0; active<activeFlocks.size(); active++) {
+                if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
                     color.a = 255;
                 }
-                
             }
-            for (int col=0; col<6; col++) {
-                if (debug) {
-                    if (tmpBoid->caught)
-                    {
+        }
+        if (myStoryHandler.myActiveTask) {
+            color.a = 0.2*255;
+            if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
+                color.a = 255;
+            }
+        }
+        for (int col=0; col<6; col++) {
+            if (debug) {
+                if (tmpBoid->caught)
+                {
+                    color.r = 255;
+                    color.g = 255;
+                    color.b = 0;
+                    if (tmpBoid->dead) {
                         color.r = 255;
-                        color.g = 255;
-                        color.b = 0;
-                        if (tmpBoid->dead) {
-                            color.r = 255;
-                            color.g = 0;
-                            color.b = 0;
-                        }
-                    }
-                    
-                    else
-                    {
-                        color.r = 0;
-                        color.g = 255;
+                        color.g = 0;
                         color.b = 0;
                     }
                 }
                 else
                 {
-                    if (tmpBoid->caught)
-                    {
-                        color.r = 255;
-                        color.g = 255;
-                        color.b = 255;
-                    }
-                    else
-                    {
-                        color.r = 255;
-                        color.g = 255;
-                        color.b = 255;
-                    }
+                    color.r = 0;
+                    color.g = 255;
+                    color.b = 0;
                 }
             }
-            
-            //ofEnableArbTex();
-            //ofEnableNormalizedTexCoords();
-            ofSetColor(color);
-            
-            textures[tmpBoid->myTypeID].bind();
-            
-            float imgWstep = 1.0/4.0;
-            float imgHstep = 1.0/4.0;
-            
-            glBegin(GL_TRIANGLE_STRIP);
-            
-
-            glTexCoord2f(0,0);
-            glVertex3f(vecs[0].x,vecs[0].y,vecs[0].z);
-            glTexCoord2f(101,0);
-            glVertex3f(vecs[1].x,vecs[1].y,vecs[1].z);
-            glTexCoord2f(0,60);
-            glVertex3f(vecs[2].x,vecs[2].y,vecs[2].z);
-            glTexCoord2f(101,60);
-            glVertex3f(vecs[3].x,vecs[3].y,vecs[3].z);
-            glTexCoord2f(0,120);
-            glVertex3f(vecs[4].x,vecs[4].y,vecs[4].z);
-            glTexCoord2f(101,120);
-            glVertex3f(vecs[5].x,vecs[5].y,vecs[5].z);
-            glTexCoord2f(0,200);
-            glVertex3f(vecs[6].x,vecs[6].y,vecs[6].z);
-            glTexCoord2f(101,200);
-            glVertex3f(vecs[7].x,vecs[7].y,vecs[7].z);
-
-        
-            glEnd();
-             
-            //ofSetColor(255, 255, 255);
-            //ofBox(tmpBoid->position,100);
-            textures[tmpBoid->myTypeID].unbind();
-            
-            
+            else
+            {
+                if (tmpBoid->caught)
+                {
+                    color.r = 255;
+                    color.g = 255;
+                    color.b = 255;
+                }
+                else
+                {
+                    color.r = 255;
+                    color.g = 255;
+                    color.b = 255;
+                }
+            }
         }
+        
+        //ofEnableArbTex();
+        //ofEnableNormalizedTexCoords();
+        ofSetColor(color);
+        
+        textures[tmpBoid->myTypeID].bind();
+        
+        float imgWstep = 100.0;
+        float imgHstep = 200.0/(tmpBoid->numberOfBones-1);
+        
+        glBegin(GL_TRIANGLE_STRIP);
+    
+        vector<ofVec3f> vertexes = tmpBoid->vertexes;
+        for (int j=0; j<(vertexes.size()); j+=2) {
+            
+            glTexCoord2f(0,j*imgHstep*0.5);
+            glVertex3f(vertexes[j].x,vertexes[j].y,vertexes[j].z);
+            glTexCoord2f(imgWstep,j*imgHstep*0.5);
+            glVertex3f(vertexes[j+1].x,vertexes[j+1].y,vertexes[j+1].z);
+        }
+    
+        glEnd();
+
+        textures[tmpBoid->myTypeID].unbind();
+        
     }    
 
     
@@ -724,6 +620,10 @@ void trxObjectHandler::checkIfStillActiveSlot(){
             myActiveConnection = NULL;
             myLastActiveConnection = NULL;
             myStoryHandler.stopStory();
+            if (activeFlocks.size()>0) {
+                myStoryHandler.changeTopic(activeFlocks.at(activeFlocks.size()-1)->topicNumber);
+            }
+            else {myStoryHandler.changeTopic(11);} // if no Flock on table then set topic to generic
             cout << "set activeConnection to NULL" << endl;
         }
     }
@@ -755,6 +655,9 @@ void trxObjectHandler::generatePredators(){
         if (allMyBoids[i]->myTypeID == 3) {
             myPredators.push_back(allMyBoids[i]);
         }
+        else{
+            myPrey.push_back(allMyBoids[i]);
+        }
     }
     for (int i=0; i<allMyBoids.size();i++)
     {
@@ -765,4 +668,17 @@ void trxObjectHandler::generatePredators(){
            // allMyBoids[i]->prey=myPredators;
         }
     }
+}
+
+void trxObjectHandler::randomPrey(){
+    if (ofGetElapsedTimeMillis() - newPreyCounter > 10000) {
+        cout<<"new Prey found"<<endl;
+        for (int i=0; i<myPredators.size(); i++) {
+            int ranomdPrey = ofRandom(myPrey.size()-1);
+            myPredators[i]->addPrey(myPrey[ranomdPrey]);
+        }
+        newPreyCounter = ofGetElapsedTimeMillis();
+    }
+    
+    
 }

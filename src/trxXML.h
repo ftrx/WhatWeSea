@@ -20,9 +20,9 @@ public:
     trxXML(string _filename);
     void setup(string _category, string _items);
     
-    string getString(int _flockID, string _tag);
-    int getIntValue(int _flockID, string _tag);
-    float getFloatValue(int _flockID, string _tag);
+    string getString(string _default, string _tag);
+    int getIntValue(int _default, string _tag);
+    float getFloatValue(float _default, string _tag);
     
     vector<int> getConnections(int _flockID);
     

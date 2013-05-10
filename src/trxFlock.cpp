@@ -7,7 +7,7 @@
 //
 
 #include "trxFlock.h"
-
+#include "trxFlockUpdater.h"
 
 
 trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum) : trxObject(_x,_y,_z,_id){
@@ -19,8 +19,12 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>*
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
 	target = ofVec3f(0, 0, 0);
-	cout << startBoidNum << endl;
-  
+	//cout << startBoidNum << endl;
+    
+    flockUpdater = new trxFlockUpdater();
+    flockUpdater->flock = this;
+    
+   
 }
 
 // Sort-Function
@@ -102,7 +106,6 @@ bool checkDead( trxVehicle &p ){return p.dead;}
 
 void trxFlock::removeDeadBoids(){
     ofRemove(boids, checkDead);
-
 }
 
 void trxFlock::sortDeadsOut(){
@@ -124,11 +127,15 @@ void trxFlock::createNewBoid(){
     v.velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
     v.maxSpeed = maxSpeed;
+    v.length = length;
+    v.numberOfBones = numberOfBones;
+    v.bonelength = length/(numberOfBones-1);
     v.maxForce = 0.5f;
     v.inSightDist = sightDistance;
     v.tooCloseDist = tooCloseDistance;
     v.maxTrailSize= 0;
     v.myTypeID = id;
+    v.bones.assign(numberOfBones, ofVec3f(v.position));
     boids.push_back(v);
     points.push_back(v.position);
     sizes.push_back(ofVec3f(190));

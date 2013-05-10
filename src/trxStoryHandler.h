@@ -11,13 +11,13 @@
 #include <iostream>
 #include "ofMain.h"
 #include "general.h"
-
 #include "trxConnectionSlot.h"
 #include "trxFlock.h"
 #include "trxConverter.h"
 #include "trxXML.h"
 #include "trxStoryButton.h"
 #include "trxOscController.h"
+#include "trxFloatingMessageController.h"
 
 
 class trxStoryHandler {
@@ -47,8 +47,6 @@ class trxStoryHandler {
         string description = "Story Comming soon";
     };
 
-    
-    
     ofTrueTypeFont	HelveticaNeueRoman18;
     ofTrueTypeFont	HelveticaNeueRoman36;
     
@@ -77,6 +75,7 @@ class trxStoryHandler {
     void startStory(trxConnectionSlot * _activeConnection);
     void stopStory();
     void draw();
+    void draw3D();
     void drawDebug();
     void update();
     
@@ -88,12 +87,11 @@ class trxStoryHandler {
     void finishStory();
     
     void resetStoryAfterTimeout (int _time);
-   
     
     int idleTimer;
     
-    
     void drawProgressBar(int _currentQuantity);
+    void drawProgressCircle(float _radius, float _barHeight,int _currentQuantity, int _numberOfSectors);
     void drawTaskMessage(string _message);
     void drawTarget();
     
@@ -104,6 +102,7 @@ class trxStoryHandler {
     
     void changeAction(int _actionNumber);
     void changeTopic(int _topicNumber);
+    
         
     vector<story> myStories;
     
@@ -123,5 +122,10 @@ class trxStoryHandler {
     
     trxOscController myOsc;
     
+    
+    int messageTimer =0;
+    trxFloatingMessageController myFloatingMessageController;
+    
+
 
 };

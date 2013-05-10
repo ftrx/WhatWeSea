@@ -9,7 +9,7 @@
 #include "trxOscController.h"
 
 trxOscController::trxOscController(){
-    mySender.setup("172.31.7.147", 12000);
+    mySender.setup("localhost", 12000);
     
 }
 
