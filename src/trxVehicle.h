@@ -36,7 +36,7 @@ public:
     int numberOfBones = 4;
     float bonelength = length/(numberOfBones-1);
     
-    vector <ofVec3f *> fleeTargets;
+    vector <ofVec3f> fleeTargets;
     vector <trxVehicle *> predators;
     vector <trxVehicle *> prey;
 	
@@ -103,7 +103,11 @@ public:
         // there are some problems with that because of the pointers…
         if  (!caught){
             for (int i=0; i<fleeTargets.size(); i++) {
-                fleeTarget(fleeTargets[i]);
+                    maxSpeed = 8.0f;
+                    fleeTarget(fleeTargets[i]);
+            }
+            if (fleeTargets.size() == 0 && maxSpeed >= maxStandardSpeed) {
+                maxSpeed -= 0.1f;
             }
             
             for (int i=0; i<predators.size(); i++){
@@ -145,12 +149,17 @@ public:
     void update();
     void arriveTarget(ofVec3f * _target);
     void isCaughtAt(ofVec3f *_target);
-    void fleeTarget(ofVec3f * _target);
+    void fleeTarget(ofVec3f _target);
     void addTarget(ofVec3f * _target){
         if (!target){
         target = _target;
         }
     }
+    
+    void addFleeTarget(ofVec3f _target){
+        fleeTargets.push_back(_target);
+    }
+    
     void addPredator(trxVehicle * _target){
         predators.clear();
         predators.push_back(_target);

@@ -16,6 +16,7 @@ trxStoryHandler::trxStoryHandler() {
     HelveticaNeueRoman36.loadFont("fonts/NewsGot-Reg.otf", 36, true, true);
 	HelveticaNeueRoman36.setLineHeight(40.0f);
 	HelveticaNeueRoman36.setLetterSpacing(1.037);
+    ship.loadImage("schiff.png");
 }
 
 void trxStoryHandler::setup(vector<trxFlock> *_allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections) {
@@ -55,9 +56,7 @@ void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
             else{
                 activeBycatchFlock = NULL;
             }
-            
         }
-        
         activeConverter = myActiveStory->myStoryConverter;
         cout << "start new Story:" << myActiveStory->description << endl;
         catchedQuantity = 0;
@@ -103,7 +102,14 @@ void trxStoryHandler::update()
         if (myActiveTask) {
             updateTargetPosition();
             if (!showMessage) {
-                catchedQuantity = activeFlock->countDead();
+                
+                if(activeConverter->id == 10) {
+                    catchedQuantity += activeFlock->countDead();
+                    activeFlock->removeDeadBoids();
+                }
+                else{
+                    catchedQuantity = activeFlock->countDead();
+                }
                 if(activeBycatchFlock){
                     bycatchQuantity += activeBycatchFlock->countDead();
                     activeBycatchFlock->removeDeadBoids();
@@ -211,19 +217,32 @@ void trxStoryHandler::draw(){
             
             //drawTarget();
             //ofTranslate(randomWiggle);
-            
-            ofSetLineWidth(2);
-            ofSetColor(255, 255, 255);
-            ofSetCircleResolution(40.0);
-            ofNoFill();
-            ofCircle(0,0, myActiveTask->targetSize-1.0);
-            
-            drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, 12);
-            
-            if (myActiveTask->bycatchID) {
-                drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+            if (activeConverter->id == 11) {
+                ofSetLineWidth(2);
+                ofSetColor(255, 255, 255);
+                ofSetCircleResolution(40.0);
+                ofNoFill();
+                ofCircle(0,0, myActiveTask->targetSize-1.0);
+                
+                drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, 12);
+                
+                if (myActiveTask->bycatchID) {
+                    drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+                }
+
             }
-            
+            else if (activeConverter->id == 10) {
+                ofEnableAlphaBlending();
+                ofSetColor(0,60,130,255);
+                ship.draw(-10, -14, 118, 29);
+                ofDisableAlphaBlending();
+                drawProgressCircle(myActiveTask->targetSize, 5.0, catchedQuantity, 12);
+                
+                if (myActiveTask->bycatchID) {
+                    drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+                }
+            }
+                        
             ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);
             
@@ -511,6 +530,7 @@ void trxStoryHandler::changeTopic(int _topicNumber){
 
     myOsc.sendOscTopic(_topicNumber);
     myFloatingMessageController.changeTopic(_topicNumber);
+    activeTopicNumber = _topicNumber;
 }
 
 

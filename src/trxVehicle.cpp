@@ -69,8 +69,8 @@ void trxVehicle::isCaughtAt(ofVec3f * _target){
     
 }
 
-void trxVehicle::fleeTarget(ofVec3f * _target){
-    flee(* _target);
+void trxVehicle::fleeTarget(ofVec3f _target){
+    flee(_target);
 }
 
 

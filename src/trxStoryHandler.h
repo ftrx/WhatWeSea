@@ -107,7 +107,7 @@ class trxStoryHandler {
     
     void changeAction(int _actionNumber);
     void changeTopic(int _topicNumber);
-    
+    int activeTopicNumber;
         
     vector<story> myStories;
     
@@ -127,6 +127,8 @@ class trxStoryHandler {
     
     trxOscController myOsc;
     
+    
+    ofImage ship;
     
     int messageTimer =0;
     trxFloatingMessageController myFloatingMessageController;

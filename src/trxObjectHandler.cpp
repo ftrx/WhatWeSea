@@ -14,13 +14,13 @@ trxObjectHandler::trxObjectHandler()
     initXML();
     generateObjects();
     
-    
     myStoryHandler.setup(&myFlocks,&myConverters,&myConnections);
     timeStamp = ofGetElapsedTimeMillis();
     newPreyCounter = 0;
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
     generatePredators();
     randomPrey();
+    myStoryHandler.changeTopic(11);
 }
 
 
@@ -62,6 +62,7 @@ void trxObjectHandler::update()
         // harvesters[i].moveMyCatch(myCamera);
         harvesters[i].update();
         catchBoid(&harvesters[i]);
+        
         
     }
     
@@ -145,8 +146,6 @@ void trxObjectHandler::draw()
         ofPopMatrix();
     }
 
-
-    
     // draw harvester / finger-cursor
     for (int i=0; i<harvesters.size(); i++) {
         harvesters.at(i).draw();
@@ -154,8 +153,6 @@ void trxObjectHandler::draw()
     }
     ofPopStyle();
     
-    
-
     myStoryHandler.draw();
 
 }
@@ -307,7 +304,7 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
     return allBoids;
 }
 
-void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
+void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
 {
     
     for (int i=0; i<allMyBoids.size(); i++){
@@ -344,16 +341,13 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
                     }
                 }
             }
-            
         }
-        
         if (dist <= 2*(_myHarverster->radius) && !boid->caught)
         {
-            boid->fleeTargets.push_back(&_myHarverster->unprojectedPosition);
+            boid->addFleeTarget(_myHarverster->unprojectedPosition);
+            //boid->fleeTargets.push_back(_myHarverster->unprojectedPosition);
         }
-    
-
-
+       
     }
 }
 
@@ -472,17 +466,12 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
                 if (!myStoryHandler.showMessage) {
                     myStoryHandler.changeAction(4);
                 }
-                
             }
-            
             harvesters.erase(harvesters.begin()+i);
         }
     }
     if (myStoryHandler.showMessage) {
-        //cout << "location: " << loc << endl;
-        //cout << "buttonPos : " << myStoryHandler.messageButton.position << endl;
         if (myStoryHandler.messageButton.clickOverButton(loc)) {
-            //cout << " message closed" << endl;
             myStoryHandler.closeMessage();
         }
     }
@@ -564,8 +553,6 @@ void trxObjectHandler::drawAllVertexes(){
             }
         }
 
-        
-        
         if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
             //color.a = 0.2*255;
             for (int active=0; active<activeFlocks.size(); active++) {
@@ -595,8 +582,7 @@ void trxObjectHandler::drawAllVertexes(){
         glBegin(GL_TRIANGLE_STRIP);
     
         vector<ofVec3f> vertexes = tmpBoid.vertexes;
-        for (int j=0; j<(vertexes.size()); j+=2) {
-            
+        for (int j=0; j<vertexes.size(); j+=2) {
             glTexCoord2f(0,j*imgHstep*0.5);
             glVertex3f(vertexes[j].x,vertexes[j].y,vertexes[j].z);
             glTexCoord2f(imgWstep,j*imgHstep*0.5);
@@ -675,6 +661,19 @@ void trxObjectHandler::checkIfStillActiveSlot(){
             else {myStoryHandler.changeTopic(11);} // if no Flock on table then set topic to generic
             cout << "set activeConnection to NULL" << endl;
         }
+    }
+    else if (activeFlocks.size()>0){
+        
+        int lastFlockInVector = activeFlocks.size()-1; // the last flock was last added to the screen
+        int topicNumber = activeFlocks[lastFlockInVector]->topicNumber;
+        if (topicNumber != myStoryHandler.activeTopicNumber) {
+            myStoryHandler.changeTopic(topicNumber);
+        }
+        
+    }
+
+    else{
+        myStoryHandler.changeTopic(11);
     }
 }
 
