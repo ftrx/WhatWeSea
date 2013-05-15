@@ -29,11 +29,39 @@ class testApp : public ofBaseApp{
     bool debug = false;
     bool lightning = false;
     
+    
+    //float runningTime = 0.0f;
+    
 	ofCamera camera;
     //ofEasyCam camera;
     
     ofRectangle viewMain;
 
+    struct activeTuioObject{
+        bool active = false;
+        float firstAdded = 0.0f;
+        float lastTimeSeen = 0.0f;
+        ofxTuioObject * tuioObject = NULL;
+    };
+    
+    struct activeTuioCursor{
+        bool active = false;
+        float firstAdded = 0.0f;
+        float lastTimeSeen = 0.0f;
+        ofxTuioCursor * tuioCursor = NULL;
+        ofxTuioCursor lastTuioCursor = ofxTuioCursor(0, 0, 0, 0);
+    };
+    
+    
+    vector<activeTuioCursor> activeCursors;
+    vector<activeTuioCursor> onRemoveCursors;
+    
+    void addNewCursor();
+    void removeNewCursor();
+    
+    bool isCursorStillThere(ofxTuioCursor & tuioCursor);
+    void addCursorToRemovable(ofxTuioCursor & tuioCursor);
+    void removeDeadCursors();
     
     trxObjectHandler myObjectHandler;
     

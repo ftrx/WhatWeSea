@@ -29,6 +29,7 @@ class trxStoryHandler {
         string taskMessage = "Story Comming Soon";
         string finalMessage = "Task Finished Message";
         int catchID = NULL;
+        int bycatchID = NULL;
         int catchSize = 10.0;
         float targetSize = 10.0;
         ofVec3f targetPosition = ofVec3f(200,0,0);
@@ -52,6 +53,7 @@ class trxStoryHandler {
     
     trxConnectionSlot * activeConnection = NULL;
     trxFlock * activeFlock;
+    trxFlock * activeBycatchFlock;
     trxConverter * activeConverter;
     
     vector<trxFlock> * allFlocks;
@@ -64,6 +66,7 @@ class trxStoryHandler {
     ofVec3f myScreenTargetMovement;
     
     int catchedQuantity;
+    int bycatchQuantity;
     
     bool showMessage = false;
     trxStoryButton messageButton;
@@ -92,6 +95,8 @@ class trxStoryHandler {
     
     void drawProgressBar(int _currentQuantity);
     void drawProgressCircle(float _radius, float _barHeight,int _currentQuantity, int _numberOfSectors);
+    
+    void drawProgressBycatchCircle(float _radius, float _barHeight,int _currentQuantity);
     void drawTaskMessage(string _message);
     void drawTarget();
     

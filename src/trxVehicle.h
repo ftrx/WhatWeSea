@@ -25,6 +25,9 @@ public:
     bool onWay = false;
     bool dead = false;
     
+    
+    float maxStandardSpeed = 0;
+    
     vector<ofVec3f> bones;
     vector<ofVec3f> boneNormals;
     vector<ofVec3f> vertexes;
@@ -43,6 +46,9 @@ public:
     
     template<typename Type> void flock(vector<Type>& vehicles)
 	{
+        if (position.x != position.x) {
+            cout<<"error nan"<<endl;
+        }
         ofVec3f averageVelocity;
 		ofVec3f averagePosition;
 		int inSightCnt = 0;
@@ -74,7 +80,9 @@ public:
 			averageVelocity *= 1.0f / inSightCnt;
 			steeringForce += averageVelocity - velocity;
 		}
-        
+        if (position.x != position.x) {
+            cout<<"error nan"<<endl;
+        }
         
         if (target) {
             if(caught){
@@ -91,25 +99,46 @@ public:
             }
         }
         
-        for (int i=0; i<fleeTargets.size(); i++) {
-            fleeTarget(fleeTargets[i]);
-        }
         
-        for (int i=0; i<predators.size(); i++){
-            if (!inSight(predators[i]->position)) continue;
-            if(!caught) evade(*predators[i]);
+        // there are some problems with that because of the pointers…
+        if  (!caught){
+            for (int i=0; i<fleeTargets.size(); i++) {
+                fleeTarget(fleeTargets[i]);
+            }
+            
+            for (int i=0; i<predators.size(); i++){
+                if (inSight(predators[i]->position) && !predators[i]->dead) {
+                    
+                        maxSpeed = 8.0f;
+                        evade(*predators[i]);
+                    
+                    
+                }
+                else {
+                    if (maxSpeed >= maxStandardSpeed){
+                        maxSpeed -= 0.1f;
+                    }
+                }
+
+                    
+            }
+            for (int i=0; i<prey.size(); i++){
+                //if (!inSight(prey[i]->position)) continue;
+                if (!prey[i]->dead) {
+                    pursue(*prey[i]);
+                }
+                
+            }
         }
-        for (int i=0; i<prey.size(); i++){
-            //if (!inSight(prey[i]->position)) continue;
-            if(!caught) pursue(*prey[i]);
-        }
-        
         
         fleeTargets.clear();
         
         if (dead)
         {
         //wander();
+        }
+        if (position.x != position.x) {
+            cout<<"error nan"<<endl;
         }
     }
     
@@ -123,6 +152,7 @@ public:
         }
     }
     void addPredator(trxVehicle * _target){
+        predators.clear();
         predators.push_back(_target);
     }
     
@@ -131,9 +161,10 @@ public:
         prey.push_back(_target);
     }
     void addTargetMovment(ofVec3f * _targetMovement){
-        position += *_targetMovement;
+        //position += *_targetMovement;
+        targetMovment = *_targetMovement;
     }
-    
+
     
     void clearTargets(){
         target = NULL;

@@ -48,21 +48,24 @@ public:
     ofShader shader;
     ofTexture  * texture;
 
-    vector <ofVec3f> points;
-    vector <ofVec3f> sizes;
 
     trxFlock(float _x, float _y, float _z, int _id,vector <trxHarvester>* _harvesters, int _startBoidNum);
     void update();
     void draw();
     void drawCircles();
+    void drawInfo();
+    
     void removeDeadBoids();
+    void freeCatchedBoids();
     void sortDeadsOut();
     void removeVehicles(vector<trxVehicle*> *_v);
-    void drawInfo();
+    
+    int countDead();
+    int countOnWay();
     
     void generateBoids();
     void createNewBoid();
+    
     int returnID();
-    int countDead();
-    int countOnWay();
+
 };

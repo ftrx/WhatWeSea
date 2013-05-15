@@ -37,16 +37,16 @@ void trxObject::draw(){
     ofEnableAlphaBlending();
     if(isActive){
         ofSetColor(255, 255, 255, 50);
-        ofCircle(0,0,80);
+        ofCircle(0,0,radius);
         ofSetColor(255, 255, 255,255);
         ofNoFill();
         ofSetLineWidth(3.0);
-        ofCircle(0,0,80);
+        ofCircle(0,0,radius);
         ofFill();
-        myIcon->draw(-40, -40, 0, 80, 80);
+        myIcon->draw(-radius/2.0, -radius/2.0, 0, radius, radius);
         
-		ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);
-		HelveticaNeueRoman18.drawString(title, -bounds.width/2.0, 110);
+		//ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);
+		//HelveticaNeueRoman18.drawString(title, -bounds.width/2.0, 110);
     }
     ofDisableAlphaBlending();
     ofPopStyle();

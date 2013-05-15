@@ -50,6 +50,9 @@ public:
     void updateCursor(ofxTuioCursor & tuioCursor);
     void removeCursor(ofxTuioCursor & tuioCursor);
     
+    
+    void updateSessionID(long _oldSessionID,long _sessionID);
+    
     //Variables
     
     trxXML xml;

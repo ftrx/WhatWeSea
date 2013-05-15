@@ -29,6 +29,12 @@ void trxHarvester::update(){
             ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
             boid->addTargetMovment(&boidMovement);
         }
+        for (int i=0; i<myBycatch.size(); i++) {
+            trxVehicle * boid = myBycatch[i];
+            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+            boid->addTargetMovment(&boidMovement);
+        }
+
     }
     
 }
@@ -40,7 +46,8 @@ void trxHarvester::draw(){
     ofSetCircleResolution(100);
     ofTranslate(position.x,position.y,0);
     ofEnableAlphaBlending();
-    ofSetColor(255, 255, 255, 100);
+    ofFill();
+    ofSetColor(255, 255, 255, 50);
     ofCircle(0,0,radius);
     ofSetColor(255, 255, 255);
     ofNoFill();
@@ -130,14 +137,21 @@ void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
         boid->maxSpeed = 8.0f;
-
         boid->onWay = true;
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
         boid->addTarget(_target);
-        boid->addTargetMovment(_movment);
+        //boid->addTargetMovment(_movment);
+    }
+    for (int i=0; i<myBycatch.size(); i++) {
+        trxVehicle * boid = myBycatch.at(i);
+        boid->maxSpeed = 8.0f;
+        boid->onWay = true;
+        boid->clearTargets(); /// !!! fast target eraser, but delets all targets
+        boid->addTarget(_target);
+        //boid->addTargetMovment(_movment);
     }
     myCatch.clear();
-    
+    myBycatch.clear();
 }
 
 

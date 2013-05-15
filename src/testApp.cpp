@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 void testApp::setup()
 {
+    ofHideCursor();
     //myObjectHandler = trxObjectHandler();
     myObjectHandler.myCamera = &camera;
     
@@ -13,6 +14,7 @@ void testApp::setup()
     
 	//ofSetFrameRate(90);
 	//ofSetVerticalSync(true);
+    
 	ofEnableSmoothing();
         
     viewMain.x = 0;
@@ -56,6 +58,10 @@ void testApp::update()
     //updateMouseRay();
     
     tuioClient.getMessage();
+    
+    addNewCursor();
+    removeDeadCursors();
+    
     myObjectHandler.debug = debug;
     myObjectHandler.update();
 }
@@ -157,6 +163,7 @@ void testApp::keyReleased(int key){
 
 void testApp::tuioObjectAdded(ofxTuioObject & tuioObject)
 {
+
     myObjectHandler.addObject( tuioObject);
 }
 
@@ -167,11 +174,26 @@ void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject)
 
 void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
     myObjectHandler.removeObject(tuioObject);
-    //cout << "Object n" << tuioObject.getSessionId() << " remove at " << loc << endl;
 }
 
 void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
-	myObjectHandler.addCursor(tuioCursor);
+    
+    if (!isCursorStillThere(tuioCursor)) {
+        //cout<<"newCursor"<<endl;
+        testApp::activeTuioCursor tmpCursor;
+        tmpCursor.tuioCursor = &tuioCursor;
+        tmpCursor.lastTuioCursor = tuioCursor;
+        tmpCursor.firstAdded = ofGetElapsedTimef();
+        tmpCursor.lastTimeSeen = ofGetElapsedTimef();
+        activeCursors.push_back(tmpCursor);
+        //myObjectHandler.addCursor(tuioCursor);
+    }
+    else{
+        
+    //cout<<"cursorAllreadyThere"<<endl;
+    }
+    
+	
 }
 
 void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
@@ -179,7 +201,10 @@ void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
 	}
 
 void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
-    myObjectHandler.removeCursor(tuioCursor);
+          //myObjectHandler.removeCursor(tuioCursor);
+        addCursorToRemovable(tuioCursor);
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -218,7 +243,65 @@ void testApp::dragEvent(ofDragInfo dragInfo){
 }
 
 
+bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
+    
+    ofVec2f tuioPosition = ofVec2f(tuioCursor.getX(),tuioCursor.getY());
+    for (int i=0; i < onRemoveCursors.size(); i++) {
+        testApp::activeTuioCursor *  tmpCursor = &onRemoveCursors[i];
+        ofVec2f tmpPosition = ofVec2f(tmpCursor->lastTuioCursor.getX(),tmpCursor->lastTuioCursor.getY());
+        if (tuioPosition.distance(tmpPosition) < DISTANCE/ofGetWidth()) {
+            if (ofGetElapsedTimef() - tmpCursor->lastTimeSeen <= TIMER) {
+                long sessionID = tmpCursor->lastTuioCursor.getSessionId();
+                myObjectHandler.updateSessionID(tmpCursor->lastTuioCursor.getSessionId(), tuioCursor.getSessionId());
+                tmpCursor->tuioCursor = &tuioCursor;
+                tmpCursor->lastTuioCursor = tuioCursor;
+                tmpCursor->lastTimeSeen = ofGetElapsedTimef();
+                activeCursors.push_back(*tmpCursor);
+                onRemoveCursors.erase(onRemoveCursors.begin()+i);
+                return true;
+            }
+        }
+    }
+    return false;
+    
+}
 
+
+void testApp::addNewCursor(){
+    for (int i=0; i<activeCursors.size(); i++) {
+         testApp::activeTuioCursor * tmpCursor = &activeCursors[i];
+        if (!tmpCursor->active) {
+            if (ofGetElapsedTimef() - tmpCursor->firstAdded > ADDTIMER) {
+                myObjectHandler.addCursor(*tmpCursor->tuioCursor);
+                tmpCursor->active = true;
+            }
+        }
+    }
+}
+
+
+void testApp::addCursorToRemovable(ofxTuioCursor &tuioCursor){
+    for (int i=0; i<activeCursors.size(); i++) {
+        if (activeCursors[i].tuioCursor->getSessionId() == tuioCursor.getSessionId()) {
+            testApp::activeTuioCursor * tmpCursor = &activeCursors[i];
+            tmpCursor->lastTuioCursor = tuioCursor;
+            tmpCursor->lastTimeSeen = ofGetElapsedTimef();
+            onRemoveCursors.push_back(*tmpCursor);
+            activeCursors.erase(activeCursors.begin()+i);
+        }
+    }
+}
+
+void testApp::removeDeadCursors(){
+    for (int i=0; i<onRemoveCursors.size(); i++) {
+        testApp::activeTuioCursor  tmpCursor = onRemoveCursors[i];
+        if (ofGetElapsedTimef() - tmpCursor.lastTimeSeen > TIMER) {
+            myObjectHandler.removeCursor(tmpCursor.lastTuioCursor);
+            onRemoveCursors.erase(onRemoveCursors.begin()+i);
+        }
+    }
+    
+}
 
 
 

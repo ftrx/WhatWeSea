@@ -11,8 +11,8 @@
 
 trxFloatingMessage::trxFloatingMessage(){
     ofTrueTypeFont::setGlobalDpi(72);
-	font.loadFont("fonts/NewsGot-Reg.otf", 48, true, true);
-	font.setLineHeight(28.0f);
+	font.loadFont("fonts/NewsGot-Reg.otf", textSize, true, true);
+	font.setLineHeight(textSize+4.0);
 	font.setLetterSpacing(1.037);
     text = "";
 }
@@ -45,10 +45,46 @@ void trxFloatingMessage::draw(){
     ofPopStyle();
     ofPopMatrix();
 }
+string trxFloatingMessage::wrapString(string text, int width) {
+	
+	string typeWrapped = "";
+	string tempString = "";
+	vector <string> words = ofSplitString(text, " ");
+	
+	for(int i=0; i<words.size(); i++) {
+		
+		string wrd = words[i];
+		
+		// if we aren't on the first word, add a space
+		if (i > 0) {
+			tempString += " ";
+		}
+		tempString += wrd;
+		
+		int stringwidth = font.stringWidth(tempString);
+        
+		if(stringwidth >= width) {
+			typeWrapped += "\n";
+			tempString = wrd;		// make sure we're including the extra word on the next line
+		} else if (i > 0) {
+			// if we aren't on the first word, add a space
+			typeWrapped += " ";
+		}
+		
+		typeWrapped += wrd;
+	}
+	
+	return typeWrapped;
+	
+}
 
 
 void trxFloatingMessage::setText(string _text){
     text = _text;
+    
+    text = wrapString(text, 1000);
+    
+    
     bounds = font.getStringBoundingBox(text, 0, 0);
 }
 

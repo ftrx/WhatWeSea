@@ -17,7 +17,7 @@ trxStoryButton::trxStoryButton(ofVec2f _pos = ofVec2f(0,0), float _w = 0, float 
 	HelveticaNeueRoman18.setLineHeight(28.0f);
 	HelveticaNeueRoman18.setLetterSpacing(1.037);
     
-    position = _pos;
+    
     width = _w;
     height = _h;
     text = _text;
@@ -25,6 +25,7 @@ trxStoryButton::trxStoryButton(ofVec2f _pos = ofVec2f(0,0), float _w = 0, float 
     ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(text, 0, 0);
     width= bounds.width;
     height= bounds.height;
+    position = ofVec2f(_pos.x-width/2.0-border,_pos.y-height/2.0-border);
     
 }
 
@@ -40,7 +41,13 @@ void trxStoryButton::draw(){
     ofPopMatrix();
     ofPopStyle();
     
-    
+    ofPushStyle();
+    //ofSetColor(255, 0, 0);
+    //ofNoFill();
+    //ofSetLineWidth(1.0);
+    //float tolerance = 50.0;
+    //ofRect(position.x-tolerance, position.y-tolerance, width+2*border+2*tolerance, height+2*border+2*tolerance);
+    ofPopStyle();
     
 }
 bool trxStoryButton::clickOverButton(ofVec2f cursorPos){
@@ -51,8 +58,9 @@ bool trxStoryButton::clickOverButton(ofVec2f cursorPos){
 }
 
 bool trxStoryButton::isOverButton(ofVec2f cursorPos){
+    float tolerance = 50.0;
     
-    if (cursorPos.x >= position.x && cursorPos.x <= position.x+width+2*border && cursorPos.y >= position.y && cursorPos.y <= position.y+height+2*border) {
+    if (cursorPos.x >= position.x-tolerance && cursorPos.x <= position.x+width+2*border+tolerance && cursorPos.y >= position.y-tolerance && cursorPos.y <= position.y+height+2*border+tolerance) {
         return true;
     }
     else return false;

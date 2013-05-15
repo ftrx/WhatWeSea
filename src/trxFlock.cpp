@@ -34,9 +34,7 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 }
 
 void trxFlock::update(){
-    //points.clear();
-    //sizes.clear();
-    //removeDeadBoids();
+
     vector <trxVehicle> tmp;
 
 	for (int i = 0; i < boids.size(); i++)
@@ -44,8 +42,6 @@ void trxFlock::update(){
 		boids[i].flock(boids);
 		boids[i].update();
 		boids[i].bounce(ofGetWidth(), ofGetHeight(), DEPTH);
-
-
 
         
         
@@ -56,14 +52,8 @@ void trxFlock::update(){
     {
        //createNewBoid();
     }
-    
-    // upload the data to the vbo
-    
-    std::sort( points.begin(), points.end(), sortOnZPosition);
-    
-	//int total = (int)boids.size();
-	//vbo.setVertexData(&points[0], total, GL_DYNAMIC_DRAW);
-	//vbo.setNormalData(&sizes[0], total, GL_DYNAMIC_DRAW);
+
+   
 
 }
 
@@ -92,7 +82,7 @@ void trxFlock::drawInfo(){
 	ofSetColor(myColor);
     
     string info = "\n";
-	info += "Total Points "+ofToString(points.size())+"\n";
+
 	info += "Total Boids "+ofToString(boids.size())+"\n";
     ofDrawBitmapString(info, 0,0);
     ofPopMatrix();
@@ -107,6 +97,24 @@ bool checkDead( trxVehicle &p ){return p.dead;}
 void trxFlock::removeDeadBoids(){
     ofRemove(boids, checkDead);
 }
+
+
+void trxFlock::freeCatchedBoids(){
+    for (int i=0; i < boids.size(); i++) {
+        boids[i].clearTargets();
+        if (boids[i].caught)
+        {
+            
+            boids[i].caught = false;
+            boids[i].maxSpeed = maxSpeed;
+            boids[i].inSightDist = sightDistance;
+            boids[i].tooCloseDist = tooCloseDistance;
+            
+        }
+    }
+}
+
+
 
 void trxFlock::sortDeadsOut(){
 
@@ -127,6 +135,7 @@ void trxFlock::createNewBoid(){
     v.velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v.lifeSpan = ofRandom(3.0f,6.0f);
     v.maxSpeed = maxSpeed;
+    v.maxStandardSpeed = maxSpeed;
     v.length = length;
     v.numberOfBones = numberOfBones;
     v.bonelength = length/(numberOfBones-1);
@@ -137,8 +146,6 @@ void trxFlock::createNewBoid(){
     v.myTypeID = id;
     v.bones.assign(numberOfBones, ofVec3f(v.position));
     boids.push_back(v);
-    points.push_back(v.position);
-    sizes.push_back(ofVec3f(190));
 }
 
 int trxFlock::countDead(){

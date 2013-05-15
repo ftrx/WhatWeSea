@@ -23,6 +23,7 @@ public:
     bool isActive;
     string title;
     int topicNumber = NULL;
+    float radius= 80.0;
     ofVec3f position;
     ofVec3f unprojectedPosition;
     float rotation;

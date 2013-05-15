@@ -35,6 +35,7 @@ public:
     ofTexture texture;
     
     vector <trxVehicle *> myCatch;
+    vector<trxVehicle *> myBycatch;
     
     vector <ofVec3f> points;
     vector <ofVec3f> sizes;

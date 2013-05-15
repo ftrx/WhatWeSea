@@ -35,7 +35,7 @@ public:
     void deletConnection();
     
     void draw();
-    void drawPossibleConnection(int flockPosition, int converterPosition);
+    void drawPossibleConnection(string _type, int _position);
     void drawWobbleLine(float _x1, float _y1,float _x2, float _y2);
 
     float	signedNoiseData[400];

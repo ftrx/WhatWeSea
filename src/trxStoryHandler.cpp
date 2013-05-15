@@ -48,12 +48,20 @@ void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
         {
             myActiveTask = &myActiveStory->myTasks.at(0);
             activeFlock = getFlockWithID(myActiveTask->catchID);
+            if(myActiveTask->bycatchID){
+                activeBycatchFlock = getFlockWithID(myActiveTask->bycatchID);
+                
+            }
+            else{
+                activeBycatchFlock = NULL;
+            }
             
         }
         
         activeConverter = myActiveStory->myStoryConverter;
         cout << "start new Story:" << myActiveStory->description << endl;
         catchedQuantity = 0;
+        bycatchQuantity = 0;
         myActiveStory->finished = false;
         
         idleTimer = ofGetElapsedTimeMillis(); // Timer for resetting the Story (or end it)
@@ -72,9 +80,17 @@ void trxStoryHandler::stopStory(){
             myActiveStory->myTasks.at(i).finished = false;
         }
         catchedQuantity = 0;
+        bycatchQuantity = 0;
         activeFlock->removeDeadBoids();
+        activeFlock->freeCatchedBoids();
+        if (activeBycatchFlock) {
+            activeBycatchFlock->removeDeadBoids();
+            activeBycatchFlock->freeCatchedBoids();
+        }
+        
         showMessage = false;
         myActiveStory = NULL;
+    
     }
     
 }
@@ -88,6 +104,10 @@ void trxStoryHandler::update()
             updateTargetPosition();
             if (!showMessage) {
                 catchedQuantity = activeFlock->countDead();
+                if(activeBycatchFlock){
+                    bycatchQuantity += activeBycatchFlock->countDead();
+                    activeBycatchFlock->removeDeadBoids();
+                }
                 onWayQuantity = activeFlock->countOnWay();
                 if (catchedQuantity >= myActiveTask->quantity) {
                     finishTask();
@@ -110,7 +130,7 @@ void trxStoryHandler::update()
     
     
     if (ofGetElapsedTimeMillis() > messageTimer + 10000 ) {
-        myFloatingMessageController.newRandomFact();
+      //  myFloatingMessageController.newRandomFact();
         messageTimer = ofGetElapsedTimeMillis();
     }
     
@@ -138,6 +158,14 @@ void trxStoryHandler::update()
 trxStoryHandler::task * trxStoryHandler::nextTask(){
     catchedQuantity = 0;
     activeFlock->removeDeadBoids();
+    activeFlock->freeCatchedBoids();
+    if(activeBycatchFlock)
+    {
+        bycatchQuantity = 0;
+        activeBycatchFlock->removeDeadBoids();
+        activeBycatchFlock->freeCatchedBoids();
+    }
+    
     if(myActiveTask->no < myActiveStory->myTasks.size()-1){
         int newNo = myActiveTask->no + 1;
         return &myActiveStory->myTasks.at(newNo);
@@ -161,7 +189,7 @@ void trxStoryHandler::finishTask(){
 void trxStoryHandler::finishStory(){
     
      myActiveStory->finished = true;
-     messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0-50.0, ofGetHeight()/2.0+50.0),100, 20, "close");
+     messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0, ofGetHeight()/2.0+40.0),100, 20, "close");
      showMessage = true;
     
 }
@@ -172,10 +200,30 @@ void trxStoryHandler::draw(){
             ofPushMatrix();
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
             ofRotate(activeConnection->myConverter->rotation);
-            activeConnection->drawWobbleLine(0, 0, myActiveTask->targetPosition.x,myActiveTask->targetPosition.y);
-            ofTranslate(myActiveTask->targetPosition);
+            ofSetColor(255, 255, 255);
+            float maxAmplitude = 5.0;
+            ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()),ofSignedNoise(ofGetElapsedTimef()),0)*maxAmplitude;
+            
+            ofVec3f target = myActiveTask->targetPosition+randomWiggle;
+            activeConnection->drawWobbleLine(0+activeConverter->radius, 0, target.x-myActiveTask->targetSize,target.y);
+            ofTranslate(target);
+            
+            
             //drawTarget();
+            //ofTranslate(randomWiggle);
+            
+            ofSetLineWidth(2);
+            ofSetColor(255, 255, 255);
+            ofSetCircleResolution(40.0);
+            ofNoFill();
+            ofCircle(0,0, myActiveTask->targetSize-1.0);
+            
             drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, 12);
+            
+            if (myActiveTask->bycatchID) {
+                drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+            }
+            
             ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);
             
@@ -217,11 +265,15 @@ void trxStoryHandler::drawDebug()
 
 
 void trxStoryHandler::drawTaskMessage(string _message){
+    ofPushStyle();
+    ofSetColor(255, 255, 255);
     HelveticaNeueRoman18.drawString(_message, 0, 0);
+    ofPopStyle();
 }
 
 void trxStoryHandler::drawMessage(string _message){
-    
+    ofPushStyle();
+    ofFill();
     ofEnableAlphaBlending();
     ofSetColor(0, 0, 0,100);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
@@ -229,12 +281,14 @@ void trxStoryHandler::drawMessage(string _message){
     
     ofPushMatrix();
     ofTranslate(ofGetWidth()/2.0, ofGetHeight()/2.0);
-    HelveticaNeueRoman36.drawString(_message, 0, 0);
+    ofRectangle bounds = HelveticaNeueRoman36.getStringBoundingBox(_message, 0, 0);
+    HelveticaNeueRoman36.drawString(_message, -bounds.width/2.0, -bounds.height/2.0);
 
     ofPopMatrix();
     ofDisableAlphaBlending();
     
     messageButton.draw();
+    ofPopStyle();
 }
 
 void trxStoryHandler::drawProgressBar(int _currentQuantity){
@@ -253,7 +307,7 @@ void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _cu
     ofSetLineWidth(0);
     
     ofFill();
-    
+    ofEnableSmoothing();
     float radius = _radius;
     float barHeight = _barHeight;
     float sectorSpace = 5.0;
@@ -265,21 +319,51 @@ void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _cu
         if (i<progress) {
             color= ofColor(255, 255, 255);
         }
-        
-        
         ofPath progressCircle;
-        
         progressCircle.setColor(color);
         progressCircle.setArcResolution(40);
         progressCircle.arc(ofPoint(0,0), radius, radius, sectorSpace/2.0+i*sectorSize, (i+1)*sectorSize-sectorSpace/2.0, true);
-        progressCircle.arc(ofPoint(0,0), radius-barHeight, radius-barHeight, (i+1)*sectorSize-sectorSpace/2.0, sectorSpace/2.0+i*sectorSize,false);
+        progressCircle.arc(ofPoint(0,0), radius+barHeight, radius+barHeight, (i+1)*sectorSize-sectorSpace/2.0, sectorSpace/2.0+i*sectorSize,false);
         progressCircle.close();
+
         progressCircle.draw();
+        
+        
+    
+    
     }
 
-    
+    ofDisableSmoothing();
     ofPopStyle();
 
+}
+
+void trxStoryHandler::drawProgressBycatchCircle(float _radius, float _barHeight, int _currentQuantity){
+    ofPushStyle();
+    ofEnableAlphaBlending();
+    ofSetLineWidth(0);
+    
+    ofFill();
+    
+    float radius = _radius;
+    float barHeight = _barHeight;
+    float progressHeight = int(ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, _barHeight));
+    ofColor color= ofColor(0, 82, 144,100);
+    
+    
+    ofPath progressCircle;
+    
+    progressCircle.setColor(color);
+    progressCircle.setArcResolution(40);
+    progressCircle.arc(ofPoint(0,0), radius, radius, 0, 360, true);
+    progressCircle.arc(ofPoint(0,0), radius+progressHeight, radius+progressHeight, 0, 360,true);
+    progressCircle.close();
+    progressCircle.draw();
+    
+    ofDisableAlphaBlending();
+    ofPopStyle();
+
+    
 }
 
 void trxStoryHandler::drawTarget(){
@@ -310,6 +394,7 @@ void trxStoryHandler::generateStories(){
             task thisTask;
             thisTask.no = xml.getIntValue(NULL, "no");
             thisTask.catchID = xml.getIntValue(NULL, "catchID");
+            thisTask.bycatchID = xml.getIntValue(99, "bycatchID");
             thisTask.catchSize = xml.getIntValue(10, "catchSize");
             thisTask.taskMessage = xml.getString("No Task Message", "taskMessage");
             thisTask.quantity = xml.getIntValue(1, "quantity");
@@ -387,6 +472,12 @@ void trxStoryHandler::closeMessage(){
             myActiveTask = nextTask();
             if (myActiveTask) {
                 activeFlock = getFlockWithID(myActiveTask->catchID);
+                if (myActiveTask->bycatchID) {
+                    activeBycatchFlock = getFlockWithID(myActiveTask->bycatchID);
+                }
+                else{
+                    activeBycatchFlock = NULL;
+                }
             }
             
         }
@@ -400,7 +491,6 @@ void trxStoryHandler::updateTargetPosition(){
     ofVec3f rotPos = myActiveTask->targetPosition;
     rotPos.rotate(activeConverter->rotation, ofVec3f(0, 0, 1));
     rotPos +=activeConverter->position;
-    
     myTargetPosition = rotPos;
     
     
@@ -408,7 +498,7 @@ void trxStoryHandler::updateTargetPosition(){
 
 void trxStoryHandler::updateMyLastTargetScreenPosition()
 {
-    myScreenTargetMovement = myScreenTargetPosition- myLastScreenTargetPosition;
+    myScreenTargetMovement = myScreenTargetPosition-myLastScreenTargetPosition;
     myLastScreenTargetPosition = myScreenTargetPosition;
 }
 

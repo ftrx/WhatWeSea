@@ -18,10 +18,12 @@ public:
     string text;
     bool active = false;
     ofVec3f position = ofVec3f(0,0,0);
-    ofVec3f velocity = ofVec3f(0,0,4.0);
+    ofVec3f velocity = ofVec3f(0,0,2.0);
 
-    float targetHight = DEPTH-200.0;
-    float endHight = DEPTH;
+    
+    int textSize = 36;
+    float targetHight = DEPTH-400.0;
+    float endHight = DEPTH-200.0;
     ofColor color = ofColor(255,255,255,0);
     ofTrueTypeFont font;
     
@@ -33,5 +35,7 @@ public:
     void draw();
     void setPosition(ofVec3f _position);
     void setText(string _text);
+    
+    string wrapString(string text, int width);
     
 };

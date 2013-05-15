@@ -71,6 +71,7 @@ public:
 	virtual long getSessionId() { 
 		return sessionId; 
 	};
+    
 	
     virtual ofxTuioPoint getPosition() {
 		ofxTuioPoint p(xpos,ypos);

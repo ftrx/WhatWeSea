@@ -13,17 +13,20 @@ trxObjectHandler::trxObjectHandler()
 {
     initXML();
     generateObjects();
-    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
-    generatePredators();
+    
+    
     myStoryHandler.setup(&myFlocks,&myConverters,&myConnections);
     timeStamp = ofGetElapsedTimeMillis();
     newPreyCounter = 0;
+    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    generatePredators();
+    randomPrey();
 }
 
 
 void trxObjectHandler::update()
 {
-    
+
     int jellyFishes = myFlocks.at(4).boids.size();
     int numberOfBoids = allMyBoids.size();
     int difference = numberOfBoids - jellyFishes;
@@ -34,20 +37,8 @@ void trxObjectHandler::update()
         }
         
     }
-   
-    
-    
-    
+
     float timer = ofGetElapsedTimeMillis() - timeStamp;
-    
-    
-    for (int i=0; i<harvesters.size();i++){
-       // harvesters[i].moveMyCatch(myCamera);
-        harvesters[i].update();
-        catchBoid(&harvesters[i]);
-        
-    }
-    
     
     // 16.66f is about 1000/60 so about 60FPS
     //if(timer>16.6f){
@@ -55,8 +46,7 @@ void trxObjectHandler::update()
             myFlocks[i].update();
         }
         timeStamp = ofGetElapsedTimeMillis();
-     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
-    randomPrey();
+    
     //}
     /*
     if (!threadStarted) {
@@ -68,14 +58,20 @@ void trxObjectHandler::update()
     }
      */
     //updateAllVertexes();
-    
+    for (int i=0; i<harvesters.size();i++){
+        // harvesters[i].moveMyCatch(myCamera);
+        harvesters[i].update();
+        catchBoid(&harvesters[i]);
+        
+    }
     
     myStoryHandler.update();
     if (myStoryHandler.myActiveTask) {
         myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
     }
     
-
+    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    randomPrey();
 }
 
 void trxObjectHandler::draw()
@@ -88,25 +84,48 @@ void trxObjectHandler::draw()
         trxConnectionSlot * thisSlot = &myConnections[i];
         trxFlock * flock = thisSlot->myFlock;
         trxConverter * converter = thisSlot->myConverter;
-        if(thisSlot != myActiveConnection)
-        {
-            ofEnableAlphaBlending();
-            if (myActiveConnection) {
-                ofSetColor(255, 255, 255,50);
+        
+        if (myActiveConnection) {
+            if (thisSlot != myActiveConnection) {
+                ofEnableAlphaBlending();
+                
+                //ofSetColor(255, 255, 255,0);
+                
+                
+                ofSetColor(255, 255, 255,100);
+                
+                if (flock != myActiveConnection->myFlock && flock->isActive) {
+                    thisSlot->drawPossibleConnection("flock",objectsPositionArray.at(flock->id));
+                }
+                if (converter != myActiveConnection->myConverter && converter->isActive) {
+                    thisSlot->drawPossibleConnection("converter",objectsPositionArray.at(converter->id));
+                }
+                
+                objectsPositionArray[flock->id]++;
+                objectsPositionArray[converter->id]++;
+                ofDisableAlphaBlending();
             }
             else {
-                ofSetColor(255, 255, 255,100);
+                 thisSlot->draw();
             }
-            thisSlot->drawPossibleConnection(objectsPositionArray.at(flock->id),objectsPositionArray.at(converter->id));
-            objectsPositionArray[flock->id]++;
-            objectsPositionArray[converter->id]++;
-            ofDisableAlphaBlending();
-            
         }
         else
         {
-            thisSlot->draw();
+            ofEnableAlphaBlending();
+            
+            ofSetColor(255, 255, 255,100);
+            
+            if (flock->isActive) {
+                thisSlot->drawPossibleConnection("flock",objectsPositionArray.at(flock->id));
+            }
+            if (converter->isActive) {
+                thisSlot->drawPossibleConnection("converter",objectsPositionArray.at(converter->id));
+            }
+            objectsPositionArray[flock->id]++;
+            objectsPositionArray[converter->id]++;
+            ofDisableAlphaBlending();
         }
+        
     }
     //draw active Objects
     for (int i = 0; i<activeFlocks.size(); i++) {
@@ -273,6 +292,12 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
         for (int j=0; j<tmpFlock->boids.size();j++)
         {
             trxVehicle * thisVehicle = &tmpFlock->boids.at(j);
+            
+            //debug
+            if (thisVehicle->position.x != thisVehicle->position.x) {
+                cout<<"error nan"<<endl;
+            }
+            
             // check if dead, when dead then do not draw
             //if (!thisVehicle->dead) {
                 allBoids.push_back(thisVehicle);
@@ -293,17 +318,29 @@ void trxObjectHandler::catchBoid(trxHarvester * _myHarverster)
         bPos = myCamera->worldToScreen(bPos);
         //hPos = camera.screenToWorld(hPos, viewMain);
         float dist = hPos.distance(bPos);
-        if (myStoryHandler.myActiveTask &&!myStoryHandler.showMessage) {
-            
-            if (_myHarverster->myCatch.size() < myStoryHandler.myActiveTask->catchSize && !boid->caught && boid->myTypeID == myStoryHandler.myActiveTask->catchID) {
-                if (dist <= _myHarverster->radius) {
-                    _myHarverster->myCatch.push_back(boid);
-                    boid->addTarget(&_myHarverster->unprojectedPosition);
-                    //boid->addTargetMovment(&_myHarverster->movment);
-                    boid->caught = true;
-                    if (firstCatch && _myHarverster->myCatch.size()>0) {
-                        myStoryHandler.changeAction(3);
-                        firstCatch = false;
+        if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
+            if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize && !boid->caught ){
+                if (boid->myTypeID == myStoryHandler.myActiveTask->catchID) {
+                    if (dist <= _myHarverster->radius) {
+                        _myHarverster->myCatch.push_back(boid);
+                        boid->addTarget(&_myHarverster->unprojectedPosition);
+                        //boid->addTargetMovment(&_myHarverster->movment);
+                        boid->caught = true;
+                        if (firstCatch && _myHarverster->myCatch.size()>0) {
+                            myStoryHandler.changeAction(3);
+                            firstCatch = false;
+                        }
+                    }
+                }
+                if (boid->myTypeID == myStoryHandler.myActiveTask->bycatchID) {
+                    if (dist <= _myHarverster->radius) {
+                        _myHarverster->myBycatch.push_back(boid);
+                        boid->addTarget(&_myHarverster->unprojectedPosition);
+                        boid->caught = true;
+                        if (firstCatch && _myHarverster->myCatch.size()>0) {
+                            myStoryHandler.changeAction(3);
+                            firstCatch = false;
+                        }
                     }
                 }
             }
@@ -454,6 +491,17 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
 	//cout << "Point n" << tuioCursor.getSessionId() << " remove at " << loc << endl;
 }
 
+void trxObjectHandler::updateSessionID(long _oldSessionID, long _sessionID){
+    for (int i = 0; i < harvesters.size(); i++) {
+        trxHarvester *thisHarvester = &harvesters[i];
+        
+        if (thisHarvester->id == _oldSessionID) {
+            thisHarvester->id = _sessionID;
+        }
+    }
+    
+}
+
 ofVec2f trxObjectHandler::getCorrectedPosition(float _x, float _y){
     float x = ofMap(_x, 0.0+SCREEN_X_MIN, 1.0-SCREEN_X_MAX, 0.0, 1.0)*ofGetWidth();
     float y = ofMap(_y, 0.0+SCREEN_Y_MIN, 1.0-SCREEN_Y_MAX, 0.0, 1.0)*ofGetHeight();
@@ -480,31 +528,17 @@ void trxObjectHandler::drawAllVertexes(){
     std::sort( allMyBoids.begin(), allMyBoids.end(), sortOnZPosition);
     
     for (int i = 0; i<allMyBoids.size(); i++) {
-        trxVehicle * tmpBoid = allMyBoids.at(i);
+        trxVehicle  tmpBoid = *allMyBoids.at(i);
         
         ofColor color = ofColor(255,255,255,255);
-        if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
-            color.a = 0.2*255;
-            for (int active=0; active<activeFlocks.size(); active++) {
-                if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
-                    color.a = 255;
-                }
-            }
-        }
-        if (myStoryHandler.myActiveTask) {
-            color.a = 0.2*255;
-            if (myStoryHandler.myActiveTask->catchID == tmpBoid->myTypeID) {
-                color.a = 255;
-            }
-        }
         for (int col=0; col<6; col++) {
             if (debug) {
-                if (tmpBoid->caught)
+                if (tmpBoid.caught)
                 {
                     color.r = 255;
                     color.g = 255;
                     color.b = 0;
-                    if (tmpBoid->dead) {
+                    if (tmpBoid.dead) {
                         color.r = 255;
                         color.g = 0;
                         color.b = 0;
@@ -519,33 +553,48 @@ void trxObjectHandler::drawAllVertexes(){
             }
             else
             {
-                if (tmpBoid->caught)
+                if (tmpBoid.caught)
                 {
-                    color.r = 255;
-                    color.g = 255;
-                    color.b = 255;
+                    color = standardColor;
                 }
                 else
                 {
-                    color.r = 255;
-                    color.g = 255;
-                    color.b = 255;
+                    color = standardColor;
                 }
             }
         }
+
         
+        
+        if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
+            //color.a = 0.2*255;
+            for (int active=0; active<activeFlocks.size(); active++) {
+                if (activeFlocks.at(active)->id == tmpBoid.myTypeID) {
+                    color = activColor;
+                    color.a = 255;
+                }
+            }
+        }
+        if (myStoryHandler.myActiveTask) {
+            //color.a = 0.2*255;
+            if (myStoryHandler.myActiveTask->catchID == tmpBoid.myTypeID) {
+                color = activColor;
+                color.a = 255;
+            }
+        }
+                
         //ofEnableArbTex();
         //ofEnableNormalizedTexCoords();
         ofSetColor(color);
         
-        textures[tmpBoid->myTypeID].bind();
+        textures[tmpBoid.myTypeID].bind();
         
         float imgWstep = 100.0;
-        float imgHstep = 200.0/(tmpBoid->numberOfBones-1);
+        float imgHstep = 200.0/(tmpBoid.numberOfBones-1);
         
         glBegin(GL_TRIANGLE_STRIP);
     
-        vector<ofVec3f> vertexes = tmpBoid->vertexes;
+        vector<ofVec3f> vertexes = tmpBoid.vertexes;
         for (int j=0; j<(vertexes.size()); j+=2) {
             
             glTexCoord2f(0,j*imgHstep*0.5);
@@ -556,7 +605,7 @@ void trxObjectHandler::drawAllVertexes(){
     
         glEnd();
 
-        textures[tmpBoid->myTypeID].unbind();
+        textures[tmpBoid.myTypeID].unbind();
         
     }    
 
@@ -650,6 +699,9 @@ trxConverter* trxObjectHandler::getConverterWithID(int _id){
 }
 
 void trxObjectHandler::generatePredators(){
+    myPredators.clear();
+    myPrey.clear();
+    
     for (int i=0; i<allMyBoids.size();i++)
     {
         if (allMyBoids[i]->myTypeID == 3) {
@@ -671,8 +723,11 @@ void trxObjectHandler::generatePredators(){
 }
 
 void trxObjectHandler::randomPrey(){
+    
     if (ofGetElapsedTimeMillis() - newPreyCounter > 10000) {
+        
         cout<<"new Prey found"<<endl;
+        generatePredators();
         for (int i=0; i<myPredators.size(); i++) {
             int ranomdPrey = ofRandom(myPrey.size()-1);
             myPredators[i]->addPrey(myPrey[ranomdPrey]);
