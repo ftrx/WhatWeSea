@@ -47,7 +47,6 @@ public:
     void drawInfo();
     void removeDeadBoids();
     
-
     
     ofVec3f screenPosition(ofVec3f _position,ofCamera * cam);
 

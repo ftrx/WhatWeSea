@@ -96,6 +96,13 @@ bool checkDead( trxVehicle &p ){return p.dead;}
 
 void trxFlock::removeDeadBoids(){
     ofRemove(boids, checkDead);
+    /*
+    for (int i=0;i<boids.size();i++){
+        if (boids[i].dead) {
+            boids.erase(boids.begin()+i);
+        }
+        else i++;
+    }*/
 }
 
 

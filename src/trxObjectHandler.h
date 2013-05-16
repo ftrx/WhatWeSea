@@ -26,6 +26,7 @@ public:
     bool threadStarted=false;
     
     trxObjectHandler();
+    void setup();
     void update();
     void draw();
     void draw3D();

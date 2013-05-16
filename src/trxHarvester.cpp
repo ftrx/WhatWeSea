@@ -25,14 +25,18 @@ void trxHarvester::update(){
     if(myCatch.size() >0)
     {
         for (int i=0; i<myCatch.size(); i++) {
-            trxVehicle * boid = myCatch[i];
+            trxVehicle * boid = myCatch.at(i);
             ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-            boid->addTargetMovment(&boidMovement);
+
+            boid->addTargetMovment(boidMovement);
+
+            
         }
         for (int i=0; i<myBycatch.size(); i++) {
-            trxVehicle * boid = myBycatch[i];
+            trxVehicle * boid = myBycatch.at(i);
             ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-            boid->addTargetMovment(&boidMovement);
+
+            boid->addTargetMovment(boidMovement);
         }
 
     }
@@ -101,12 +105,13 @@ void trxHarvester::clearCatch(){
     }
     myCatch.clear();
 }
-
+/*
 void trxHarvester::moveMyCatch(ofCamera * cam){
     for (int i = 0; i < myCatch.size(); i++) {
         trxVehicle * boid = myCatch[i];
     }
 }
+ */
 ofVec3f trxHarvester::movmentToBoidZ(ofCamera * cam, ofVec3f _pos){
     ofVec3f pos= _pos;
     
@@ -122,7 +127,7 @@ ofVec3f trxHarvester::screenPosition(ofCamera * cam){
     pos = cam->screenToWorld(pos, ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
     return pos;
 }
-
+/*
 void trxHarvester::removeBoids(){
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
@@ -132,12 +137,13 @@ void trxHarvester::removeBoids(){
     myCatch.clear();
 
 }
-
+*/
 void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
         boid->maxSpeed = 8.0f;
         boid->onWay = true;
+        boid->caught = true;
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
         boid->addTarget(_target);
         //boid->addTargetMovment(_movment);
@@ -146,6 +152,7 @@ void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
         trxVehicle * boid = myBycatch.at(i);
         boid->maxSpeed = 8.0f;
         boid->onWay = true;
+        boid->caught = true;
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
         boid->addTarget(_target);
         //boid->addTargetMovment(_movment);

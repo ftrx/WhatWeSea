@@ -41,7 +41,8 @@ class testApp : public ofBaseApp{
         bool active = false;
         float firstAdded = 0.0f;
         float lastTimeSeen = 0.0f;
-        ofxTuioObject * tuioObject = NULL;
+        //ofxTuioObject * tuioObject = NULL;
+        ofPtr<ofxTuioObject> tuioObject;
     };
     
     struct activeTuioCursor{
@@ -49,6 +50,7 @@ class testApp : public ofBaseApp{
         float firstAdded = 0.0f;
         float lastTimeSeen = 0.0f;
         ofxTuioCursor * tuioCursor = NULL;
+        //ofPtr<ofxTuioCursor> tuioCursor;
         ofxTuioCursor lastTuioCursor = ofxTuioCursor(0, 0, 0, 0);
     };
     

@@ -45,7 +45,8 @@ void testApp::setup()
     ofAddListener(tuioClient.objectAdded,this,&testApp::tuioObjectAdded);
 	ofAddListener(tuioClient.objectRemoved,this,&testApp::tuioObjectRemoved);
 	ofAddListener(tuioClient.objectUpdated,this,&testApp::tuioObjectUpdated);
-     
+    
+    myObjectHandler.setup();
 //    light.disable();
 //    ofEnableLighting();
  //   light.setPointLight();
@@ -177,6 +178,7 @@ void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
 }
 
 void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
+    //myObjectHandler.addCursor(tuioCursor);
     
     if (!isCursorStillThere(tuioCursor)) {
         //cout<<"newCursor"<<endl;
@@ -198,10 +200,10 @@ void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
 
 void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
     myObjectHandler.updateCursor(tuioCursor);
-	}
+}
 
 void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
-          //myObjectHandler.removeCursor(tuioCursor);
+        //myObjectHandler.removeCursor(tuioCursor);
         addCursorToRemovable(tuioCursor);
     
     

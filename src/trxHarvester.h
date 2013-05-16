@@ -20,7 +20,7 @@ class trxHarvester: public ofVec3f {
 public:
     int id;
     
-    float radius = 100.0f;
+    float radius = HARVESTER_RADIUS;
     
     ofVec3f target;
     ofVec3f position;

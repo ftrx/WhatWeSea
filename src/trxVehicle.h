@@ -9,6 +9,8 @@
 #pragma once
 
 #include "BiologicalVehicle.h"
+#include "general.h"
+
 
 class trxVehicle : public BiologicalVehicle {
 	
@@ -18,6 +20,9 @@ protected:
 	
 public:
 	int myTypeID; // ID of flock == fishType
+    
+    ofVec3f position2D;
+    
 	ofVec3f * target = NULL;
 
     ofVec3f targetMovment;
@@ -36,7 +41,7 @@ public:
     int numberOfBones = 4;
     float bonelength = length/(numberOfBones-1);
     
-    vector <ofVec3f> fleeTargets;
+    vector <ofVec3f*> fleeTargets;
     vector <trxVehicle *> predators;
     vector <trxVehicle *> prey;
 	
@@ -87,14 +92,9 @@ public:
         if (target) {
             if(caught){
                 isCaughtAt(target);
-                position += targetMovment;
-                /*
-                for (int i=0; i< trails.size(); i++) {
-                    trails[i] += targetMovment;
-                }*/
-
+                //position += targetMovment;
             }
-            else {
+            else{
                 arriveTarget(target);
             }
         }
@@ -102,30 +102,27 @@ public:
         
         // there are some problems with that because of the pointers…
         if  (!caught){
-            for (int i=0; i<fleeTargets.size(); i++) {
-                    maxSpeed = 8.0f;
-                    fleeTarget(fleeTargets[i]);
-            }
-            if (fleeTargets.size() == 0 && maxSpeed >= maxStandardSpeed) {
+            if (maxSpeed >= maxStandardSpeed) {
                 maxSpeed -= 0.1f;
             }
             
+            for (int i=0; i<fleeTargets.size(); i++) {
+                ofVec3f pos = ofVec3f(fleeTargets[i]->x,fleeTargets[i]->y,0);
+                if (position2D.distance(pos) < HARVESTER_RADIUS+20.0){
+                    maxSpeed = 8.0f;
+                    fleeTarget(*fleeTargets[i]);
+                }
+            }
+            
+          
+            
             for (int i=0; i<predators.size(); i++){
                 if (inSight(predators[i]->position) && !predators[i]->dead) {
-                    
-                        maxSpeed = 8.0f;
-                        evade(*predators[i]);
-                    
-                    
+                    maxSpeed = 8.0f;
+                    evade(*predators[i]);
                 }
-                else {
-                    if (maxSpeed >= maxStandardSpeed){
-                        maxSpeed -= 0.1f;
-                    }
-                }
-
-                    
             }
+            
             for (int i=0; i<prey.size(); i++){
                 //if (!inSight(prey[i]->position)) continue;
                 if (!prey[i]->dead) {
@@ -133,9 +130,10 @@ public:
                 }
                 
             }
+            
         }
         
-        fleeTargets.clear();
+        //fleeTargets.clear();
         
         if (dead)
         {
@@ -150,14 +148,19 @@ public:
     void arriveTarget(ofVec3f * _target);
     void isCaughtAt(ofVec3f *_target);
     void fleeTarget(ofVec3f _target);
+    
     void addTarget(ofVec3f * _target){
-        if (!target){
         target = _target;
-        }
+    }
+    void clearTargets(){
+        target = NULL;
     }
     
-    void addFleeTarget(ofVec3f _target){
+    void addFleeTarget(ofVec3f * _target){
         fleeTargets.push_back(_target);
+    }
+    void clearFleeTargets(){
+        fleeTargets.clear();
     }
     
     void addPredator(trxVehicle * _target){
@@ -169,15 +172,13 @@ public:
         prey.clear();
         prey.push_back(_target);
     }
-    void addTargetMovment(ofVec3f * _targetMovement){
-        //position += *_targetMovement;
-        targetMovment = *_targetMovement;
+    void addTargetMovment(ofVec3f _targetMovement){
+        position += _targetMovement;
+        //targetMovment = *_targetMovement;
     }
 
     
-    void clearTargets(){
-        target = NULL;
-    }
+ 
     void evade(trxVehicle& target);
 
 };
