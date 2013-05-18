@@ -28,12 +28,16 @@ class trxStoryHandler {
         int no = NULL;
         string taskMessage = "Story Comming Soon";
         string finalMessage = "Task Finished Message";
+        string type = "standard";
+        int percent = 100;
         int catchID = NULL;
         int bycatchID = NULL;
         int catchSize = 10.0;
         float targetSize = 10.0;
         ofVec3f targetPosition = ofVec3f(200,0,0);
         int    quantity = NULL;
+        bool dieAfterCatch = false;
+        string progress = "circle";
         
     };
     
@@ -46,7 +50,11 @@ class trxStoryHandler {
         trxConverter * myStoryConverter;
         string finalMessage = "Story Finished Message";
         string description = "Story Comming soon";
+        vector<string> messages;
     };
+    
+    
+    vector<trxFlock *> finishedFlocks;
 
     ofTrueTypeFont	HelveticaNeueRoman18;
     ofTrueTypeFont	HelveticaNeueRoman36;
@@ -66,7 +74,9 @@ class trxStoryHandler {
     ofVec3f myScreenTargetMovement;
     
     int catchedQuantity;
+    int tempCatchedQuantity;
     int bycatchQuantity;
+    int tempBycatchQuantity;
     
     bool showMessage = false;
     trxStoryButton messageButton;
@@ -96,12 +106,25 @@ class trxStoryHandler {
     void drawProgressBar(int _currentQuantity);
     void drawProgressCircle(float _radius, float _barHeight,int _currentQuantity, int _numberOfSectors);
     
-    void drawProgressBycatchCircle(float _radius, float _barHeight,int _currentQuantity);
+    void drawProgressAmount(float _radius, float _barHeight,int _currentQuantity);
     void drawTaskMessage(string _message);
     void drawTarget();
     
+    
+    // Task and Story Messages
+    ofImage message_edge_topright;
+    ofImage message_edge_topleft;
+    ofImage message_edge_bottomright;
+    ofImage message_edge_bottomleft;
+    ofImage message_line_left;
+    ofImage message_line_top;
+    ofImage message_line_right;
+    ofImage message_line_bottom;
     void drawMessage(string _message);
     void closeMessage();
+    
+    string wrapString(string text, int width);
+
     
     void updateTargetPosition ();
     
@@ -133,6 +156,7 @@ class trxStoryHandler {
     int messageTimer =0;
     trxFloatingMessageController myFloatingMessageController;
     
+    string randomFact;
 
 
 };

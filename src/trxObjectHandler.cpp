@@ -23,8 +23,8 @@ trxObjectHandler::trxObjectHandler()
 
 void trxObjectHandler::setup(){
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
-    generatePredators();
-    randomPrey();
+    //generatePredators();
+    //randomPrey();
 }
 
 
@@ -62,7 +62,7 @@ void trxObjectHandler::update()
     }
 
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
-    randomPrey();
+    //randomPrey();
     
     /*
      
@@ -293,7 +293,7 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
         
         for (int j=0; j<tmpFlock->boids.size();j++)
         {
-            trxVehicle * thisVehicle = &tmpFlock->boids.at(j);
+            trxVehicle * thisVehicle = tmpFlock->boids.at(j);
             ofVec3f pos = myCamera->worldToScreen(thisVehicle->position);
             thisVehicle->position2D = pos;
             //debug

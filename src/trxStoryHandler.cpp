@@ -16,6 +16,17 @@ trxStoryHandler::trxStoryHandler() {
     HelveticaNeueRoman36.loadFont("fonts/NewsGot-Reg.otf", 36, true, true);
 	HelveticaNeueRoman36.setLineHeight(40.0f);
 	HelveticaNeueRoman36.setLetterSpacing(1.037);
+    
+    message_edge_topright.loadImage("message_background/edge_topright.png");
+    message_edge_topleft.loadImage("message_background/edge_topleft.png");
+    message_edge_bottomright.loadImage("message_background/edge_bottomright.png");
+    message_edge_bottomleft.loadImage("message_background/edge_bottomleft.png");
+    message_line_left.loadImage("message_background/line_left.png");
+    message_line_top.loadImage("message_background/line_top.png");
+    message_line_right.loadImage("message_background/line_right.png");
+    message_line_bottom.loadImage("message_background/line_bottom.png");
+
+    
     ship.loadImage("schiff.png");
 }
 
@@ -77,15 +88,20 @@ void trxStoryHandler::stopStory(){
         }
         for (int i=0; i<myActiveStory->myTasks.size(); i++) {
             myActiveStory->myTasks.at(i).finished = false;
+            
         }
+        
+        for (int i=0; i<finishedFlocks.size(); i++) {
+            finishedFlocks[i]->removeDeadBoids();
+            finishedFlocks[i]->freeCatchedBoids();
+
+        }
+        
         catchedQuantity = 0;
         bycatchQuantity = 0;
-        activeFlock->removeDeadBoids();
-        activeFlock->freeCatchedBoids();
-        if (activeBycatchFlock) {
-            activeBycatchFlock->removeDeadBoids();
-            activeBycatchFlock->freeCatchedBoids();
-        }
+        
+        tempBycatchQuantity = 0;
+        tempCatchedQuantity = 0;
         
         showMessage = false;
         myActiveStory = NULL;
@@ -102,21 +118,54 @@ void trxStoryHandler::update()
         if (myActiveTask) {
             updateTargetPosition();
             if (!showMessage) {
-                
-                if(activeConverter->id == 10) {
-                    catchedQuantity += activeFlock->countDead();
-                    activeFlock->removeDeadBoids();
+                if (myActiveTask->type == "standard") {
+                    
+                    if(myActiveTask->dieAfterCatch) {
+                        catchedQuantity += activeFlock->countDead();
+                        activeFlock->removeDeadBoids();
+                    }
+                    else{
+                        catchedQuantity = activeFlock->countDead();
+                    }
+                    if(activeBycatchFlock){
+                        bycatchQuantity += activeBycatchFlock->countDead();
+                        activeBycatchFlock->removeDeadBoids();
+                    }
+                    onWayQuantity = activeFlock->countOnWay();
+                    if (catchedQuantity >= myActiveTask->quantity) {
+                        finishTask();
+                    }
+
                 }
-                else{
-                    catchedQuantity = activeFlock->countDead();
-                }
-                if(activeBycatchFlock){
-                    bycatchQuantity += activeBycatchFlock->countDead();
-                    activeBycatchFlock->removeDeadBoids();
-                }
-                onWayQuantity = activeFlock->countOnWay();
-                if (catchedQuantity >= myActiveTask->quantity) {
-                    finishTask();
+                else if (myActiveTask->type == "fraction"){
+                    
+                    
+                    if(myActiveTask->dieAfterCatch) {
+                        int lastCatchedQuantity = catchedQuantity;
+                        
+                        tempCatchedQuantity += activeFlock->countDead();
+                        catchedQuantity = int(tempCatchedQuantity/100.0 * myActiveTask->percent +0.5);
+                        bycatchQuantity = tempCatchedQuantity-catchedQuantity;
+                        activeFlock->removeDeadBoids();
+                        
+                        if (lastCatchedQuantity != catchedQuantity) {
+                            myOsc.sendOscAction(6);
+                        }
+                        
+                    }
+                    else{
+                        catchedQuantity = activeFlock->countDead();
+                    }
+                    if(activeBycatchFlock){
+                        bycatchQuantity += activeBycatchFlock->countDead();
+                        activeBycatchFlock->removeDeadBoids();
+                    }
+                    onWayQuantity = activeFlock->countOnWay();
+                    if (catchedQuantity >= myActiveTask->quantity) {
+                        finishTask();
+                    }
+
+                    
                 }
             }
         }
@@ -163,12 +212,17 @@ void trxStoryHandler::update()
 
 trxStoryHandler::task * trxStoryHandler::nextTask(){
     catchedQuantity = 0;
-    activeFlock->removeDeadBoids();
+    tempCatchedQuantity = 0;
+    bycatchQuantity = 0;
+    tempBycatchQuantity = 0;
+    //activeFlock->removeDeadBoids();
     activeFlock->freeCatchedBoids();
+    finishedFlocks.push_back(activeFlock);
     if(activeBycatchFlock)
     {
-        bycatchQuantity = 0;
-        activeBycatchFlock->removeDeadBoids();
+       
+        finishedFlocks.push_back(activeBycatchFlock);
+        //activeBycatchFlock->removeDeadBoids();
         activeBycatchFlock->freeCatchedBoids();
     }
     
@@ -194,9 +248,10 @@ void trxStoryHandler::finishTask(){
 
 void trxStoryHandler::finishStory(){
     
-     myActiveStory->finished = true;
-     messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0, ofGetHeight()/2.0+40.0),100, 20, "close");
-     showMessage = true;
+    myActiveStory->finished = true;
+    messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0, ofGetHeight()/2.0+40.0),100, 20, "schliessen");
+    showMessage = true;
+    myOsc.sendOscAction(7);
     
 }
 
@@ -224,22 +279,27 @@ void trxStoryHandler::draw(){
                 ofNoFill();
                 ofCircle(0,0, myActiveTask->targetSize-1.0);
                 
-                drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, 12);
-                
-                if (myActiveTask->bycatchID) {
-                    drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+                if (myActiveTask->progress == "circle") {
+
+                    drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, myActiveTask->quantity);
+                }
+                else if (myActiveTask->progress == "amount"){
+                    drawProgressAmount(myActiveTask->targetSize, 100.0, catchedQuantity);
+                }
+                if (myActiveTask->bycatchID || myActiveTask->type == "fraction") {
+                    drawProgressAmount(myActiveTask->targetSize, 100.0, bycatchQuantity);
                 }
 
             }
             else if (activeConverter->id == 10) {
                 ofEnableAlphaBlending();
                 ofSetColor(0,60,130,255);
-                ship.draw(-10, -14, 118, 29);
+                ship.draw(-10, -20, 163, 40);
                 ofDisableAlphaBlending();
-                drawProgressCircle(myActiveTask->targetSize, 5.0, catchedQuantity, 12);
+                drawProgressCircle(myActiveTask->targetSize, 5.0, catchedQuantity, myActiveTask->quantity);
                 
                 if (myActiveTask->bycatchID) {
-                    drawProgressBycatchCircle(myActiveTask->targetSize, 100.0, bycatchQuantity);
+                    drawProgressAmount(myActiveTask->targetSize, 100.0, bycatchQuantity);
                 }
             }
                         
@@ -254,7 +314,8 @@ void trxStoryHandler::draw(){
             }
         }
         if (myActiveStory->finished) {
-           drawMessage("Story Finished Message");
+           //drawMessage(myActiveStory->finalMessage);
+            drawMessage(randomFact);
         }
     }
     myFloatingMessageController.draw();
@@ -291,21 +352,53 @@ void trxStoryHandler::drawTaskMessage(string _message){
 }
 
 void trxStoryHandler::drawMessage(string _message){
+    
+    int frameWidth = 700;
+    int alpha = 200;
+    string message = wrapString(_message, frameWidth);
+    
     ofPushStyle();
     ofFill();
     ofEnableAlphaBlending();
     ofSetColor(0, 0, 0,100);
     ofRect(0, 0, ofGetWidth(), ofGetHeight());
-    ofSetColor(255, 255, 255,255);
     
     ofPushMatrix();
-    ofTranslate(ofGetWidth()/2.0, ofGetHeight()/2.0);
-    ofRectangle bounds = HelveticaNeueRoman36.getStringBoundingBox(_message, 0, 0);
-    HelveticaNeueRoman36.drawString(_message, -bounds.width/2.0, -bounds.height/2.0);
-
-    ofPopMatrix();
-    ofDisableAlphaBlending();
+    int margin = 40;
+    ofRectangle bounds = HelveticaNeueRoman36.getStringBoundingBox(message, 0, 0);
+    bounds.height +=2*margin;
+    bounds.width +=2*margin;
+    ofTranslate(ofGetWidth()/2.0-bounds.width/2.0, ofGetHeight()/2.0-bounds.height/2.0);
+    int border = 40;
     
+    //draw rounded box
+    ofSetColor(0, 0, 0,alpha);
+    ofRect(0, 0, bounds.width, bounds.height);
+    
+    ofSetColor(255, 255, 255,alpha);
+    ofPushMatrix();
+    ofTranslate(-border, -border);
+    message_edge_topleft.draw(0,0,0);
+    message_line_top.draw(border,0,bounds.width,border);
+    ofTranslate(bounds.width+border, 0);
+    message_edge_topright.draw(0,0);
+    message_line_right.draw(0,border,border,bounds.height);
+    ofTranslate(0, bounds.height+border);
+    message_edge_bottomright.draw(0,0);
+    message_line_bottom.draw(0, 0, -bounds.width, border);
+    ofTranslate(-bounds.width-border, 0);
+    message_edge_bottomleft.draw(0,0);
+    message_line_left.draw(0,0, border, -bounds.height);
+    ofPopMatrix();
+    
+    //draw text
+    ofSetColor(255, 255, 255,255);
+    HelveticaNeueRoman36.drawString(message, margin, bounds.height/2-margin/4);
+    ofPopMatrix();
+    
+    //draw Button
+    messageButton.setPosition(ofVec3f(ofGetWidth()/2,ofGetHeight()/2+bounds.height/2+border+40));
+    ofDisableAlphaBlending();
     messageButton.draw();
     ofPopStyle();
 }
@@ -357,7 +450,7 @@ void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _cu
 
 }
 
-void trxStoryHandler::drawProgressBycatchCircle(float _radius, float _barHeight, int _currentQuantity){
+void trxStoryHandler::drawProgressAmount(float _radius, float _barHeight, int _currentQuantity){
     ofPushStyle();
     ofEnableAlphaBlending();
     ofSetLineWidth(0);
@@ -418,6 +511,11 @@ void trxStoryHandler::generateStories(){
             thisTask.taskMessage = xml.getString("No Task Message", "taskMessage");
             thisTask.quantity = xml.getIntValue(1, "quantity");
             thisTask.targetSize = xml.getFloatValue(40.0, "targetSize");
+            int intToBool = xml.getIntValue(0, "dieAfterCatch");
+            thisTask.dieAfterCatch = ( intToBool !=0);
+            thisTask.progress = xml.getString("circle", "progress");
+            thisTask.type = xml.getString("standard", "type");
+            thisTask.percent = xml.getIntValue(100, "percent");
             thisStory.myTasks.push_back(thisTask);
             xml.XML.popTag();
         }
@@ -530,7 +628,40 @@ void trxStoryHandler::changeTopic(int _topicNumber){
 
     myOsc.sendOscTopic(_topicNumber);
     myFloatingMessageController.changeTopic(_topicNumber);
+    randomFact = myFloatingMessageController.getRandomFact();
     activeTopicNumber = _topicNumber;
 }
 
 
+string trxStoryHandler::wrapString(string text, int width) {
+	
+	string typeWrapped = "";
+	string tempString = "";
+	vector <string> words = ofSplitString(text, " ");
+	
+	for(int i=0; i<words.size(); i++) {
+		
+		string wrd = words[i];
+		
+		// if we aren't on the first word, add a space
+		if (i > 0) {
+			tempString += " ";
+		}
+		tempString += wrd;
+		
+		int stringwidth = HelveticaNeueRoman36.stringWidth(tempString);
+        
+		if(stringwidth >= width) {
+			typeWrapped += "\n";
+			tempString = wrd;		// make sure we're including the extra word on the next line
+		} else if (i > 0) {
+			// if we aren't on the first word, add a space
+			typeWrapped += " ";
+		}
+		
+		typeWrapped += wrd;
+	}
+	
+	return typeWrapped;
+	
+}

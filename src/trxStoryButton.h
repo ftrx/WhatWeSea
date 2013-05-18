@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include "ofMain.h"
+#include "general.h"
 
 
 class trxStoryButton {
@@ -19,10 +20,13 @@ public:
     
     bool state = false;
     
+    void setPosition(ofVec2f _pos);
+    
     ofVec2f position;
+    ofRectangle bounds;
     float height;
     float width;
-    float border = 10.0;
+    float border = 15.0;
     string text;
     
     ofTrueTypeFont HelveticaNeueRoman18;
@@ -31,4 +35,6 @@ public:
     bool isOverButton(ofVec2f cursorPos);
     bool clickOverButton(ofVec2f cursorPos);
     
+    
+    helpers helper;
 };

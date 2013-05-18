@@ -62,6 +62,19 @@ void trxFloatingMessageController::newRandomFact(){
         
     }
 }
+string trxFloatingMessageController::getRandomFact(){
+    if (myActiveTopicMessages) {
+        int numberOfFacts = myActiveTopicMessages->size();
+        int factNumber = int(ofRandom(numberOfFacts-1)+0.5);
+        
+        trxFloatingMessage thisMessage = myActiveTopicMessages->at(factNumber);
+        thisMessage.setPosition(ofVec3f(ofGetWidth()/2.0,ofGetHeight()/2.0,0));
+        thisMessage.active = true;
+        //myActiveMessages.push_back(thisMessage);
+        return thisMessage.text;
+        
+    }
+}
 
 
 void trxFloatingMessageController::generateAllMessages(){

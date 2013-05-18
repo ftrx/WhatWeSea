@@ -35,8 +35,8 @@ public:
     
     ofVec3f target;
 
-    vector<trxVehicle> boids;
-    vector<trxVehicle> deadBoids;
+    vector<trxVehicle*> boids;
+    vector<trxVehicle*> deadBoids;
     
     
     vector <trxHarvester> * myHarvesters;
@@ -58,7 +58,7 @@ public:
     void removeDeadBoids();
     void freeCatchedBoids();
     void sortDeadsOut();
-    void removeVehicles(vector<trxVehicle*> *_v);
+    void removeVehicles(vector<trxVehicle*> _v);
     
     int countDead();
     int countOnWay();

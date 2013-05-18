@@ -49,7 +49,7 @@ public:
         
 	}
     
-    template<typename Type> void flock(vector<Type>& vehicles)
+    template<typename Type> void flock(vector<Type> &vehicles)
 	{
         if (position.x != position.x) {
             cout<<"error nan"<<endl;
@@ -62,18 +62,18 @@ public:
 		
 		for (int i = 0; i < vehicles.size(); i++)
 		{
-			if (vehicles[i].getId() == getId()) continue;
+			if (vehicles[i]->getId() == getId()) continue;
 
-            if (vehicles[i].caught != caught) continue;
-			if (!inSight(vehicles[i].position)) continue;
+            if (vehicles[i]->caught != caught) continue;
+			if (!inSight(vehicles[i]->position)) continue;
 			
-			averageVelocity += vehicles[i].velocity;
-			averagePosition += vehicles[i].position;
+			averageVelocity += vehicles[i]->velocity;
+			averagePosition += vehicles[i]->position;
 			inSightCnt++;
 			
-			if (tooClose(vehicles[i].position))
+			if (tooClose(vehicles[i]->position))
 			{
-				flee(vehicles[i].position);
+				flee(vehicles[i]->position);
 			}
             
 		}
@@ -107,28 +107,38 @@ public:
             }
             
             for (int i=0; i<fleeTargets.size(); i++) {
-                ofVec3f pos = ofVec3f(fleeTargets[i]->x,fleeTargets[i]->y,0);
-                if (position2D.distance(pos) < HARVESTER_RADIUS+20.0){
-                    maxSpeed = 8.0f;
-                    fleeTarget(*fleeTargets[i]);
+                if (fleeTargets.at(i)) {
+                    ofVec3f pos = ofVec3f(fleeTargets[i]->x,fleeTargets[i]->y,0);
+                    if (position2D.distance(pos) < HARVESTER_RADIUS+20.0){
+                        maxSpeed = 8.0f;
+                        fleeTarget(*fleeTargets[i]);
+                    }
+
                 }
             }
             
           
             
             for (int i=0; i<predators.size(); i++){
-                if (inSight(predators[i]->position) && !predators[i]->dead) {
-                    maxSpeed = 8.0f;
-                    evade(*predators[i]);
+                if(predators.at(i))
+                {
+                    if (inSight(predators[i]->position) && !predators[i]->dead) {
+                        maxSpeed = 8.0f;
+                        evade(*predators[i]);
+                    }
                 }
             }
             
             for (int i=0; i<prey.size(); i++){
                 //if (!inSight(prey[i]->position)) continue;
-                if (!prey[i]->dead) {
-                    pursue(*prey[i]);
+                if (prey.at(i)) {
+                    if (!prey[i]->dead) {
+                        pursue(*prey[i]);
+                    }
+                    else {
+                        prey.clear();
+                    }
                 }
-                
             }
             
         }

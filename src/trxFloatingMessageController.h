@@ -39,6 +39,7 @@ public:
     
     void changeTopic(int _topicNumber);
     void newRandomFact();
+    string getRandomFact();
     
     void generateAllMessages();
     

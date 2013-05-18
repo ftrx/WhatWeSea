@@ -39,9 +39,9 @@ void trxFlock::update(){
 
 	for (int i = 0; i < boids.size(); i++)
 	{
-		boids[i].flock(boids);
-		boids[i].update();
-		boids[i].bounce(ofGetWidth(), ofGetHeight(), DEPTH);
+		boids[i]->flock(boids);
+		boids[i]->update();
+		boids[i]->bounce(ofGetWidth(), ofGetHeight(), DEPTH);
 
         
         
@@ -66,7 +66,7 @@ void trxFlock::draw(){
 void trxFlock::drawCircles(){
     ofSetColor(255,255,255);
     for (int i=0; i<boids.size(); i++) {
-        ofCircle(ofPoint(boids[i].position),2);
+        ofCircle(ofPoint(boids[i]->position),2);
     }
 
 }
@@ -88,14 +88,15 @@ void trxFlock::drawInfo(){
     ofPopMatrix();
 }
 
-void trxFlock::removeVehicles(vector<trxVehicle*> *_v){
+void trxFlock::removeVehicles(vector<trxVehicle*> _v){
 
+    delete &_v;
 }
 
-bool checkDead( trxVehicle &p ){return p.dead;}
+bool checkDead( trxVehicle *p ){return p->dead;}
 
 void trxFlock::removeDeadBoids(){
-    ofRemove(boids, checkDead);
+    //ofRemove(boids, checkDead);
     /*
     for (int i=0;i<boids.size();i++){
         if (boids[i].dead) {
@@ -103,19 +104,29 @@ void trxFlock::removeDeadBoids(){
         }
         else i++;
     }*/
+    vector<trxVehicle*>::iterator it;
+    for ( it = boids.begin(); it != boids.end();){
+        if( (*it)->dead){
+            delete * it;
+            it = boids.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
 }
 
 
 void trxFlock::freeCatchedBoids(){
     for (int i=0; i < boids.size(); i++) {
-        boids[i].clearTargets();
-        if (boids[i].caught)
+        
+        if (boids[i]->caught && !boids[i]->dead)
         {
-            
-            boids[i].caught = false;
-            boids[i].maxSpeed = maxSpeed;
-            boids[i].inSightDist = sightDistance;
-            boids[i].tooCloseDist = tooCloseDistance;
+            boids[i]->clearTargets();
+            boids[i]->caught = false;
+            boids[i]->maxSpeed = maxSpeed;
+            boids[i]->inSightDist = sightDistance;
+            boids[i]->tooCloseDist = tooCloseDistance;
             
         }
     }
@@ -138,27 +149,27 @@ void trxFlock::generateBoids(){
 }
 
 void trxFlock::createNewBoid(){
-    trxVehicle v(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(50, DEPTH-50));
-    v.velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
-    v.lifeSpan = ofRandom(3.0f,6.0f);
-    v.maxSpeed = maxSpeed;
-    v.maxStandardSpeed = maxSpeed;
-    v.length = length;
-    v.numberOfBones = numberOfBones;
-    v.bonelength = length/(numberOfBones-1);
-    v.maxForce = 0.5f;
-    v.inSightDist = sightDistance;
-    v.tooCloseDist = tooCloseDistance;
-    v.maxTrailSize= 0;
-    v.myTypeID = id;
-    v.bones.assign(numberOfBones, ofVec3f(v.position));
+    trxVehicle* v = new trxVehicle(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(50, DEPTH-50));
+    v->velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
+    v->lifeSpan = ofRandom(3.0f,6.0f);
+    v->maxSpeed = maxSpeed;
+    v->maxStandardSpeed = maxSpeed;
+    v->length = length;
+    v->numberOfBones = numberOfBones;
+    v->bonelength = length/(numberOfBones-1);
+    v->maxForce = 0.5f;
+    v->inSightDist = sightDistance;
+    v->tooCloseDist = tooCloseDistance;
+    v->maxTrailSize= 0;
+    v->myTypeID = id;
+    v->bones.assign(numberOfBones, ofVec3f(v->position));
     boids.push_back(v);
 }
 
 int trxFlock::countDead(){
     int dead= 0;
     for (int i=0; i<boids.size(); i++) {
-        if (boids[i].dead) { dead++;}
+        if (boids[i]->dead) { dead++;}
     }
     return dead;
 }
@@ -166,7 +177,7 @@ int trxFlock::countDead(){
 int trxFlock::countOnWay(){
     int onWay= 0;
     for (int i=0; i<boids.size(); i++) {
-        if (boids[i].onWay) { onWay++;}
+        if (boids[i]->onWay) { onWay++;}
     }
     return onWay;
 }
