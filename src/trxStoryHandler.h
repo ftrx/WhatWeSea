@@ -18,6 +18,7 @@
 #include "trxStoryButton.h"
 #include "trxOscController.h"
 #include "trxFloatingMessageController.h"
+#include "trxStoryHint.h"
 
 
 class trxStoryHandler {
@@ -30,8 +31,8 @@ class trxStoryHandler {
         string finalMessage = "Task Finished Message";
         string type = "standard";
         int percent = 100;
-        int catchID = NULL;
-        int bycatchID = NULL;
+        vector<int> catchID;
+        vector<int> bycatchID;
         int catchSize = 10.0;
         float targetSize = 10.0;
         ofVec3f targetPosition = ofVec3f(200,0,0);
@@ -49,6 +50,7 @@ class trxStoryHandler {
         trxFlock * myStoryFlock;
         trxConverter * myStoryConverter;
         string finalMessage = "Story Finished Message";
+        ofImage finalFactImage;
         string description = "Story Comming soon";
         vector<string> messages;
     };
@@ -60,8 +62,8 @@ class trxStoryHandler {
     ofTrueTypeFont	HelveticaNeueRoman36;
     
     trxConnectionSlot * activeConnection = NULL;
-    trxFlock * activeFlock;
-    trxFlock * activeBycatchFlock;
+    vector<trxFlock *> activeFlock;
+    vector<trxFlock *> activeBycatchFlock;
     trxConverter * activeConverter;
     
     vector<trxFlock> * allFlocks;
@@ -157,6 +159,12 @@ class trxStoryHandler {
     trxFloatingMessageController myFloatingMessageController;
     
     string randomFact;
+    
+    
+    /// Story Hints
+    trxStoryHint fingerHint;
+    bool showFingerHint = false;
+    
 
 
 };

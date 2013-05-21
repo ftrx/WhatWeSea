@@ -4,6 +4,7 @@
 //--------------------------------------------------------------
 void testApp::setup()
 {
+    ofSetLogLevel(OF_LOG_VERBOSE);
     ofHideCursor();
     //myObjectHandler = trxObjectHandler();
     myObjectHandler.myCamera = &camera;
@@ -203,8 +204,8 @@ void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
 }
 
 void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
-        //myObjectHandler.removeCursor(tuioCursor);
-        addCursorToRemovable(tuioCursor);
+    //myObjectHandler.removeCursor(tuioCursor);
+    addCursorToRemovable(tuioCursor);
     
     
 }

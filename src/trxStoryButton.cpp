@@ -53,6 +53,9 @@ bool trxStoryButton::clickOverButton(ofVec2f cursorPos){
     if (isOverButton(cursorPos)) {
         state = true;
     }
+    else {
+        state = false;
+    }
     return state;
 }
 
@@ -67,5 +70,5 @@ bool trxStoryButton::isOverButton(ofVec2f cursorPos){
     if (cursorPos.x >= position.x-tolerance && cursorPos.x <= position.x+width+2*border+tolerance && cursorPos.y >= position.y-tolerance && cursorPos.y <= position.y+height+2*border+tolerance) {
         return true;
     }
-    else return false;
+    return false;
 }

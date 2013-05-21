@@ -42,25 +42,17 @@ void trxFlock::update(){
 		boids[i]->flock(boids);
 		boids[i]->update();
 		boids[i]->bounce(ofGetWidth(), ofGetHeight(), DEPTH);
-
-        
-        
 	}
 
-    
     if (boids.size() < boidNum)
     {
        //createNewBoid();
     }
 
-   
-
 }
 
 void trxFlock::draw(){
-    
     trxObject::draw();
-    
 }
 
 void trxFlock::drawCircles(){
@@ -68,7 +60,6 @@ void trxFlock::drawCircles(){
     for (int i=0; i<boids.size(); i++) {
         ofCircle(ofPoint(boids[i]->position),2);
     }
-
 }
 
 void trxFlock::drawInfo(){
@@ -88,10 +79,6 @@ void trxFlock::drawInfo(){
     ofPopMatrix();
 }
 
-void trxFlock::removeVehicles(vector<trxVehicle*> _v){
-
-    delete &_v;
-}
 
 bool checkDead( trxVehicle *p ){return p->dead;}
 
@@ -104,8 +91,8 @@ void trxFlock::removeDeadBoids(){
         }
         else i++;
     }*/
-    vector<trxVehicle*>::iterator it;
-    for ( it = boids.begin(); it != boids.end();){
+    vector<trxVehicle*>::iterator it = boids.begin(); 
+    for (;it != boids.end();){
         if( (*it)->dead){
             delete * it;
             it = boids.erase(it);
@@ -162,6 +149,7 @@ void trxFlock::createNewBoid(){
     v->tooCloseDist = tooCloseDistance;
     v->maxTrailSize= 0;
     v->myTypeID = id;
+    v->pathThreshold = 10.0f;
     v->bones.assign(numberOfBones, ofVec3f(v->position));
     boids.push_back(v);
 }

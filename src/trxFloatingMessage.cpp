@@ -82,7 +82,7 @@ string trxFloatingMessage::wrapString(string text, int width) {
 void trxFloatingMessage::setText(string _text){
     text = _text;
     
-    text = wrapString(text, 1000);
+    //text = wrapString(text, 1000);
     
     
     bounds = font.getStringBoundingBox(text, 0, 0);

@@ -44,6 +44,8 @@ public:
     vector <ofVec3f*> fleeTargets;
     vector <trxVehicle *> predators;
     vector <trxVehicle *> prey;
+    
+    vector <ofVec3f> paths;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
         
@@ -102,8 +104,11 @@ public:
         
         // there are some problems with that because of the pointers…
         if  (!caught){
-            if (maxSpeed >= maxStandardSpeed) {
+            if (maxSpeed > maxStandardSpeed) {
                 maxSpeed -= 0.1f;
+            }
+            if (maxSpeed < maxStandardSpeed) {
+                maxSpeed += 0.1f;
             }
             
             for (int i=0; i<fleeTargets.size(); i++) {
@@ -116,8 +121,6 @@ public:
 
                 }
             }
-            
-          
             
             for (int i=0; i<predators.size(); i++){
                 if(predators.at(i))
@@ -152,6 +155,12 @@ public:
         if (position.x != position.x) {
             cout<<"error nan"<<endl;
         }
+    }
+    
+    
+    template<typename Type> void catchFlock()
+	{
+        
     }
     
     void update();

@@ -56,14 +56,33 @@ void trxVehicle::arriveTarget(ofVec3f * _target){
 }
 
 void trxVehicle::isCaughtAt(ofVec3f * _target){
+    // generate path
     
-    //position = *_target;
+    maxSpeed = 2.0f;
+    tooCloseDist = 1.0f;
+    //wanderDistance = 0.5f;
+    
+    float pathRadius = 80.0;
+    int pathCircleNumber = 8;
+    
+    if (_target) {
+        for (int i=0; i<pathCircleNumber; i++) {
+            ofVec3f pathPoint;
+            float x = sin(TWO_PI/pathCircleNumber*i)*pathRadius;
+            float y = cos(TWO_PI/pathCircleNumber*i)*pathRadius;
+            
+            
+            pathPoint = ofVec3f(_target->x+x,_target->y+y,_target->z);
+            
+            paths.push_back(pathPoint);
+        }
+    }
+    //patrol(paths);
     arrive(* _target);
+    
     float dist = position.distance(*_target);
     if (dist <= 50.0 && onWay){
-        maxSpeed = 2.0f;
-        tooCloseDist = 1.0f;
-        wanderDistance = 0.5f;
+        
         dead=true;
     }
     

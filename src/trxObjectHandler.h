@@ -94,6 +94,10 @@ public:
     
     void drawAllVertexes();
     
+    
+    bool checkActiveSlots = false;
+    bool checkStillActiveSlots= false;
+    
     void checkIfActiveSlot();
     void checkIfStillActiveSlot();
     
@@ -105,6 +109,9 @@ public:
     
     // StoryHandler
     trxStoryHandler myStoryHandler;
+    bool closeMessage = false;
+    
+    bool isIdAnCatch(int _id, vector<int> * _catchIDs);
 
     void generatePredators();
     

@@ -42,23 +42,40 @@ void trxObjectHandler::update()
         }
         
     }
-
-    for (int i = 0; i<myFlocks.size(); i++) {
-        myFlocks[i].update();
+    
+    
+    if (checkActiveSlots){
+        checkIfActiveSlot();
+        checkActiveSlots = false;
+    }
+    if(checkStillActiveSlots) {
+        checkIfStillActiveSlot();
+        checkStillActiveSlots = false;
     }
 
     for (int i=0; i<harvesters.size();i++){
+        if (myStoryHandler.showFingerHint) {
+            myStoryHandler.showFingerHint = false;
+        }
+        
         harvesters[i].update();
         catchBoid(&harvesters[i]);
     }
-
     
-    
+    for (int i = 0; i<myFlocks.size(); i++) {
+        myFlocks[i].update();
+    }
     
     
     myStoryHandler.update();
     if (myStoryHandler.myActiveTask) {
         myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
+    }
+    
+    if(closeMessage){
+        closeMessage = false;
+        myStoryHandler.closeMessage();
+        
     }
 
     allMyBoids = getAllBoidsFromFlocks(&myFlocks);
@@ -290,15 +307,20 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
     for(int i=0; i< _myFlocks->size(); i++)
     {
         trxFlock * tmpFlock = &_myFlocks->at(i);
-        
         for (int j=0; j<tmpFlock->boids.size();j++)
         {
+            
             trxVehicle * thisVehicle = tmpFlock->boids.at(j);
+            thisVehicle->clearFleeTargets();
             ofVec3f pos = myCamera->worldToScreen(thisVehicle->position);
             thisVehicle->position2D = pos;
             //debug
             if (thisVehicle->position.x != thisVehicle->position.x) {
                 cout<<"error nan"<<endl;
+            }
+            
+            for (int harvester = 0; harvester< harvesters.size(); harvester++) {
+                thisVehicle->addFleeTarget(&harvesters.at(harvester).position);
             }
             
             // check if dead, when dead then do not draw
@@ -324,7 +346,7 @@ void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
             float dist = hPos.distance(bPos);
             if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
                 if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
-                    if (boid->myTypeID == myStoryHandler.myActiveTask->catchID) {
+                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
                         if (dist <= _myHarverster->radius) {
                             
                             boid->addTarget(&_myHarverster->unprojectedPosition);
@@ -336,7 +358,7 @@ void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
                             }
                         }
                     }
-                    if (boid->myTypeID == myStoryHandler.myActiveTask->bycatchID) {
+                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
                         if (dist <= _myHarverster->radius) {
                             
                             boid->addTarget(&_myHarverster->unprojectedPosition);
@@ -425,7 +447,8 @@ void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
         activeConverters.push_back(thisConverter);
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
-    checkIfActiveSlot();
+    //checkIfActiveSlot();
+    checkActiveSlots = true;
 }
 
 void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
@@ -447,7 +470,8 @@ void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
         thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
-    checkIfActiveSlot();
+    //checkIfActiveSlot();
+    checkActiveSlots = true;
 }
 
 void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
@@ -472,8 +496,10 @@ void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
         }
     }
     //cout << "Object n" << tuioObject.getSessionId() << " removed at " << loc << endl;
-    checkIfActiveSlot();
-    checkIfStillActiveSlot();
+    //checkIfActiveSlot();
+    checkActiveSlots = true;
+    //checkIfStillActiveSlot();
+    checkStillActiveSlots = true;
     
 }
 
@@ -487,10 +513,12 @@ void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
     if (harvesters.size()<=1) {
         firstCatch = true;
     }
+    /*
     for (int i=0; i<allMyBoids.size(); i++) {
         trxVehicle * tmpVehicle = allMyBoids.at(i);
         tmpVehicle->addFleeTarget(&harvesters.at(harvesters.size()-1).position);
     }
+     */
 	//cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
 }
 
@@ -526,6 +554,7 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
             harvesters.erase(harvesters.begin()+i);
         }
     }
+    /*
     for (int i=0; i<allMyBoids.size(); i++) {
         trxVehicle * tmpVehicle = allMyBoids.at(i);
         tmpVehicle->clearFleeTargets();
@@ -535,9 +564,10 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
         }
         
     }
+     */
     if (myStoryHandler.showMessage) {
-        if (myStoryHandler.messageButton.clickOverButton(loc)) {
-            myStoryHandler.closeMessage();
+        if (myStoryHandler.messageButton.clickOverButton(loc) && !closeMessage) {
+            closeMessage = true;
         }
     }
 
@@ -578,21 +608,21 @@ bool sortOnZPosition(trxVehicle * boid1, trxVehicle * boid2)
 }
 
 void trxObjectHandler::drawAllVertexes(){
-    
+
     std::sort( allMyBoids.begin(), allMyBoids.end(), sortOnZPosition);
     
     for (int i = 0; i<allMyBoids.size(); i++) {
-        trxVehicle  tmpBoid = *allMyBoids.at(i);
+        trxVehicle * tmpBoid = allMyBoids.at(i);
         
         ofColor color = ofColor(255,255,255,255);
         for (int col=0; col<6; col++) {
             if (debug) {
-                if (tmpBoid.caught)
+                if (tmpBoid->caught)
                 {
                     color.r = 255;
                     color.g = 255;
                     color.b = 0;
-                    if (tmpBoid.dead) {
+                    if (tmpBoid->dead) {
                         color.r = 255;
                         color.g = 0;
                         color.b = 0;
@@ -607,7 +637,7 @@ void trxObjectHandler::drawAllVertexes(){
             }
             else
             {
-                if (tmpBoid.caught)
+                if (tmpBoid->caught)
                 {
                     color = standardColor;
                 }
@@ -621,7 +651,7 @@ void trxObjectHandler::drawAllVertexes(){
         if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
             //color.a = 0.2*255;
             for (int active=0; active<activeFlocks.size(); active++) {
-                if (activeFlocks.at(active)->id == tmpBoid.myTypeID) {
+                if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
                     color = activColor;
                     color.a = 255;
                 }
@@ -629,7 +659,7 @@ void trxObjectHandler::drawAllVertexes(){
         }
         if (myStoryHandler.myActiveTask) {
             //color.a = 0.2*255;
-            if (myStoryHandler.myActiveTask->catchID == tmpBoid.myTypeID) {
+            if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
                 color = activColor;
                 color.a = 255;
             }
@@ -639,14 +669,14 @@ void trxObjectHandler::drawAllVertexes(){
         //ofEnableNormalizedTexCoords();
         ofSetColor(color);
         
-        textures[tmpBoid.myTypeID].bind();
+        textures[tmpBoid->myTypeID].bind();
         
         float imgWstep = 100.0;
-        float imgHstep = 200.0/(tmpBoid.numberOfBones-1);
+        float imgHstep = 200.0/(tmpBoid->numberOfBones-1);
         
         glBegin(GL_TRIANGLE_STRIP);
     
-        vector<ofVec3f> vertexes = tmpBoid.vertexes;
+        vector<ofVec3f> vertexes = tmpBoid->vertexes;
         for (int j=0; j<vertexes.size(); j+=2) {
             glTexCoord2f(0,j*imgHstep*0.5);
             glVertex3f(vertexes[j].x,vertexes[j].y,vertexes[j].z);
@@ -656,7 +686,7 @@ void trxObjectHandler::drawAllVertexes(){
     
         glEnd();
 
-        textures[tmpBoid.myTypeID].unbind();
+        textures[tmpBoid->myTypeID].unbind();
         
     }    
 
@@ -802,6 +832,15 @@ void trxObjectHandler::randomPrey(){
         }
         newPreyCounter = ofGetElapsedTimeMillis();
     }
-    
-    
 }
+
+bool trxObjectHandler::isIdAnCatch(int _id, vector<int> *_catchIDs)
+{
+    for (int i=0; i<_catchIDs->size(); i++) {
+        if (_id == _catchIDs->at(i)) {
+            return true;
+        }
+    }
+    return false;
+}
+

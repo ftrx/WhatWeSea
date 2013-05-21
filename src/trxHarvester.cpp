@@ -21,26 +21,20 @@ void trxHarvester::update(){
     
     movment = unprojectedPosition-lastPosition;
     lastPosition = unprojectedPosition;
-    
-    if(myCatch.size() >0)
-    {
-        for (int i=0; i<myCatch.size(); i++) {
-            trxVehicle * boid = myCatch.at(i);
-            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+    for (int i=0; i<myCatch.size(); i++) {
+        trxVehicle * boid = myCatch.at(i);
+        ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
 
-            boid->addTargetMovment(boidMovement);
+        boid->addTargetMovment(boidMovement);
 
-            
-        }
-        for (int i=0; i<myBycatch.size(); i++) {
-            trxVehicle * boid = myBycatch.at(i);
-            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-
-            boid->addTargetMovment(boidMovement);
-        }
-
+        
     }
-    
+    for (int i=0; i<myBycatch.size(); i++) {
+        trxVehicle * boid = myBycatch.at(i);
+        ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+
+        boid->addTargetMovment(boidMovement);
+    }
 }
 
 void trxHarvester::draw(){
@@ -51,9 +45,13 @@ void trxHarvester::draw(){
     ofTranslate(position.x,position.y,0);
     ofEnableAlphaBlending();
     ofFill();
-    ofSetColor(255, 255, 255, 50);
+    
+    ofSetColor(255, 255, 255, 30);
     ofCircle(0,0,radius);
-    ofSetColor(255, 255, 255);
+    ofSetColor(255, 255, 255, 50);
+    ofCircle(0, 0, 10);
+    ofSetColor(255, 255, 255,255);
+    
     ofNoFill();
     ofSetLineWidth(1.0);
     

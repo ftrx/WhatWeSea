@@ -31,6 +31,7 @@
 		803C5BB91725D47500EB9608 /* trxConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 803C5BB71725D47400EB9608 /* trxConverter.cpp */; };
 		803C5BBC17267FAB00EB9608 /* trxObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 803C5BBA17267FAB00EB9608 /* trxObject.cpp */; };
 		8046E4E61714459D009E9418 /* ofxBlur.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8046E4E41714459D009E9418 /* ofxBlur.cpp */; };
+		806F1854174B72BF009FFD6D /* trxStoryHint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 806F1852174B72BF009FFD6D /* trxStoryHint.cpp */; };
 		807B47B217397D0600D53212 /* trxFloatingMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 807B47B017397D0500D53212 /* trxFloatingMessage.cpp */; };
 		808405A0172452AF0042B9EA /* trxVehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8084059E172452AF0042B9EA /* trxVehicle.cpp */; };
 		80967404171EA07400B8F30C /* trxXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 80967402171EA07400B8F30C /* trxXML.cpp */; };
@@ -149,6 +150,8 @@
 		804B20111729501A00A1F283 /* ofxTuioCursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTuioCursor.h; sourceTree = "<group>"; };
 		804B20121729501A00A1F283 /* ofxTuioObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTuioObject.h; sourceTree = "<group>"; };
 		804B20131729501A00A1F283 /* ofxTuioPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxTuioPoint.h; sourceTree = "<group>"; };
+		806F1852174B72BF009FFD6D /* trxStoryHint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxStoryHint.cpp; sourceTree = "<group>"; };
+		806F1853174B72BF009FFD6D /* trxStoryHint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxStoryHint.h; sourceTree = "<group>"; };
 		80769A60172026C000EF663E /* general.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = general.h; sourceTree = "<group>"; };
 		807B47B017397D0500D53212 /* trxFloatingMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxFloatingMessage.cpp; sourceTree = "<group>"; };
 		807B47B117397D0600D53212 /* trxFloatingMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxFloatingMessage.h; sourceTree = "<group>"; };
@@ -424,6 +427,8 @@
 				8027B876170AD617005032BF /* testApp.h */,
 				80097A73172E6F0400B1C020 /* trxStoryHandler.h */,
 				80097A72172E6F0400B1C020 /* trxStoryHandler.cpp */,
+				806F1852174B72BF009FFD6D /* trxStoryHint.cpp */,
+				806F1853174B72BF009FFD6D /* trxStoryHint.h */,
 				801BF922173BA4A40067EC1D /* trxFloatingMessageController.cpp */,
 				801BF923173BA4A40067EC1D /* trxFloatingMessageController.h */,
 				807B47B017397D0500D53212 /* trxFloatingMessage.cpp */,
@@ -645,6 +650,7 @@
 				807B47B217397D0600D53212 /* trxFloatingMessage.cpp in Sources */,
 				801BF920173A915B0067EC1D /* trxFlockUpdater.cpp in Sources */,
 				801BF924173BA4A50067EC1D /* trxFloatingMessageController.cpp in Sources */,
+				806F1854174B72BF009FFD6D /* trxStoryHint.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
