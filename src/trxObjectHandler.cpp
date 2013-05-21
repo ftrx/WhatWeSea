@@ -232,7 +232,7 @@ void trxObjectHandler::initXML()
 }
 void trxObjectHandler::generateObjects()
 {
-    cout << xml.objectNumber <<endl;
+    //cout << xml.objectNumber <<endl;
     for (int i=0; i < xml.objectNumber; i++)
     {
         xml.XML.pushTag("Objects");
@@ -242,8 +242,8 @@ void trxObjectHandler::generateObjects()
             ofImage img;
             string texPath = "textures/" + xml.getString("","TEXTURE_PATH");
             string imgPath = "icon_figures/" + xml.getString("","ICON_PATH");
-            cout << texPath << endl;
-            cout << imgPath << endl;
+            //cout << texPath << endl;
+            //cout << imgPath << endl;
             ofImage texImage;
             texImage.loadImage(texPath);
             tex = texImage.getTextureReference();
@@ -346,24 +346,13 @@ void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
             float dist = hPos.distance(bPos);
             if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
                 if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
-                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
+                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
                         if (dist <= _myHarverster->radius) {
                             
                             boid->addTarget(&_myHarverster->unprojectedPosition);
+                            boid->pathRadius = _myHarverster->radius;
                             boid->caught = true;
                             _myHarverster->myCatch.push_back(boid);
-                            if (firstCatch && _myHarverster->myCatch.size()>0) {
-                                myStoryHandler.changeAction(3);
-                                firstCatch = false;
-                            }
-                        }
-                    }
-                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
-                        if (dist <= _myHarverster->radius) {
-                            
-                            boid->addTarget(&_myHarverster->unprojectedPosition);
-                            boid->caught = true;
-                            _myHarverster->myBycatch.push_back(boid);
                             if (firstCatch && _myHarverster->myCatch.size()>0) {
                                 myStoryHandler.changeAction(3);
                                 firstCatch = false;
@@ -546,7 +535,7 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
             if (myStoryHandler.myActiveTask) {
                 myStoryHandler.runningAction = false;
                 myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
-                thisHarvester->moveBoidsToTarget(&myStoryHandler.myScreenTargetPosition,&myStoryHandler.myScreenTargetMovement);
+                thisHarvester->moveBoidsToTarget(&myStoryHandler.myScreenTargetPosition,&myStoryHandler.myScreenTargetMovement,myStoryHandler.myActiveTask->targetSize);
                 if (!myStoryHandler.showMessage) {
                     myStoryHandler.changeAction(4);
                 }

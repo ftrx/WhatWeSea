@@ -8,11 +8,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "200"
-         endingLineNumber = "200"
+         startingLineNumber = "204"
+         endingLineNumber = "204"
          landmarkName = "class trxVehicle"
          landmarkType = "3">
       </FileBreakpoint>
@@ -47,11 +47,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "171"
-         endingLineNumber = "171"
+         startingLineNumber = "175"
+         endingLineNumber = "175"
          landmarkName = "class trxVehicle"
          landmarkType = "3">
       </FileBreakpoint>
@@ -60,11 +60,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "172"
-         endingLineNumber = "172"
+         startingLineNumber = "176"
+         endingLineNumber = "176"
          landmarkName = "addTarget(ofVec3f * _target)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -84,11 +84,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "186"
-         endingLineNumber = "186"
+         startingLineNumber = "190"
+         endingLineNumber = "190"
          landmarkName = "addPredator(trxVehicle * _target)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -110,11 +110,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838031.416097"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "57"
-         endingLineNumber = "57"
+         startingLineNumber = "59"
+         endingLineNumber = "59"
          landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -123,11 +123,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838031.416097"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "91"
-         endingLineNumber = "91"
+         startingLineNumber = "93"
+         endingLineNumber = "93"
          landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -136,11 +136,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "156"
-         endingLineNumber = "156"
+         startingLineNumber = "152"
+         endingLineNumber = "152"
          landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -149,11 +149,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838782.719568"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "179"
-         endingLineNumber = "179"
+         startingLineNumber = "183"
+         endingLineNumber = "183"
          landmarkName = "addFleeTarget(ofVec3f * _target)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -162,11 +162,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838234.592472"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "116"
-         endingLineNumber = "116"
+         startingLineNumber = "112"
+         endingLineNumber = "112"
          landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -175,24 +175,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.h"
-         timestampString = "390838234.592472"
+         timestampString = "390843021.074522"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "123"
-         endingLineNumber = "123"
-         landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
-         landmarkType = "5">
-      </FileBreakpoint>
-      <FileBreakpoint
-         shouldBeEnabled = "No"
-         ignoreCount = "0"
-         continueAfterRunningActions = "No"
-         filePath = "src/trxVehicle.h"
-         timestampString = "390838031.416097"
-         startingColumnNumber = "9223372036854775807"
-         endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "96"
-         endingLineNumber = "96"
+         startingLineNumber = "119"
+         endingLineNumber = "119"
          landmarkName = "flock(vector&lt;Type&gt; &amp;vehicles)"
          landmarkType = "5">
       </FileBreakpoint>
@@ -206,7 +193,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "143"
          endingLineNumber = "143"
-         landmarkName = "trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment)"
+         landmarkName = "trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment,float _targetRadius)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -284,7 +271,7 @@
          endingColumnNumber = "9223372036854775807"
          startingLineNumber = "140"
          endingLineNumber = "140"
-         landmarkName = "trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment)"
+         landmarkName = "trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment,float _targetRadius)"
          landmarkType = "5">
       </FileBreakpoint>
       <FileBreakpoint
@@ -292,11 +279,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxFlock.cpp"
-         timestampString = "390838393.443359"
+         timestampString = "390840487.298807"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "155"
-         endingLineNumber = "155"
+         startingLineNumber = "163"
+         endingLineNumber = "163"
          landmarkName = "trxFlock::createNewBoid()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -305,11 +292,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxFlock.cpp"
-         timestampString = "390750577.563146"
+         timestampString = "390840487.298807"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "104"
-         endingLineNumber = "104"
+         startingLineNumber = "111"
+         endingLineNumber = "111"
          landmarkName = "trxFlock::removeDeadBoids()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -318,11 +305,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390829454.664162"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "581"
-         endingLineNumber = "581"
+         startingLineNumber = "579"
+         endingLineNumber = "579"
          landmarkName = "trxStoryHandler::generateStories()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -331,11 +318,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390829454.664162"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "585"
-         endingLineNumber = "585"
+         startingLineNumber = "583"
+         endingLineNumber = "583"
          landmarkName = "trxStoryHandler::generateStories()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -357,11 +344,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390829454.664162"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "567"
-         endingLineNumber = "567"
+         startingLineNumber = "565"
+         endingLineNumber = "565"
          landmarkName = "trxStoryHandler::generateStories()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -370,11 +357,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390829454.664162"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "593"
-         endingLineNumber = "593"
+         startingLineNumber = "591"
+         endingLineNumber = "591"
          landmarkName = "trxStoryHandler::generateStories()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -422,11 +409,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390836441.363519"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "316"
-         endingLineNumber = "316"
+         startingLineNumber = "324"
+         endingLineNumber = "324"
          landmarkName = "trxStoryHandler::draw()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -435,11 +422,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxStoryHandler.cpp"
-         timestampString = "390836754.080335"
+         timestampString = "390844527.51503"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "315"
-         endingLineNumber = "315"
+         startingLineNumber = "323"
+         endingLineNumber = "323"
          landmarkName = "trxStoryHandler::draw()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -448,11 +435,11 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/trxVehicle.cpp"
-         timestampString = "390838280.510507"
+         timestampString = "390843475.443172"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "80"
-         endingLineNumber = "80"
+         startingLineNumber = "91"
+         endingLineNumber = "91"
          landmarkName = "trxVehicle::isCaughtAt(ofVec3f * _target)"
          landmarkType = "5">
       </FileBreakpoint>

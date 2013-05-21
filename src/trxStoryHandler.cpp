@@ -299,6 +299,14 @@ void trxStoryHandler::draw(){
             //drawTarget();
             //ofTranslate(randomWiggle);
             if (activeConverter->id == 11 || activeConverter->id == 10) {
+                
+                if (activeConverter->id == 10) {
+                    ofEnableAlphaBlending();
+                    ofSetColor(0,60,130,255);
+                    ship.draw(-10, -24, 160, 48);
+                    ofDisableAlphaBlending();
+                }
+                
                 ofSetLineWidth(2);
                 ofSetColor(255, 255, 255);
                 ofSetCircleResolution(40.0);
@@ -317,17 +325,7 @@ void trxStoryHandler::draw(){
                 }
 
             }
-            else if (activeConverter->id == 10) {
-                ofEnableAlphaBlending();
-                ofSetColor(0,60,130,255);
-                ship.draw(-10, -24, 160, 48);
-                ofDisableAlphaBlending();
-                drawProgressCircle(myActiveTask->targetSize, 5.0, catchedQuantity, myActiveTask->quantity);
                 
-                if (myActiveTask->bycatchID.size()>0) {
-                    drawProgressAmount(myActiveTask->targetSize, 100.0, bycatchQuantity);
-                }
-            }
                         
             ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);

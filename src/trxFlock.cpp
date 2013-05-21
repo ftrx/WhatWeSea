@@ -39,7 +39,14 @@ void trxFlock::update(){
 
 	for (int i = 0; i < boids.size(); i++)
 	{
-		boids[i]->flock(boids);
+        
+        if (boids[i]->caught) {
+            boids[i]->catchFlock();
+        }
+        else {
+         
+            boids[i]->flock(boids);
+        }
 		boids[i]->update();
 		boids[i]->bounce(ofGetWidth(), ofGetHeight(), DEPTH);
 	}
@@ -149,7 +156,8 @@ void trxFlock::createNewBoid(){
     v->tooCloseDist = tooCloseDistance;
     v->maxTrailSize= 0;
     v->myTypeID = id;
-    v->pathThreshold = 10.0f;
+    v->pathThreshold = 20.0f;
+    v->pathLoop = true;
     v->bones.assign(numberOfBones, ofVec3f(v->position));
     boids.push_back(v);
 }

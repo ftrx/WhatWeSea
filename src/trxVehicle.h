@@ -30,6 +30,7 @@ public:
     bool onWay = false;
     bool dead = false;
     
+    float pathRadius = 40.0;
     
     float maxStandardSpeed = 0;
     
@@ -46,6 +47,7 @@ public:
     vector <trxVehicle *> prey;
     
     vector <ofVec3f> paths;
+    vector <ofVec3f> circlePaths;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
         
@@ -92,16 +94,10 @@ public:
         }
         
         if (target) {
-            if(caught){
-                isCaughtAt(target);
-                //position += targetMovment;
-            }
-            else{
-                arriveTarget(target);
-            }
+            arriveTarget(target);
         }
         
-        
+                
         // there are some problems with that because of the pointers…
         if  (!caught){
             if (maxSpeed > maxStandardSpeed) {
@@ -158,9 +154,17 @@ public:
     }
     
     
-    template<typename Type> void catchFlock()
+    void catchFlock()
 	{
+        if (position.x != position.x) {
+            cout<<"error nan"<<endl;
+        }
         
+        if (target) {
+            isCaughtAt(target);
+            //position += targetMovment;
+        }
+
     }
     
     void update();

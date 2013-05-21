@@ -23,17 +23,17 @@ void trxHarvester::update(){
     lastPosition = unprojectedPosition;
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
-        ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-
-        boid->addTargetMovment(boidMovement);
-
-        
+        if (boid->caught) {
+            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+            boid->addTargetMovment(boidMovement);
+        }
     }
     for (int i=0; i<myBycatch.size(); i++) {
         trxVehicle * boid = myBycatch.at(i);
-        ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-
-        boid->addTargetMovment(boidMovement);
+        if (boid->caught) {
+            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+            boid->addTargetMovment(boidMovement);
+        }
     }
 }
 
@@ -136,7 +136,7 @@ void trxHarvester::removeBoids(){
 
 }
 */
-void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
+void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment,float _targetRadius){
     for (int i=0; i<myCatch.size(); i++) {
         trxVehicle * boid = myCatch.at(i);
         boid->maxSpeed = 8.0f;
@@ -144,6 +144,7 @@ void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment){
         boid->caught = true;
         boid->clearTargets(); /// !!! fast target eraser, but delets all targets
         boid->addTarget(_target);
+        boid->pathRadius = _targetRadius;
         //boid->addTargetMovment(_movment);
     }
     for (int i=0; i<myBycatch.size(); i++) {

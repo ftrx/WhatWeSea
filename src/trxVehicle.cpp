@@ -58,32 +58,46 @@ void trxVehicle::arriveTarget(ofVec3f * _target){
 void trxVehicle::isCaughtAt(ofVec3f * _target){
     // generate path
     
-    maxSpeed = 2.0f;
-    tooCloseDist = 1.0f;
-    //wanderDistance = 0.5f;
+    maxSpeed = 4.0f;
+    //tooCloseDist = 1.0f;
+    wanderDistance = 0.5f;
     
-    float pathRadius = 80.0;
+    
     int pathCircleNumber = 8;
     
     if (_target) {
-        for (int i=0; i<pathCircleNumber; i++) {
-            ofVec3f pathPoint;
-            float x = sin(TWO_PI/pathCircleNumber*i)*pathRadius;
-            float y = cos(TWO_PI/pathCircleNumber*i)*pathRadius;
+        
+        if (pathIndex >= paths.size() - 1 || circlePaths.size()==0){
+            circlePaths.clear();
+            for (int i=0; i<pathCircleNumber; i++) {
+                ofVec3f pathPoint;
+                float x = sin(TWO_PI/pathCircleNumber*i)*(pathRadius-pathThreshold)*ofRandom(0.3,1.0);
+                float y = cos(TWO_PI/pathCircleNumber*i)*(pathRadius-pathThreshold)*ofRandom(0.3,1.0);
+                
+                pathPoint = ofVec3f(x,y,0);
+                circlePaths.push_back(pathPoint);
+                
+            }
+        }
+        paths.clear();
+        
+        for (int i=0; i<circlePaths.size(); i++) {
             
-            
-            pathPoint = ofVec3f(_target->x+x,_target->y+y,_target->z);
-            
+            ofVec3f pathPoint = ofVec3f(_target->x+circlePaths[i].x,_target->y+circlePaths[i].y,_target->z);
             paths.push_back(pathPoint);
         }
+        
     }
-    //patrol(paths);
-    arrive(* _target);
+    patrol(paths);
+    //arrive(* _target);
     
     float dist = position.distance(*_target);
-    if (dist <= 50.0 && onWay){
+    if (dist <= pathRadius){
+        maxSpeed = 2.0f;
+        if (onWay) {
+            dead=true;
+        }
         
-        dead=true;
     }
     
 }
