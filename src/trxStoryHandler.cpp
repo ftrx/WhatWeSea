@@ -302,7 +302,7 @@ void trxStoryHandler::draw(){
                 
                 if (activeConverter->id == 10) {
                     ofEnableAlphaBlending();
-                    ofSetColor(0,60,130,255);
+                    ofSetColor(0,30,80,255);
                     ship.draw(-10, -24, 160, 48);
                     ofDisableAlphaBlending();
                 }
@@ -470,7 +470,7 @@ void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _cu
     
     for (int i=0; i<_numberOfSectors; i++) {
         int progress = int(ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, _numberOfSectors)+0.5);
-        ofColor color= ofColor(0, 82, 144);
+        ofColor color= PROGRESSBARCOLOR;
         if (i<progress) {
             color= ofColor(255, 255, 255);
         }
@@ -503,7 +503,8 @@ void trxStoryHandler::drawProgressAmount(float _radius, float _barHeight, int _c
     float radius = _radius;
     float barHeight = _barHeight;
     float progressHeight = int(ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, _barHeight));
-    ofColor color= ofColor(0, 82, 144,100);
+    ofColor color= PROGRESSBARCOLOR;
+    color.a = 100;
     
     
     ofPath progressCircle;
