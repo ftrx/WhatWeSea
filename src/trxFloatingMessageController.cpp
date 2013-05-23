@@ -39,13 +39,12 @@ void trxFloatingMessageController::draw(){
 
 void trxFloatingMessageController::changeTopic(int _topicNumber){
     myActiveTopicMessages = NULL;
+    
     for (int i=0; i<myTopics.size(); i++) {
         topic * thisTopic = &myTopics[i];
         if (thisTopic->topicNumber == _topicNumber) {
             myActiveTopicMessages = &thisTopic->messages;
         }
-            
-
     }
 }
 

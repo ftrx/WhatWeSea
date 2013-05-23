@@ -1,4 +1,28 @@
 <messages>
+<topic>
+		<description>NULL TOPIC</description>
+		<type>item</type>
+		<flock>2</flock>
+		<topicNumber>0</topicNumber>
+		<facts>
+			<fact>
+				<text>comming soon 1</text>
+			</fact>
+			<fact>
+				<text>comming soon 2</text>
+			</fact>
+			<fact>
+				<text>comming soon 3</text>
+			</fact>
+            <fact>
+				<text>comming soon 4</text>
+			</fact>
+            
+		</facts>
+
+
+	</topic>
+
 	<topic>
 		<description>Thunfisch solo</description>
 		<type>item</type>

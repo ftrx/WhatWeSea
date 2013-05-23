@@ -85,7 +85,7 @@ class trxStoryHandler {
     trxStoryButton messageButton;
     
     trxStoryHandler();
-    void setup(vector<trxFlock*> _allFLocks,vector<trxConverter*> _allConverters, vector<trxConnectionSlot*> _allConnections);
+    void setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>& _allConverters, vector<trxConnectionSlot*>& _allConnections);
     void generateStories();
     
     void startStory(trxConnectionSlot * _activeConnection);

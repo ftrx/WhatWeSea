@@ -49,6 +49,18 @@ public:
     vector <ofVec3f> sizes;
     
     trxHarvester(float _x, float _y, float _z, int _id);
+    ~trxHarvester(){
+        for (int i=0; i<myCatch.size(); i++) {
+            myCatch[i]->target = NULL;
+        }
+        for (int i=0; i<myBycatch.size(); i++) {
+            myBycatch[i]->target = NULL;
+        }
+        myCatch.clear();
+        myBycatch.clear();
+        longlinePoints.clear();
+        longlineUnprojectedPoints.clear();
+    };
     void update();
     void draw();
     void drawInfo();

@@ -87,14 +87,7 @@ void trxFlock::drawInfo(){
 bool checkDead( trxVehicle *p ){return p->dead;}
 
 void trxFlock::removeDeadBoids(){
-    //ofRemove(boids, checkDead);
-    /*
-    for (int i=0;i<boids.size();i++){
-        if (boids[i].dead) {
-            boids.erase(boids.begin()+i);
-        }
-        else i++;
-    }*/
+    
     vector<trxVehicle*>::iterator it = boids.begin(); 
     for (;it != boids.end();){
         if( (*it)->dead){
@@ -105,6 +98,7 @@ void trxFlock::removeDeadBoids(){
             ++it;
         }
     }
+     
 }
 
 
@@ -116,6 +110,7 @@ void trxFlock::freeCatchedBoids(){
             boids[i]->clearTargets();
             boids[i]->paths.clear();
             boids[i]->caught = false;
+            boids[i]->onWay = false;
             boids[i]->maxSpeed = maxSpeed;
             boids[i]->inSightDist = sightDistance;
             boids[i]->tooCloseDist = tooCloseDistance;
