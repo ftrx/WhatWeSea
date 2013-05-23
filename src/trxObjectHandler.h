@@ -84,8 +84,8 @@ public:
     vector<trxVehicle *> myPrey;
     
     vector<trxConnectionSlot*> myConnections;
-    trxConnectionSlot * myActiveConnection;
-    trxConnectionSlot * myLastActiveConnection;
+    trxConnectionSlot * myActiveConnection = NULL;
+    trxConnectionSlot * myLastActiveConnection = NULL;
     
     //Grafix
     ofVbo vbo;

@@ -27,9 +27,10 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);
     
     Poco::Mutex mutex;
+    //ofMutex mutex;
 
     bool debug = false;
-    bool lightning = false;
+
     
     
     //float runningTime = 0.0f;
@@ -51,7 +52,7 @@ class testApp : public ofBaseApp{
         bool active = false;
         float firstAdded = 0.0f;
         float lastTimeSeen = 0.0f;
-        ofxTuioCursor * tuioCursor = NULL;
+        ofxTuioCursor tuioCursor = ofxTuioCursor(0, 0, 0, 0);
         //ofPtr<ofxTuioCursor> tuioCursor;
         ofxTuioCursor lastTuioCursor = ofxTuioCursor(0, 0, 0, 0);
     };
@@ -67,14 +68,11 @@ class testApp : public ofBaseApp{
     void addCursorToRemovable(ofxTuioCursor & tuioCursor);
     void removeDeadCursors();
     
-    trxObjectHandler myObjectHandler;
+    trxObjectHandler * myObjectHandler = NULL;
     
     ofImage background;
 	ofTexture texture1;
     ofShader shader1;
-    
-    ofLight light;
-    
     
     void	tuioCursorAdded(ofxTuioCursor & tuioCursor);
 	void	tuioCursorRemoved(ofxTuioCursor & tuioCursor);

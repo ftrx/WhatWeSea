@@ -31,7 +31,7 @@ trxStoryHandler::trxStoryHandler() {
     ship.loadImage("schiff.png");
 }
 
-void trxStoryHandler::setup(vector<trxFlock*> _allFLocks,vector<trxConverter*> _allConverters, vector<trxConnectionSlot*> _allConnections) {
+void trxStoryHandler::setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>& _allConverters, vector<trxConnectionSlot*>& _allConnections) {
 
     
     xml = trxXML("stories.xml");
@@ -49,7 +49,7 @@ void trxStoryHandler::setup(vector<trxFlock*> _allFLocks,vector<trxConverter*> _
     //myOsc.setup();
 }
 
-void trxStoryHandler::startStory(trxConnectionSlot * _activeConnection){
+void trxStoryHandler::startStory(trxConnectionSlot* _activeConnection){
     
     stopStory(); // stop any current running Story
 
@@ -700,10 +700,15 @@ void trxStoryHandler::changeAction(int _actionNumber){
 
 void trxStoryHandler::changeTopic(int _topicNumber){
 
-    myOsc.sendOscTopic(_topicNumber);
-    myFloatingMessageController.changeTopic(_topicNumber);
-    randomFact = myFloatingMessageController.getRandomFact();
-    activeTopicNumber = _topicNumber;
+    if (_topicNumber != 0) {
+        myOsc.sendOscTopic(_topicNumber);
+        myFloatingMessageController.changeTopic(_topicNumber);
+        
+        randomFact = myFloatingMessageController.getRandomFact();
+        
+        activeTopicNumber = _topicNumber;
+    }
+    
 }
 
 

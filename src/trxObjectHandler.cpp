@@ -55,7 +55,21 @@ void trxObjectHandler::update()
         checkIfStillActiveSlot();
         checkStillActiveSlots = false;
     }
+    
+    for (int i = 0; i<myFlocks.size(); i++) {
+        if (myFlocks[i] != NULL) {
+            myFlocks[i]->update();
+        }
+        
+    }
 
+    myStoryHandler.update();
+    if (myStoryHandler.myActiveTask) {
+        myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
+    }
+    
+    allMyBoids = getAllBoidsFromFlocks(myFlocks);
+    
     for (int i=0; i<harvesters.size();i++){
         if (myStoryHandler.showFingerHint) {
             myStoryHandler.showFingerHint = false;
@@ -70,15 +84,8 @@ void trxObjectHandler::update()
         }
     }
     
-    for (int i = 0; i<myFlocks.size(); i++) {
-        myFlocks[i]->update();
-    }
+        
     
-    
-    myStoryHandler.update();
-    if (myStoryHandler.myActiveTask) {
-        myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
-    }
     
     if(closeMessage){
         closeMessage = false;
@@ -86,7 +93,7 @@ void trxObjectHandler::update()
         
     }
 
-    allMyBoids = getAllBoidsFromFlocks(myFlocks);
+    
     //randomPrey();
     
     /*
@@ -116,7 +123,7 @@ void trxObjectHandler::draw()
         trxFlock * flock = thisSlot->myFlock;
         trxConverter * converter = thisSlot->myConverter;
         
-        if (myActiveConnection) {
+        if (myActiveConnection != NULL) {
             if (thisSlot != myActiveConnection) {
                 ofEnableAlphaBlending();
                 
@@ -322,7 +329,7 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(const vector<trxFlo
         {
             
             trxVehicle * thisVehicle = tmpFlock->boids.at(j);
-            thisVehicle->clearFleeTargets();
+            
             ofVec3f pos = myCamera->worldToScreen(thisVehicle->position);
             thisVehicle->position2D = pos;
             //debug
@@ -330,8 +337,9 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(const vector<trxFlo
                 cout<<"error nan"<<endl;
             }
             
+            thisVehicle->clearFleeTargets();
             for (int harvester = 0; harvester< harvesters.size(); harvester++) {
-                thisVehicle->addFleeTarget(&harvesters.at(harvester)->position);
+                thisVehicle->addFleeTarget(harvesters.at(harvester)->position);
             }
             
             // check if dead, when dead then do not draw
@@ -343,20 +351,19 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(const vector<trxFlo
     return allBoids;
 }
 
-void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
+void trxObjectHandler::catchBoid(trxHarvester* _myHarverster)
 {
-    for (int i=0; i<allMyBoids.size(); i++){
-        trxVehicle* boid = allMyBoids.at(i);
-        if (!boid->caught) {
-            ofVec3f bPos= boid->position2D;
-            ofVec3f hPos= ofVec3f (_myHarverster->position.x,_myHarverster->position.y,0);
-            //bPos = myCamera->worldToScreen(bPos);
-
-            float dist = hPos.distance(bPos);
-            if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
-                if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
-                    if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
+    if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
+        for (int i=0; i<allMyBoids.size(); i++){
+            trxVehicle* boid = allMyBoids.at(i);
+            if (!boid->caught) {
+                if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
+                    if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
+                        ofVec3f bPos= boid->position2D;
+                        ofVec3f hPos= ofVec3f (_myHarverster->position.x,_myHarverster->position.y,0);
+                        float dist = hPos.distance(bPos);
                         if (dist <= _myHarverster->radius) {
+                            boid->caught = true;
                             _myHarverster->myCatch.push_back(boid);
                             if (firstCatch && _myHarverster->myCatch.size()>0) {
                                 myStoryHandler.changeAction(3);
@@ -382,11 +389,11 @@ void trxObjectHandler::catchLongLineBoid(trxHarvester *_myHarverster){
                     for (int j=0; j<_myHarverster->longlinePoints.size(); j++) {
                         if (!_myHarverster->longlineHooks[j]) {
                             ofVec3f hPos= ofVec3f (_myHarverster->longlinePoints[j]->x,_myHarverster->longlinePoints[j]->y,0);
-                            //bPos = ofVec3f(bPos.x,bPos.y,0);
                             float dist = hPos.distance(bPos);
                             if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
                                 if (dist <= LONGLINE_RADIUS) {
                                     boid->addTarget(_myHarverster->longlineUnprojectedPoints[j]);
+                                    boid->caught = true;
                                     _myHarverster->longlineHooks[j] = 1;
                                     _myHarverster->myCatch.push_back(boid);
                                     if (firstCatch && _myHarverster->myCatch.size()>0) {
@@ -404,56 +411,6 @@ void trxObjectHandler::catchLongLineBoid(trxHarvester *_myHarverster){
     }
 }
 
-/*
-void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
-{
-    for (int i=0; i<myFlocks.size(); i++) {
-        trxFlock* tmpFlock= &myFlocks.at(i);
-        
-        if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
-            if (tmpFlock->id == myStoryHandler.myActiveTask->catchID || tmpFlock->id == myStoryHandler.myActiveTask->bycatchID) {
-                for (int j; j<tmpFlock->boids.size(); j++) {
-                    trxVehicle* tmpBoid = &tmpFlock->boids.at(j);
-                    
-                    if (!tmpBoid->caught) {
-                        if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize) {
-                            ofVec3f bPos= tmpBoid->position;
-                            ofVec3f hPos= ofVec3f (_myHarverster->position.x,_myHarverster->position.y,0);
-                            bPos = myCamera->worldToScreen(bPos);
-                            float dist = hPos.distance(bPos);
-                            if (dist <= _myHarverster->radius) {
-                                tmpBoid->addTarget(&_myHarverster->unprojectedPosition);
-                                tmpBoid->caught = true;
-                                
-                                if (tmpBoid->myTypeID == myStoryHandler.myActiveTask->catchID) {
-                                    _myHarverster->myCatch.push_back(tmpBoid);
-                                }
-                                if (tmpBoid->myTypeID == myStoryHandler.myActiveTask->bycatchID) {
-                                    _myHarverster->myBycatch.push_back(tmpBoid);
-                                }
-                                
-                                if (firstCatch) {
-                                    myStoryHandler.changeAction(3);
-                                    firstCatch = false;
-                                }
-
-                            }
-                            
-                        }
-                    }
-                    
-                    
-                }
-                
-                
-                
-            }
-        }        
-    }
- 
-}
-*/ 
- 
 void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
 {
     ofPoint loc = ofPoint(getCorrectedPosition( tuioObject.getX(),tuioObject.getY()));
@@ -548,13 +505,7 @@ void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
     if (harvesters.size()<=1) {
         firstCatch = true;
     }
-    /*
-    for (int i=0; i<allMyBoids.size(); i++) {
-        trxVehicle * tmpVehicle = allMyBoids.at(i);
-        tmpVehicle->addFleeTarget(&harvesters.at(harvesters.size()-1).position);
-    }
-     */
-	//cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
+    //cout << "Point n" << tuioCursor.getSessionId() << " add at " << loc << endl;
 }
 
 void trxObjectHandler::updateCursor(ofxTuioCursor & tuioCursor)
@@ -589,21 +540,10 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
             thisHarvester->clearLonglinePoints();
             thisHarvester->longline = false;
             delete thisHarvester;
-            thisHarvester = NULL;
+            //thisHarvester = NULL;
             harvesters.erase(harvesters.begin()+i);
         }
     }
-    /*
-    for (int i=0; i<allMyBoids.size(); i++) {
-        trxVehicle * tmpVehicle = allMyBoids.at(i);
-        tmpVehicle->clearFleeTargets();
-        
-        for (int j = 0; j< harvesters.size(); j++) {
-            tmpVehicle->addFleeTarget(&harvesters.at(j).position);
-        }
-        
-    }
-     */
     if (myStoryHandler.showMessage) {
         if (myStoryHandler.messageButton.clickOverButton(loc) && !closeMessage) {
             closeMessage = true;

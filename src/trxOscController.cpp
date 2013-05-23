@@ -9,6 +9,7 @@
 #include "trxOscController.h"
 
 trxOscController::trxOscController(){
+    
     mySender.setup(trx_HOST, trx_PORT);
     
 }

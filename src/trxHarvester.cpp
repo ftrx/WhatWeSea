@@ -16,6 +16,9 @@ trxHarvester::trxHarvester(float _x, float _y, float _z,int _id){
     lastPosition.set(position);       
 }
 
+
+
+
 void trxHarvester::update(){
     
     movment = unprojectedPosition-lastPosition;
@@ -39,10 +42,8 @@ void trxHarvester::update(){
         }
         for (int i=0; i<myCatch.size(); i++) {
             trxVehicle * boid = myCatch.at(i);
-            if (boid->caught) {
                 boid->pathRadius = 0;
-                boid->caught = true;
-            }
+                
         }
     }
     
@@ -52,7 +53,7 @@ void trxHarvester::update(){
             trxVehicle * boid = myCatch.at(i);
                 ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
                 boid->addTargetMovment(boidMovement);
-                boid->addTarget(&unprojectedPosition);
+                boid->isCaughtAt(unprojectedPosition);
                 boid->pathRadius = radius;
                 boid->caught = true;
 
@@ -61,7 +62,7 @@ void trxHarvester::update(){
             trxVehicle * boid = myBycatch.at(i);
                 ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
                 boid->addTargetMovment(boidMovement);
-                boid->addTarget(&unprojectedPosition);
+                boid->isCaughtAt(unprojectedPosition);
                 boid->pathRadius = radius;
                 boid->caught = true;
         }
