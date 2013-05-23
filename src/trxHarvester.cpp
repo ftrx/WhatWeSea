@@ -13,53 +13,113 @@
 trxHarvester::trxHarvester(float _x, float _y, float _z,int _id){
     id = _id;
     position.set(ofVec3f(_x,_y,_z));
-    lastPosition.set(position);
-    
+    lastPosition.set(position);       
 }
 
 void trxHarvester::update(){
     
     movment = unprojectedPosition-lastPosition;
     lastPosition = unprojectedPosition;
-    for (int i=0; i<myCatch.size(); i++) {
-        trxVehicle * boid = myCatch.at(i);
-        if (boid->caught) {
-            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-            boid->addTargetMovment(boidMovement);
+    if (longline) {
+        ofPoint * positionPoint = new ofPoint(position.x,position.y,0);
+        if (longlinePoints.size()>0) {
+            ofPoint * lastPoint = longlinePoints[longlinePoints.size()-1];
+            if (positionPoint->distance(*lastPoint) >= 30.0) {
+                ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
+                longlineUnprojectedPoints.push_back(projectedPoint);
+                longlinePoints.push_back(positionPoint);
+                longlineHooks.push_back(0);
+            }
+        }
+        else{
+            ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
+            longlineUnprojectedPoints.push_back(projectedPoint);
+            longlinePoints.push_back(positionPoint);
+            longlineHooks.push_back(0);
+        }
+        for (int i=0; i<myCatch.size(); i++) {
+            trxVehicle * boid = myCatch.at(i);
+            if (boid->caught) {
+                boid->pathRadius = 0;
+                boid->caught = true;
+            }
         }
     }
-    for (int i=0; i<myBycatch.size(); i++) {
-        trxVehicle * boid = myBycatch.at(i);
-        if (boid->caught) {
-            ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
-            boid->addTargetMovment(boidMovement);
+    
+    
+    if (!longline) {
+        for (int i=0; i<myCatch.size(); i++) {
+            trxVehicle * boid = myCatch.at(i);
+                ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+                boid->addTargetMovment(boidMovement);
+                boid->addTarget(&unprojectedPosition);
+                boid->pathRadius = radius;
+                boid->caught = true;
+
+        }
+        for (int i=0; i<myBycatch.size(); i++) {
+            trxVehicle * boid = myBycatch.at(i);
+                ofVec3f boidMovement = movment * ofMap(boid->position.z, 0, 600, 2.5f, 1.0f);
+                boid->addTargetMovment(boidMovement);
+                boid->addTarget(&unprojectedPosition);
+                boid->pathRadius = radius;
+                boid->caught = true;
         }
     }
+    
 }
 
 void trxHarvester::draw(){
     
-    ofPushMatrix();
     ofPushStyle();
     ofSetCircleResolution(100);
-    ofTranslate(position.x,position.y,0);
+    
     ofEnableAlphaBlending();
-    ofFill();
+    if (longline) {
+        ofNoFill();
+        ofSetLineWidth(2.0);
+        ofSetColor(255, 255, 255,255);
+        ofBeginShape();
+        for (int i=0; i<longlinePoints.size(); i++) {
+            if (i == 0) {
+                ofCurveVertex(*longlinePoints[i]);
+                ofCurveVertex(*longlinePoints[i]);
+            }
+            else {
+                ofCurveVertex(*longlinePoints[i]);
+            }
+            
+            ofCircle(*longlinePoints[i], 10);
+        }
+        ofCurveVertex(position.x, position.y,0);
+        ofCurveVertex(position.x, position.y,0);
+        ofEndShape(false);
+    }
     
-    ofSetColor(255, 255, 255, 30);
-    ofCircle(0,0,radius);
-    ofSetColor(255, 255, 255, 50);
-    ofCircle(0, 0, 10);
-    ofSetColor(255, 255, 255,255);
     
-    ofNoFill();
-    ofSetLineWidth(1.0);
     
-    ofCircle(0,0,radius);
-    ofFill();
+    else {
+        ofPushMatrix();
+        ofTranslate(position.x,position.y,0);
+        ofFill();
+        
+        ofSetColor(255, 255, 255, 30);
+        ofCircle(0,0,radius);
+        ofSetColor(255, 255, 255, 50);
+        ofCircle(0, 0, 10);
+        ofSetColor(255, 255, 255,255);
+        
+        ofNoFill();
+        ofSetLineWidth(1.0);
+        
+        ofCircle(0,0,radius);
+        ofFill();
+        ofPopMatrix();
+    }
+   
     ofDisableAlphaBlending();
     ofPopStyle();
-    ofPopMatrix();
+    
     
     }
 
@@ -82,6 +142,17 @@ void trxHarvester::drawInfo(){
     string info = "Harvesterposition:"+ofToString(position)+"\n";
     ofDrawBitmapString(info, 0,0);
     ofPopMatrix();
+    
+    
+    for (int i=0; i<longlineUnprojectedPoints.size(); i++) {
+        ofSetColor(0, 255, 0);
+        if (longlineHooks[i]) {
+            ofSetColor(255, 0, 0);
+        }
+        
+        ofNoFill();
+        ofCircle(*longlineUnprojectedPoints[i], LONGLINE_RADIUS);
+    }
     //ofDisableAlphaBlending();
     ofPopStyle();
     
@@ -160,5 +231,27 @@ void trxHarvester::moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment,float 
     myBycatch.clear();
 }
 
+void trxHarvester::clearLonglinePoints(){
+    longlinePoints.clear();
+    longlineHooks.clear();
+}
 
+ofPoint trxHarvester::pointToProjection(ofPoint _point){
+    ofVec3f point= ofVec3f (_point.x,_point.y,0.666666);
+    point = myCamera->screenToWorld(point,ofRectangle(0,0,ofGetWidth(),ofGetHeight()));
+    return point;
+    
+}
+
+void trxHarvester::setID(int _id){
+    id = _id;
+}
+
+void trxHarvester::setPosition(ofVec3f _pos){
+    position = _pos;
+}
+
+void trxHarvester::setUnprojectedPosition(ofVec3f _pos){
+    unprojectedPosition = _pos;
+}
 

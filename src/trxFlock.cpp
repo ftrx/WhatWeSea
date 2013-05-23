@@ -10,19 +10,18 @@
 #include "trxFlockUpdater.h"
 
 
-trxFlock::trxFlock(float _x, float _y, float _z, int _id, vector <trxHarvester>* _harvesters, int _startBoidNum) : trxObject(_x,_y,_z,_id){
+trxFlock::trxFlock(float _x, float _y, float _z, int _id, int _startBoidNum) : trxObject(_x,_y,_z,_id){
 
    // myConnectionSlot = &trxConnectionSlot(this);
     
-    myHarvesters = _harvesters;
 	boidNum = 200;
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
 	target = ofVec3f(0, 0, 0);
 	//cout << startBoidNum << endl;
     
-    flockUpdater = new trxFlockUpdater();
-    flockUpdater->flock = this;
+   // flockUpdater = new trxFlockUpdater();
+   // flockUpdater->flock = this;
     
    
 }
@@ -34,8 +33,6 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 }
 
 void trxFlock::update(){
-
-    vector <trxVehicle> tmp;
 
 	for (int i = 0; i < boids.size(); i++)
 	{
@@ -117,6 +114,7 @@ void trxFlock::freeCatchedBoids(){
         if (boids[i]->caught && !boids[i]->dead)
         {
             boids[i]->clearTargets();
+            boids[i]->paths.clear();
             boids[i]->caught = false;
             boids[i]->maxSpeed = maxSpeed;
             boids[i]->inSightDist = sightDistance;
@@ -158,6 +156,15 @@ void trxFlock::createNewBoid(){
     v->myTypeID = id;
     v->pathThreshold = 20.0f;
     v->pathLoop = true;
+    ofColor color;
+    int r = standardColor.r + int(ofRandom(-5.0, 10.0));
+    int g = standardColor.g + int(ofRandom(-5.0, 10.0));
+    int b = standardColor.b + int(ofRandom(-5.0, 10.0));
+    color.r = r;
+    color.g = g;
+    color.b = b;
+    v->color = color;
+    
     v->bones.assign(numberOfBones, ofVec3f(v->position));
     boids.push_back(v);
 }

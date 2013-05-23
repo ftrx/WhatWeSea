@@ -25,6 +25,8 @@ class testApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+    
+    Poco::Mutex mutex;
 
     bool debug = false;
     bool lightning = false;
@@ -55,8 +57,8 @@ class testApp : public ofBaseApp{
     };
     
     
-    vector<activeTuioCursor> activeCursors;
-    vector<activeTuioCursor> onRemoveCursors;
+    vector<activeTuioCursor*> activeCursors;
+    vector<activeTuioCursor*> onRemoveCursors;
     
     void addNewCursor();
     void removeNewCursor();

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<stories>
+	<story>
+		<description>Story: Thunfische/Schiff</description>
+		<topicNumber>2</topicNumber>
+		<flock>2</flock>
+		<converter>10</converter>
+		<task>
+			<no>0</no>
+			<description>Aktion: Einfange der Thunfische</description>
+			<actionNumber>2</actionNumber>
+			<catchIDs>
+				<catchID>
+					<ID>2</ID>
+				</catchID>
+			</catchIDs>
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>20</catchSize>
+			<taskMessage>Fange Thunfische</taskMessage>
+			<quantity>40</quantity>
+			<harvester>longline</harvester>
+			<targetSize>50.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+		</task>
+		<finalMessage>Gratulation/n Du hast 20 Tonnen Thunfische gefangen</finalMessage>
+		<finalFact>Thunfisch_Boot_Fact.png</finalFact>
+	</story>
+
+	<story>
+		<description>Story: Thunfische/Aquakultur</description>
+		<topicNumber>3</topicNumber>
+		<flock>2</flock>
+		<converter>11</converter>
+		<task>
+			<no>0</no>
+			<description>Aktion: Einfange der Thunfische</description>
+			<catchIDs>
+				<catchID>
+					<ID>2</ID>
+				</catchID>
+			</catchIDs>
+			
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Fange Thunfische</taskMessage>
+			<finalMessage>10 Tonnen Thunfische gefangen</finalMessage>
+			<quantity>10</quantity>
+			<harvester>Net</harvester>
+			<targetSize>80.0</targetSize>
+			<dieAfterCatch>0</dieAfterCatch>
+			<progress>circle</progress>
+		</task>
+		<task>
+			<no>1</no>
+			<description>Aktion: Füttern der Thunfische</description>
+			<catchIDs>
+				<catchID>
+					<ID>5</ID>
+				</catchID>
+				<catchID>
+					<ID>6</ID>
+				</catchID>
+			</catchIDs>
+			
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Füttere Thunfische</taskMessage>
+			<quantity>50</quantity>
+			<harvester>Net</harvester>
+			<targetSize>80.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+			<progress>amount</progress>
+		</task>
+		<finalMessage>Gratulation/n Du hast 50 Tonnen Futterfisch für 20 Tonnen Thunfisch benötigt!</finalMessage>
+		<finalFact>Thunfisch_Aqua_Fact.png</finalFact>
+	</story>
+
+	<story>
+		<description>Story: Shrimp/Schiff</description>
+		<topicNumber>5</topicNumber>
+		<flock>1</flock>
+		<converter>10</converter>
+		<task>
+			<no>0</no>
+			<description>Aktion: Einfange der Shrimps</description>
+			<actionNumber>2</actionNumber>
+			<catchIDs>
+				<catchID>
+					<ID>1</ID>
+				</catchID>
+			</catchIDs>
+			
+			<bycatchIDs>
+				<bycatchID>
+					<ID>5</ID>
+				</bycatchID>
+				<bycatchID>
+					<ID>6</ID>
+				</bycatchID>
+			</bycatchIDs>
+			<catchSize>20</catchSize>
+			<taskMessage>Fange Shrimps</taskMessage>
+			<quantity>40</quantity>
+			<harvester>Net</harvester>
+			<targetSize>50.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+		</task>
+		<finalMessage>Gratulation/n Du hast 20 Tonnen Thunfische gefangen</finalMessage>
+		<finalFact>Shrimp_Boot_Fact.png</finalFact>
+	</story>
+	<story>
+		<description>Story: Shrimp/Aquakultur</description>
+		<topicNumber>6</topicNumber>
+		<flock>1</flock>
+		<converter>11</converter>
+		<task>
+			<no>0</no>
+			<description>Aktion: Einfange der Shrimps</description>
+			<catchIDs>
+				<catchID>
+					<ID>1</ID>
+				</catchID>
+			</catchIDs>
+			
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Fange Shrimps</taskMessage>
+			<quantity>20</quantity>
+			<harvester>Net</harvester>
+			<targetSize>80.0</targetSize>
+			<dieAfterCatch>0</dieAfterCatch>
+		</task>
+		<task>
+			<no>1</no>
+			<description>Aktion: Füttern der Shrimps</description>
+			<catchIDs>
+				<catchID>
+					<ID>5</ID>
+				</catchID>
+				<catchID>
+					<ID>6</ID>
+				</catchID>
+			</catchIDs>
+			
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Füttere die Shrimps</taskMessage>
+			<quantity>50</quantity>
+			<harvester>Net</harvester>
+			<targetSize>80.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+			<progress>amount</progress>
+		</task>
+		<finalMessage>Gratulation Du hast 20 Tonnen Shrimp produziert</finalMessage>
+		<finalFact>Shrimp_Aqua_Fact.png</finalFact>
+	</story>
+	<story>
+		<description>Story: Hai/Schiff</description>
+		<topicNumber>8</topicNumber>
+		<flock>0</flock>
+		<converter>10</converter>
+		<task>
+			<no>0</no>
+			<description>Aktion: Einfange der Hais</description>
+			<type>fraction</type>
+			<percent>4</percent>
+			<catchIDs>
+				<catchID>
+					<ID>0</ID>
+				</catchID>
+			</catchIDs>
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Fange Hais</taskMessage>
+			<quantity>4</quantity>
+			<harvester>Net</harvester>
+			<targetSize>50.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+		</task>
+		<finalMessage>Gratulation Du hast 20 Tonnen Haie gefangen</finalMessage>
+		<finalFact>Shark_Fact.png</finalFact>
+	</story>
+	<story>
+		<description>Story: Delfin/Schiff</description>
+		<topicNumber>10</topicNumber>
+		<flock>3</flock>
+		<converter>10</converter>
+		<task>
+			<no>0</no>
+			<type>fraction</type>
+			<percent>10</percent>
+			<description>Aktion: Einfange der Delfine</description>
+			<catchIDs>
+				<catchID>
+					<ID>3</ID>
+				</catchID>
+			</catchIDs>
+			<bycatchIDs>
+			</bycatchIDs>
+			<catchSize>10</catchSize>
+			<taskMessage>Fange Delfine</taskMessage>
+			<quantity>3</quantity>
+			<harvester>Net</harvester>
+			<targetSize>40.0</targetSize>
+			<dieAfterCatch>1</dieAfterCatch>
+		</task>
+		<finalMessage>Gratulation Du hast 20 Tonnen Delfine gefangen</finalMessage>
+		<finalFact>Delfin_Fact.png</finalFact>
+	</story>
+</stories>

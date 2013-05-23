@@ -39,9 +39,9 @@ public:
     vector<trxVehicle*> deadBoids;
     
     
-    vector <trxHarvester> * myHarvesters;
+
     
-    trxFlockUpdater * flockUpdater;
+    //trxFlockUpdater * flockUpdater;
     
     
     ofVbo vbo;
@@ -49,7 +49,7 @@ public:
     ofTexture  * texture;
 
 
-    trxFlock(float _x, float _y, float _z, int _id,vector <trxHarvester>* _harvesters, int _startBoidNum);
+    trxFlock(float _x, float _y, float _z, int _id, int _startBoidNum);
     void update();
     void draw();
     void drawCircles();

@@ -37,10 +37,12 @@ public:
     void generateObjects();
     
     
-    vector<trxVehicle *> getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks);
+    vector<trxVehicle *> getAllBoidsFromFlocks(const vector<trxFlock * >& _myFlocks);
     void drawAllBoids();
 
     void catchBoid(trxHarvester * _myHarverster);
+    
+    void catchLongLineBoid(trxHarvester * _myHarverster);
     
     
     void addObject(ofxTuioObject & tuioObject);
@@ -70,10 +72,10 @@ public:
     vector<ofImage> icons;
     
     
-    vector<trxFlock> myFlocks;
-    vector<trxConverter> myConverters;
+    vector<trxFlock *> myFlocks;
+    vector<trxConverter *> myConverters;
     
-    vector<trxHarvester> harvesters;
+    vector<trxHarvester* > harvesters;
     vector<trxFlock *> activeFlocks;
     vector<trxConverter *> activeConverters;
     
@@ -81,7 +83,7 @@ public:
     vector<trxVehicle *> myPredators;
     vector<trxVehicle *> myPrey;
     
-    vector<trxConnectionSlot> myConnections;
+    vector<trxConnectionSlot*> myConnections;
     trxConnectionSlot * myActiveConnection;
     trxConnectionSlot * myLastActiveConnection;
     

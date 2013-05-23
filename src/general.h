@@ -12,7 +12,7 @@
 
 // Harvester (finger)
 const float HARVESTER_RADIUS = 100.0f;
-
+const float LONGLINE_RADIUS = 20.0f;
 
 const int VERTEXNUMBER = 6;
 const int DEPTH = 600; // Depth of the virtual water
@@ -25,7 +25,7 @@ const float ADDTIMER = 0.100;
 
 
 const ofColor activColor = ofColor(255,255,255,255);
-const ofColor standardColor = ofColor(0,80,160,255);
+const ofColor standardColor = ofColor(6,43,104,255);
 
 #define trx_HOST "172.31.7.147"
 #define trx_PORT 12000

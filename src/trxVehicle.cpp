@@ -49,19 +49,18 @@ void trxVehicle::update(){
     SteeredVehicle::update();
 }
 
-void trxVehicle::arriveTarget(ofVec3f * _target){
+void trxVehicle::arriveTarget(ofVec3f* _target){
     
     arrive(* _target);
     
 }
 
-void trxVehicle::isCaughtAt(ofVec3f * _target){
+void trxVehicle::isCaughtAt(ofVec3f* _target){
     // generate path
     
     maxSpeed = 4.0f;
     //tooCloseDist = 1.0f;
     wanderDistance = 0.5f;
-    
     
     int pathCircleNumber = 8;
     
@@ -102,8 +101,8 @@ void trxVehicle::isCaughtAt(ofVec3f * _target){
     
 }
 
-void trxVehicle::fleeTarget(ofVec3f _target){
-    flee(_target);
+void trxVehicle::fleeTarget(ofVec3f *_target){
+    flee(*_target);
 }
 
 

@@ -21,17 +21,17 @@ private:
     
 public:
     trxConnectionSlot();
-    trxConnectionSlot(trxFlock * _myFlock);
+    trxConnectionSlot(trxFlock* _myFlock);
     
-    trxFlock  * myFlock;
-    trxConverter * myConverter;
+    trxFlock* myFlock;
+    trxConverter* myConverter;
     
     bool state = false;
     int inactiveFlockPosition = 0;
     int inactiveConverterPosition = 0;
     bool isConnectionActive();
     
-    void connect(trxConverter * _myConverter);
+    void connect(trxConverter* _myConverter);
     void deletConnection();
     
     void draw();

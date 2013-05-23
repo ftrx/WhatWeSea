@@ -31,7 +31,7 @@ trxStoryHandler::trxStoryHandler() {
     ship.loadImage("schiff.png");
 }
 
-void trxStoryHandler::setup(vector<trxFlock> *_allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections) {
+void trxStoryHandler::setup(vector<trxFlock*> _allFLocks,vector<trxConverter*> _allConverters, vector<trxConnectionSlot*> _allConnections) {
 
     
     xml = trxXML("stories.xml");
@@ -581,6 +581,7 @@ void trxStoryHandler::generateStories(){
             thisTask.progress = xml.getString("circle", "progress");
             thisTask.type = xml.getString("standard", "type");
             thisTask.percent = xml.getIntValue(100, "percent");
+            thisTask.harvester = xml.getString("net", "harvester");
             thisStory.myTasks.push_back(thisTask);
             xml.XML.popTag();
         }
@@ -594,8 +595,8 @@ void trxStoryHandler::generateStories(){
 
 // helpers
 trxFlock* trxStoryHandler::getFlockWithID(int _id){
-    for (int i=0; i< allFlocks->size(); i++) {
-        trxFlock * thisFlock = & allFlocks->at(i);
+    for (int i=0; i< allFlocks.size(); i++) {
+        trxFlock * thisFlock = allFlocks.at(i);
         if (thisFlock->id == _id) {
             return thisFlock;
         }
@@ -604,8 +605,8 @@ trxFlock* trxStoryHandler::getFlockWithID(int _id){
 }
 
 trxConverter* trxStoryHandler::getConverterWithID(int _id){
-    for (int i=0; i< allConverters->size(); i++) {
-        trxConverter * thisConverter = & allConverters->at(i);
+    for (int i=0; i< allConverters.size(); i++) {
+        trxConverter * thisConverter = allConverters.at(i);
         if (thisConverter->id == _id) {
             return thisConverter;
         }
@@ -614,8 +615,8 @@ trxConverter* trxStoryHandler::getConverterWithID(int _id){
 }
 
 trxConnectionSlot* trxStoryHandler::getConnectionSlotWithID(trxFlock * _flock, trxConverter * _converter){
-    for (int i=0; i< allConnectionSlots->size(); i++) {
-        trxConnectionSlot * thisConnectionSlot = &allConnectionSlots->at(i);
+    for (int i=0; i< allConnectionSlots.size(); i++) {
+        trxConnectionSlot * thisConnectionSlot = allConnectionSlots.at(i);
         if (thisConnectionSlot->myFlock == _flock && thisConnectionSlot->myConverter == _converter) {
             return thisConnectionSlot;
         }

@@ -30,6 +30,8 @@ public:
     bool onWay = false;
     bool dead = false;
     
+    ofColor color = standardColor;
+    
     float pathRadius = 40.0;
     
     float maxStandardSpeed = 0;
@@ -52,6 +54,13 @@ public:
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
         
 	}
+    
+    /*
+    virtual ~trxVehicle()
+    {
+    
+    }
+    */
     
     template<typename Type> void flock(vector<Type> &vehicles)
 	{
@@ -98,7 +107,7 @@ public:
         }
         
                 
-        // there are some problems with that because of the pointers…
+        // there are some problems with that, because of the pointers…
         if  (!caught){
             if (maxSpeed > maxStandardSpeed) {
                 maxSpeed -= 0.1f;
@@ -106,18 +115,17 @@ public:
             if (maxSpeed < maxStandardSpeed) {
                 maxSpeed += 0.1f;
             }
-            
+            /*
             for (int i=0; i<fleeTargets.size(); i++) {
                 if (fleeTargets.at(i)) {
                     ofVec3f pos = ofVec3f(fleeTargets[i]->x,fleeTargets[i]->y,0);
                     if (position2D.distance(pos) < HARVESTER_RADIUS+20.0){
                         maxSpeed = 8.0f;
-                        fleeTarget(*fleeTargets[i]);
+                        fleeTarget(fleeTargets[i]);
                     }
-
                 }
             }
-            
+            */
             for (int i=0; i<predators.size(); i++){
                 if(predators.at(i))
                 {
@@ -159,18 +167,16 @@ public:
         if (position.x != position.x) {
             cout<<"error nan"<<endl;
         }
-        
         if (target) {
             isCaughtAt(target);
             //position += targetMovment;
         }
-
     }
     
     void update();
     void arriveTarget(ofVec3f * _target);
     void isCaughtAt(ofVec3f *_target);
-    void fleeTarget(ofVec3f _target);
+    void fleeTarget(ofVec3f *_target);
     
     void addTarget(ofVec3f * _target){
         target = _target;
@@ -179,7 +185,7 @@ public:
         target = NULL;
     }
     
-    void addFleeTarget(ofVec3f * _target){
+    void addFleeTarget(ofVec3f *_target){
         fleeTargets.push_back(_target);
     }
     void clearFleeTargets(){

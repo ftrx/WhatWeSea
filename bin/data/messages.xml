@@ -1,0 +1,237 @@
+<messages>
+	<topic>
+		<description>Thunfisch solo</description>
+		<type>item</type>
+		<flock>2</flock>
+		<topicNumber>1</topicNumber>
+		<facts>
+			<fact>
+				<text>Ein Thunfisch wird zwischen 1m-4.5m lang</text>
+			</fact>
+			<fact>
+				<text>Ein Thunfisch wird zwischen 20-680kg schwer</text>
+			</fact>
+			<fact>
+				<text>Ein Thunfisch kann bis zu 80km/h schnell schwimmen</text>
+			</fact>
+            <fact>
+				<text>Thunfische gehören zu den wichtigsten Speisefischen</text>
+			</fact>
+            
+		</facts>
+
+
+	</topic>
+
+	<topic>
+		<description>Thunfisch/Schiff</description>
+		<type>connection</type>
+		<flock>2</flock>
+		<converter>10</converter>
+		<topicNumber>2</topicNumber>
+		<facts>
+			<fact>
+				<text>Es werden rund 5 Mio Tonnen Thunfisch pro Jahr gefangen</text>
+			</fact>
+			<fact>
+				<text>Im Mittelmeer wird 40% des Blauflossenthunfischs illegal gefangen</text>
+			</fact>
+			<fact>
+				<text>Seit 1950 hat sich der Thunfischfang verzehnfacht</text>
+			</fact> 
+		</facts>
+
+
+	</topic>
+    
+    <topic>
+		<description>Thunfisch/Aquakultur</description>
+		<type>connection</type>
+		<flock>2</flock>
+		<converter>10</converter>
+		<topicNumber>3</topicNumber>
+		<facts>
+			<fact>
+				<text>80% des roten Thunfischs wird als Sushifisch nach Japan verkauft</text>
+			</fact>
+			<fact>
+				<text>Jährlich wird rund 4 Mia Dollar durch illegaler Thunfischfang erzielt</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Shrimp solo</description>
+		<type>item</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>4</topicNumber>
+		<facts>
+			<fact>
+				<text>Einige Shrimparten werden bis zu 33,7cm lang</text>
+			</fact>
+			<fact>
+				<text>Shrimps leben in einer Tiefe von bis zu 1380m</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Shrimp/Schiff</description>
+		<type>connection</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>5</topicNumber>
+		<facts>
+			<fact>
+				<text>Ein durchschnittlicher Garnelenkutter wirft 80% der Fangmenge zurück ins Meer "Beifang"</text>
+			</fact>
+			<fact>
+				<text>1kg Garnelen = 9kg Beifang</text>
+			</fact>
+			<fact>
+				<text>Der Verbrauch von Shrimps stieg in den vergangenen zehn Jahren um das fast Dreifache, auf 1,2 Kilogramm pro Kopf (D)</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Shrimp/Aquakultur</description>
+		<type>connection</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>6</topicNumber>
+		<facts>
+			<fact>
+				<text>1t Garnelen werden mit 20t Fischmehl gefüttert. Um 20t Fischmehl herzustellen braucht man 90t Fischabfall. Somit braucht man für 1t Garnelen rund 90t Fisch (für Aquakulturen)</text>
+			</fact>
+			<fact>
+				<text>Antibiotika, Fungizide, Parasitizide, Algizide und Pestizide werden benutzt, um Krankheiten in der hoch-intensiven Shrimps-Aquakultur vorzubeugen</text>
+			</fact>
+			<fact>
+				<text>Rund 150-200 Shrimps werden pro m2 gehalten</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Hai solo</description>
+		<type>item</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>7</topicNumber>
+		<facts>
+			<fact>
+				<text>Haie brauchen durchschnittlich 23-25 Jahre bis sie die Geschlechtsreife erlangen</text>
+			</fact>
+			<fact>
+				<text>Haie müssen ständig schwimmen um zu atmen</text>
+			</fact>
+			<fact>
+				<text>Haie fressen durchschnittlich 80kg Fisch pro Jahr</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Hai/Schiff</description>
+		<type>connection</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>8</topicNumber>
+		<facts>
+			<fact>
+				<text>Es werden rund 100 Mio Haie pro Jahr gefangen</text>
+			</fact>
+			<fact>
+				<text>Eine Haiflosse kann bis zu 700 Dollar einbringen</text>
+			</fact>
+			<fact>
+				<text>Pro Minute werden ca. 200 Haie gefangen</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Deflin solo</description>
+		<type>item</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>9</topicNumber>
+		<facts>
+			<fact>
+				<text>Delfine gehören zu den Zahnwalen</text>
+			</fact>
+			<fact>
+				<text>Delfine können sich im Spiegel wiedererkennen</text>
+			</fact>
+			<fact>
+				<text>Delfine werden vom US-Militär als Unterwasserminenspührer ausgebildet</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Delfin/Schiff</description>
+		<type>connection</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>10</topicNumber>
+		<facts>
+			<fact>
+				<text>Jährlich verenden mehr als 300'000 Kleinwale und Delfine in den Fischernetzen'</text>
+			</fact>
+			<fact>
+				<text>Ein Delfin wird für rund 150'000 Euro an Delfinarien verkauft</text>
+			</fact>
+			<fact>
+				<text>Der Ort Taiji (JPN) gehört zu den grössten Delfinlieferanten</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+    
+    <topic>
+		<description>Allgemein</description>
+		<type>connection</type>
+		<flock>0</flock>
+		<converter>10</converter>
+		<topicNumber>11</topicNumber>
+		<facts>
+			<fact>
+				<text>80 Prozent der Fischbestände sind bereits komplett ausgebeutet, überfischt oder erschöpft</text>
+			</fact>
+			<fact>
+				<text>Für 1,3 Mia Menschen ist Fisch der Hauptbestandteil der Nahrung</text>
+			</fact>
+			<fact>
+				<text>Die Fischbestände sind in den letzten 60 Jahen um 90% gesunken</text>
+			</fact>
+            <fact>
+				<text>Die Artenvielfalt in unseren Ozeanen wird auf eine Million verschiedener Lebewesen  geschätzt</text>
+			</fact>
+            <fact>
+				<text>Wissenschaftler schätzen, dass mehr als die Hälfte des weltweit verfügbaren Sauerstoffs von einzelligen Meeresalgen produziert wird</text>
+			</fact>
+		</facts>
+        
+        
+	</topic>
+
+
+</messages>

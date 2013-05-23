@@ -14,7 +14,7 @@ trxObjectHandler::trxObjectHandler()
     initXML();
     generateObjects();
     
-    myStoryHandler.setup(&myFlocks,&myConverters,&myConnections);
+    myStoryHandler.setup(myFlocks,myConverters,myConnections);
     timeStamp = ofGetElapsedTimeMillis();
     newPreyCounter = 0;
     
@@ -22,7 +22,7 @@ trxObjectHandler::trxObjectHandler()
 }
 
 void trxObjectHandler::setup(){
-    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    allMyBoids = getAllBoidsFromFlocks(myFlocks);
     //generatePredators();
     //randomPrey();
 }
@@ -32,13 +32,16 @@ void trxObjectHandler::setup(){
 void trxObjectHandler::update()
 {
 
-    int jellyFishes = myFlocks.at(4).boids.size();
+    int jellyFishes = myFlocks.at(4)->boids.size();
     int numberOfBoids = allMyBoids.size();
     int difference = numberOfBoids - jellyFishes;
     
     if (numberOfBoids < 1500) {
         for (int i=0; i< 1500-numberOfBoids; i++) {
-            myFlocks.at(4).createNewBoid();
+            if(myFlocks.at(4) != NULL)
+                myFlocks.at(4)->createNewBoid();
+            else
+                cout << "trxObjectHandler::update  null pointer !!!!" << endl;
         }
         
     }
@@ -58,12 +61,17 @@ void trxObjectHandler::update()
             myStoryHandler.showFingerHint = false;
         }
         
-        harvesters[i].update();
-        catchBoid(&harvesters[i]);
+        harvesters[i]->update();
+        if (harvesters[i]->longline) {
+            catchLongLineBoid(harvesters[i]);
+        }
+        else {
+            catchBoid(harvesters[i]);
+        }
     }
     
     for (int i = 0; i<myFlocks.size(); i++) {
-        myFlocks[i].update();
+        myFlocks[i]->update();
     }
     
     
@@ -78,7 +86,7 @@ void trxObjectHandler::update()
         
     }
 
-    allMyBoids = getAllBoidsFromFlocks(&myFlocks);
+    allMyBoids = getAllBoidsFromFlocks(myFlocks);
     //randomPrey();
     
     /*
@@ -104,7 +112,7 @@ void trxObjectHandler::draw()
     vector<int> objectsPositionArray;
     objectsPositionArray.assign(maxID+1,0);
     for(int i=0; i < myConnections.size(); i++){
-        trxConnectionSlot * thisSlot = &myConnections[i];
+        trxConnectionSlot * thisSlot = myConnections[i];
         trxFlock * flock = thisSlot->myFlock;
         trxConverter * converter = thisSlot->myConverter;
         
@@ -170,9 +178,12 @@ void trxObjectHandler::draw()
 
     // draw harvester / finger-cursor
     for (int i=0; i<harvesters.size(); i++) {
-        harvesters.at(i).draw();
+        harvesters.at(i)->draw();
         
     }
+    
+
+    
     ofPopStyle();
     
     myStoryHandler.draw();
@@ -184,13 +195,13 @@ void trxObjectHandler::draw3D(){
     myStoryHandler.draw3D();
     if(debug){
         for (int i = 0; i<myFlocks.size(); i++) {
-            myFlocks[i].drawInfo();
+            myFlocks[i]->drawInfo();
         }
         for (int i = 0; i<myConverters.size(); i++) {
-            myConverters[i].drawInfo();
+            myConverters[i]->drawInfo();
         }
         for (int i=0; i<harvesters.size(); i++) {
-            harvesters.at(i).drawInfo();
+            harvesters.at(i)->drawInfo();
         }
         myStoryHandler.drawDebug();
     }
@@ -260,31 +271,31 @@ void trxObjectHandler::generateObjects()
         xml.XML.pushTag("Object",i);
         string type = xml.getString("", "Type");
         if ( type == "flock") {
-            trxFlock thisFlock = trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"),&harvesters,xml.getIntValue(0, "START_BOIDS"));
+            trxFlock * thisFlock = new trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"),xml.getIntValue(0, "START_BOIDS"));
             //thisFlock.color = colors[i];
-            thisFlock.title = xml.getString("noTitle", "NAME");
-            thisFlock.boidNum = xml.getIntValue(0, "MAX_BOIDS");
-            thisFlock.startBoidNum = xml.getIntValue(0, "START_BOIDS");
-            thisFlock.maxSpeed = xml.getFloatValue(2.0, "MAX_SPEED");
-            thisFlock.numberOfBones = xml.getIntValue(4, "numberOfBones");
-            thisFlock.length = xml.getFloatValue(40.0, "length");
-            thisFlock.sightDistance = xml.getFloatValue(100.0, "sightDistance");
-            thisFlock.tooCloseDistance = xml.getFloatValue(40.0, "tooCloseDistance");
-            thisFlock.topicNumber = xml.getIntValue(NULL, "topicNumber");
-            thisFlock.texture = &textures.at(i);
-            thisFlock.myIcon = &icons.at(i);
-            thisFlock.myConnections = xml.getConnections(i);
+            thisFlock->title = xml.getString("noTitle", "NAME");
+            thisFlock->boidNum = xml.getIntValue(0, "MAX_BOIDS");
+            thisFlock->startBoidNum = xml.getIntValue(0, "START_BOIDS");
+            thisFlock->maxSpeed = xml.getFloatValue(2.0, "MAX_SPEED");
+            thisFlock->numberOfBones = xml.getIntValue(4, "numberOfBones");
+            thisFlock->length = xml.getFloatValue(40.0, "length");
+            thisFlock->sightDistance = xml.getFloatValue(100.0, "sightDistance");
+            thisFlock->tooCloseDistance = xml.getFloatValue(40.0, "tooCloseDistance");
+            thisFlock->topicNumber = xml.getIntValue(NULL, "topicNumber");
+            thisFlock->texture = &textures.at(i);
+            thisFlock->myIcon = &icons.at(i);
+            thisFlock->myConnections = xml.getConnections(i);
             myFlocks.push_back(thisFlock);
         }
         else if(type == "converter")
         {
-            trxConverter thisConverter = trxConverter(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"));
+            trxConverter * thisConverter = new trxConverter(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"));
             //thisFlock.color = colors[i];
             //thisConverter.title = xml.getString(i, "NAME");
             
-            thisConverter.title = xml.getString("noTitle", "NAME");
-            thisConverter.myConnections = xml.getConnections(i);
-            thisConverter.myIcon = &icons.at(i);
+            thisConverter->title = xml.getString("noTitle", "NAME");
+            thisConverter->myConnections = xml.getConnections(i);
+            thisConverter->myIcon = &icons.at(i);
             myConverters.push_back(thisConverter);
             
         }
@@ -292,21 +303,21 @@ void trxObjectHandler::generateObjects()
         xml.XML.popTag();
     }
     for (int i=0; i<myFlocks.size(); i++) {
-        myFlocks[i].generateBoids();
-        for (int j=0; j<myFlocks[i].myConnections.size(); j++) {
-            trxConnectionSlot thisSlot = trxConnectionSlot();
-            thisSlot.myFlock = &myFlocks[i];
-            thisSlot.myConverter = &myConverters[j];
+        myFlocks[i]->generateBoids();
+        for (int j=0; j<myFlocks[i]->myConnections.size(); j++) {
+            trxConnectionSlot * thisSlot = new trxConnectionSlot();
+            thisSlot->myFlock = myFlocks[i];
+            thisSlot->myConverter = myConverters[j];
             myConnections.push_back(thisSlot);
         }
     }
 }
 
-vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * _myFlocks){
+vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(const vector<trxFlock* >& _myFlocks){
     vector<trxVehicle *> allBoids;
-    for(int i=0; i< _myFlocks->size(); i++)
+    for(int i=0; i< _myFlocks.size(); i++)
     {
-        trxFlock * tmpFlock = &_myFlocks->at(i);
+        trxFlock * tmpFlock = _myFlocks.at(i);
         for (int j=0; j<tmpFlock->boids.size();j++)
         {
             
@@ -320,7 +331,7 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
             }
             
             for (int harvester = 0; harvester< harvesters.size(); harvester++) {
-                thisVehicle->addFleeTarget(&harvesters.at(harvester).position);
+                thisVehicle->addFleeTarget(&harvesters.at(harvester)->position);
             }
             
             // check if dead, when dead then do not draw
@@ -334,24 +345,18 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(vector<trxFlock> * 
 
 void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
 {
-    
     for (int i=0; i<allMyBoids.size(); i++){
-        
         trxVehicle* boid = allMyBoids.at(i);
         if (!boid->caught) {
-            ofVec3f bPos= boid->position;
+            ofVec3f bPos= boid->position2D;
             ofVec3f hPos= ofVec3f (_myHarverster->position.x,_myHarverster->position.y,0);
-            bPos = myCamera->worldToScreen(bPos);
+            //bPos = myCamera->worldToScreen(bPos);
 
             float dist = hPos.distance(bPos);
             if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
                 if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
                     if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
                         if (dist <= _myHarverster->radius) {
-                            
-                            boid->addTarget(&_myHarverster->unprojectedPosition);
-                            boid->pathRadius = _myHarverster->radius;
-                            boid->caught = true;
                             _myHarverster->myCatch.push_back(boid);
                             if (firstCatch && _myHarverster->myCatch.size()>0) {
                                 myStoryHandler.changeAction(3);
@@ -361,11 +366,44 @@ void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
                     }
                 }
             }
-
         }
     }
 }
- 
+
+
+
+void trxObjectHandler::catchLongLineBoid(trxHarvester *_myHarverster){
+    if (myStoryHandler.myActiveTask && !myStoryHandler.showMessage) {
+        for (int i=0; i<allMyBoids.size(); i++){
+            trxVehicle* boid = allMyBoids.at(i);
+            if (!boid->caught) {
+                if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
+                    ofVec3f bPos= boid->position2D;
+                    for (int j=0; j<_myHarverster->longlinePoints.size(); j++) {
+                        if (!_myHarverster->longlineHooks[j]) {
+                            ofVec3f hPos= ofVec3f (_myHarverster->longlinePoints[j]->x,_myHarverster->longlinePoints[j]->y,0);
+                            //bPos = ofVec3f(bPos.x,bPos.y,0);
+                            float dist = hPos.distance(bPos);
+                            if (_myHarverster->myCatch.size()+_myHarverster->myBycatch.size() < myStoryHandler.myActiveTask->catchSize){
+                                if (dist <= LONGLINE_RADIUS) {
+                                    boid->addTarget(_myHarverster->longlineUnprojectedPoints[j]);
+                                    _myHarverster->longlineHooks[j] = 1;
+                                    _myHarverster->myCatch.push_back(boid);
+                                    if (firstCatch && _myHarverster->myCatch.size()>0) {
+                                        myStoryHandler.changeAction(3);
+                                        firstCatch = false;
+                                    }
+                                }
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+}
+
 /*
 void trxObjectHandler::catchBoid(trxHarvester *_myHarverster)
 {
@@ -495,8 +533,16 @@ void trxObjectHandler::removeObject(ofxTuioObject & tuioObject)
 void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
 {
     ofPoint loc = ofPoint(getCorrectedPosition(tuioCursor.getX(),tuioCursor.getY()));
-    trxHarvester thisHarvester = trxHarvester(loc.x,loc.y,DEPTH,tuioCursor.getSessionId());
-    thisHarvester.unprojectedPosition = thisHarvester.screenPosition(myCamera);
+    trxHarvester * thisHarvester =  new trxHarvester(loc.x,loc.y,DEPTH,tuioCursor.getSessionId());
+    thisHarvester->myCamera = myCamera;
+    thisHarvester->setUnprojectedPosition(thisHarvester->screenPosition(myCamera));
+    if (myStoryHandler.myActiveTask) {
+        if (myStoryHandler.myActiveTask->harvester == "longline") {
+            thisHarvester->longline = true;
+        }
+
+    }
+        
     harvesters.push_back(thisHarvester);
     
     if (harvesters.size()<=1) {
@@ -515,11 +561,11 @@ void trxObjectHandler::updateCursor(ofxTuioCursor & tuioCursor)
 {
     ofPoint loc = ofPoint(getCorrectedPosition(tuioCursor.getX(),tuioCursor.getY()));
     for (int i = 0; i < harvesters.size(); i++) {
-        trxHarvester *thisHarvester = &harvesters.at(i);
+        trxHarvester * thisHarvester = harvesters.at(i);
         
         if (thisHarvester->id == tuioCursor.getSessionId()) {
-            thisHarvester->position = ofVec3f(loc.x,loc.y,thisHarvester->position.z);
-            thisHarvester->unprojectedPosition = thisHarvester->screenPosition(myCamera);
+            thisHarvester->setPosition(ofVec3f(loc.x,loc.y,thisHarvester->position.z));
+            thisHarvester->setUnprojectedPosition(thisHarvester->screenPosition(myCamera));
         }
     }
     
@@ -530,7 +576,7 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
 {
     ofPoint loc = ofPoint(getCorrectedPosition(tuioCursor.getX(),tuioCursor.getY()));
     for (int i = 0; i < harvesters.size(); i++) {
-        trxHarvester * thisHarvester = &harvesters.at(i);
+        trxHarvester * thisHarvester = harvesters.at(i);
         if (thisHarvester->id == tuioCursor.getSessionId()) {            
             if (myStoryHandler.myActiveTask) {
                 myStoryHandler.runningAction = false;
@@ -540,6 +586,10 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
                     myStoryHandler.changeAction(4);
                 }
             }
+            thisHarvester->clearLonglinePoints();
+            thisHarvester->longline = false;
+            delete thisHarvester;
+            thisHarvester = NULL;
             harvesters.erase(harvesters.begin()+i);
         }
     }
@@ -566,7 +616,7 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
 
 void trxObjectHandler::updateSessionID(long _oldSessionID, long _sessionID){
     for (int i = 0; i < harvesters.size(); i++) {
-        trxHarvester *thisHarvester = &harvesters[i];
+        trxHarvester *thisHarvester = harvesters[i];
         
         if (thisHarvester->id == _oldSessionID) {
             thisHarvester->id = _sessionID;
@@ -628,32 +678,37 @@ void trxObjectHandler::drawAllVertexes(){
             {
                 if (tmpBoid->caught)
                 {
-                    color = standardColor;
+                    color = tmpBoid->color;
                 }
                 else
                 {
-                    color = standardColor;
+                    color = tmpBoid->color;
                 }
             }
         }
-
-        if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
-            //color.a = 0.2*255;
-            for (int active=0; active<activeFlocks.size(); active++) {
-                if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
+        if (debug) {
+            
+        }
+        else {
+            if (activeFlocks.size() > 0 && !myStoryHandler.myActiveTask) {
+                //color.a = 0.2*255;
+                for (int active=0; active<activeFlocks.size(); active++) {
+                    if (activeFlocks.at(active)->id == tmpBoid->myTypeID) {
+                        color = activColor;
+                        color.a = 255;
+                    }
+                }
+            }
+            if (myStoryHandler.myActiveTask) {
+                //color.a = 0.2*255;
+                if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
                     color = activColor;
                     color.a = 255;
                 }
             }
+
         }
-        if (myStoryHandler.myActiveTask) {
-            //color.a = 0.2*255;
-            if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
-                color = activColor;
-                color.a = 255;
-            }
-        }
-                
+        
         //ofEnableArbTex();
         //ofEnableNormalizedTexCoords();
         ofSetColor(color);
@@ -687,7 +742,7 @@ void trxObjectHandler::drawAllVertexes(){
 void trxObjectHandler::checkIfActiveSlot(){
     //check all Connections (even the not active)
     for (int i=0; i<myConnections.size(); i++) {
-        trxConnectionSlot * thisSlot = &myConnections[i];
+        trxConnectionSlot * thisSlot = myConnections[i];
         
         //if both members (flock&converter) of an aconnection ar active (on the Table) then set the state of the connection to active
         if(thisSlot->myFlock->isActive && thisSlot->myConverter->isActive)
@@ -763,7 +818,7 @@ void trxObjectHandler::checkIfStillActiveSlot(){
 
 trxFlock* trxObjectHandler::getFlockWithID(int _id){
     for (int i=0; i< myFlocks.size(); i++) {
-        trxFlock * thisFlock = & myFlocks.at(i);
+        trxFlock * thisFlock = myFlocks.at(i);
         if (thisFlock->id == _id) {
             return thisFlock;
         }
@@ -773,7 +828,7 @@ trxFlock* trxObjectHandler::getFlockWithID(int _id){
 
 trxConverter* trxObjectHandler::getConverterWithID(int _id){
     for (int i=0; i< myConverters.size(); i++) {
-        trxConverter * thisConverter = & myConverters.at(i);
+        trxConverter * thisConverter = myConverters.at(i);
         if (thisConverter->id == _id) {
             return thisConverter;
         }

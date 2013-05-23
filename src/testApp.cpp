@@ -11,7 +11,7 @@ void testApp::setup()
     
 	ofBackground(20,20,40);
     //ofSetBackgroundAuto(true);
-    background.loadImage("background.jpg");
+    background.loadImage("background.png");
     
 	//ofSetFrameRate(90);
 	//ofSetVerticalSync(true);
@@ -57,6 +57,8 @@ void testApp::setup()
 //--------------------------------------------------------------
 void testApp::update()
 {
+    /*
+    mutex.lock();
     //updateMouseRay();
     
     tuioClient.getMessage();
@@ -66,11 +68,30 @@ void testApp::update()
     
     myObjectHandler.debug = debug;
     myObjectHandler.update();
+    mutex.unlock();
+*/
 }
 
 //--------------------------------------------------------------
 void testApp::draw()
 {
+    tuioClient.getMessage();
+    
+    mutex.lock();
+   
+    
+    
+    //updateMouseRay();
+    
+    
+    addNewCursor();
+    removeDeadCursors();
+    
+    myObjectHandler.debug = debug;
+    myObjectHandler.update();
+    
+    
+    
     ofSetColor(255, 255, 255);
     
     background.draw(0,0, ofGetWidth(), ofGetHeight());
@@ -89,7 +110,7 @@ void testApp::draw()
     camera.end();
     
     
-    int health = ofMap(myObjectHandler.myFlocks.at(4).boids.size(), 0, myObjectHandler.allMyBoids.size(), 0, 100);
+    int health = ofMap(myObjectHandler.myFlocks.at(4)->boids.size(), 0, myObjectHandler.allMyBoids.size(), 0, 100);
     
     ofEnableAlphaBlending();
     ofSetColor(25, 0, 0, health);
@@ -121,7 +142,15 @@ void testApp::draw()
         tuioClient.drawObjects();
         
     }
-        
+
+    mutex.unlock();
+    /*
+    try{
+    mutex.unlock();
+    }
+    catch(Poco::SystemException e)
+    {}
+     */
 }
 
 //--------------------------------------------------------------
@@ -165,29 +194,35 @@ void testApp::keyReleased(int key){
 
 void testApp::tuioObjectAdded(ofxTuioObject & tuioObject)
 {
-
+    mutex.lock();
     myObjectHandler.addObject( tuioObject);
+    mutex.unlock();
 }
 
 void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject)
 {
+    mutex.lock();
     myObjectHandler.updateObject(tuioObject);
+    mutex.unlock();
 }
 
 void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
+    mutex.lock();
     myObjectHandler.removeObject(tuioObject);
+    mutex.unlock();
 }
 
 void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
+    mutex.lock();
     //myObjectHandler.addCursor(tuioCursor);
     
-    if (!isCursorStillThere(tuioCursor)) {
+    if (!isCursorStillThere(tuioCursor) && activeCursors.size()< 10) {
         //cout<<"newCursor"<<endl;
-        testApp::activeTuioCursor tmpCursor;
-        tmpCursor.tuioCursor = &tuioCursor;
-        tmpCursor.lastTuioCursor = tuioCursor;
-        tmpCursor.firstAdded = ofGetElapsedTimef();
-        tmpCursor.lastTimeSeen = ofGetElapsedTimef();
+        testApp::activeTuioCursor * tmpCursor = new testApp::activeTuioCursor();
+        tmpCursor->tuioCursor = &tuioCursor;
+        tmpCursor->lastTuioCursor = tuioCursor;
+        tmpCursor->firstAdded = ofGetElapsedTimef();
+        tmpCursor->lastTimeSeen = ofGetElapsedTimef();
         activeCursors.push_back(tmpCursor);
         //myObjectHandler.addCursor(tuioCursor);
     }
@@ -195,24 +230,30 @@ void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
         
     //cout<<"cursorAllreadyThere"<<endl;
     }
-    
+    mutex.unlock();
 	
 }
 
 void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
+    if (mutex.tryLock() == false) {
+        cout<<"mutex locked"<<endl;
+    }
+    mutex.lock();
     myObjectHandler.updateCursor(tuioCursor);
+    mutex.unlock();
 }
 
 void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
+    mutex.lock();
     //myObjectHandler.removeCursor(tuioCursor);
     addCursorToRemovable(tuioCursor);
-    
+    mutex.unlock();
     
 }
 
 //--------------------------------------------------------------
 void testApp::mouseMoved(int x, int y ){
-    light.setPosition(600,ofGetMouseY(),ofGetMouseX());
+    //light.setPosition(600,ofGetMouseY(),ofGetMouseX());
 }
 
 //--------------------------------------------------------------
@@ -250,7 +291,7 @@ bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
     
     ofVec2f tuioPosition = ofVec2f(tuioCursor.getX(),tuioCursor.getY());
     for (int i=0; i < onRemoveCursors.size(); i++) {
-        testApp::activeTuioCursor *  tmpCursor = &onRemoveCursors[i];
+        testApp::activeTuioCursor *  tmpCursor = onRemoveCursors[i];
         ofVec2f tmpPosition = ofVec2f(tmpCursor->lastTuioCursor.getX(),tmpCursor->lastTuioCursor.getY());
         if (tuioPosition.distance(tmpPosition) < DISTANCE/ofGetWidth()) {
             if (ofGetElapsedTimef() - tmpCursor->lastTimeSeen <= TIMER) {
@@ -259,7 +300,7 @@ bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
                 tmpCursor->tuioCursor = &tuioCursor;
                 tmpCursor->lastTuioCursor = tuioCursor;
                 tmpCursor->lastTimeSeen = ofGetElapsedTimef();
-                activeCursors.push_back(*tmpCursor);
+                activeCursors.push_back(tmpCursor);
                 onRemoveCursors.erase(onRemoveCursors.begin()+i);
                 return true;
             }
@@ -272,7 +313,7 @@ bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
 
 void testApp::addNewCursor(){
     for (int i=0; i<activeCursors.size(); i++) {
-         testApp::activeTuioCursor * tmpCursor = &activeCursors[i];
+         testApp::activeTuioCursor * tmpCursor = activeCursors[i];
         if (!tmpCursor->active) {
             if (ofGetElapsedTimef() - tmpCursor->firstAdded > ADDTIMER) {
                 myObjectHandler.addCursor(*tmpCursor->tuioCursor);
@@ -285,11 +326,11 @@ void testApp::addNewCursor(){
 
 void testApp::addCursorToRemovable(ofxTuioCursor &tuioCursor){
     for (int i=0; i<activeCursors.size(); i++) {
-        if (activeCursors[i].tuioCursor->getSessionId() == tuioCursor.getSessionId()) {
-            testApp::activeTuioCursor * tmpCursor = &activeCursors[i];
+        if (activeCursors[i]->tuioCursor->getSessionId() == tuioCursor.getSessionId()) {
+            testApp::activeTuioCursor * tmpCursor = activeCursors[i];
             tmpCursor->lastTuioCursor = tuioCursor;
             tmpCursor->lastTimeSeen = ofGetElapsedTimef();
-            onRemoveCursors.push_back(*tmpCursor);
+            onRemoveCursors.push_back(tmpCursor);
             activeCursors.erase(activeCursors.begin()+i);
         }
     }
@@ -297,9 +338,11 @@ void testApp::addCursorToRemovable(ofxTuioCursor &tuioCursor){
 
 void testApp::removeDeadCursors(){
     for (int i=0; i<onRemoveCursors.size(); i++) {
-        testApp::activeTuioCursor  tmpCursor = onRemoveCursors[i];
-        if (ofGetElapsedTimef() - tmpCursor.lastTimeSeen > TIMER) {
-            myObjectHandler.removeCursor(tmpCursor.lastTuioCursor);
+        testApp::activeTuioCursor * tmpCursor = onRemoveCursors[i];
+        if (ofGetElapsedTimef() - tmpCursor->lastTimeSeen > TIMER) {
+            myObjectHandler.removeCursor(tmpCursor->lastTuioCursor);
+            delete tmpCursor;
+            tmpCursor = NULL;
             onRemoveCursors.erase(onRemoveCursors.begin()+i);
         }
     }

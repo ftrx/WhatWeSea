@@ -22,7 +22,7 @@ public:
     ofImage tapIcon;
     
     float radius;
-    float startRadius = 10;
+    float startRadius = 50;
     float fadeInDistance = 5;
     float maxRadius = 30;
     int lineWidth = 2;

@@ -33,9 +33,9 @@ void main(void)
    sum += texture2DRect(tex, vec2(gl_TexCoord[0].x, gl_TexCoord[0].y + 3.0*blurSize)) * 0.09;
    sum += texture2DRect(tex, vec2(gl_TexCoord[0].x, gl_TexCoord[0].y + 4.0*blurSize)) * 0.05;
    //alt mit dunklem untergang
-   //gl_FragColor = sum/2.0 * gl_Color*vec4(position.z/600.0,position.z/400.0,position.z/200.0,position.z/300.0);
+   //gl_FragColor = sum/2.0 * gl_Color*vec4(position.z/200.0,position.z/200.0,position.z/100.0,position.z/300.0);
    
-   gl_FragColor = sum/2.0 * gl_Color*vec4(1.0,1.0,1.0,position.z/300.0);
+   gl_FragColor = sum/2.0 * gl_Color*vec4(1.0,1.0,1.0,position.z/600.0);
    
    //gl_FragColor = texture2DRect(tex, gl_TexCoord[0].xy) * gl_Color*vec4(position.z/600.0,position.z/400.0,position.z/200.0,position.z/300.0);
    }

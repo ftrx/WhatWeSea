@@ -39,6 +39,7 @@ class trxStoryHandler {
         int    quantity = NULL;
         bool dieAfterCatch = false;
         string progress = "circle";
+        string harvester = "net";
         
     };
     
@@ -56,19 +57,19 @@ class trxStoryHandler {
     };
     
     
-    vector<trxFlock *> finishedFlocks;
+    vector<trxFlock*> finishedFlocks;
 
     ofTrueTypeFont	HelveticaNeueRoman18;
     ofTrueTypeFont	HelveticaNeueRoman36;
     
-    trxConnectionSlot * activeConnection = NULL;
-    vector<trxFlock *> activeFlock;
-    vector<trxFlock *> activeBycatchFlock;
-    trxConverter * activeConverter;
+    trxConnectionSlot* activeConnection = NULL;
+    vector<trxFlock*> activeFlock;
+    vector<trxFlock*> activeBycatchFlock;
+    trxConverter* activeConverter;
     
-    vector<trxFlock> * allFlocks;
-    vector<trxConverter> * allConverters;
-    vector<trxConnectionSlot> * allConnectionSlots;
+    vector<trxFlock*> allFlocks;
+    vector<trxConverter*> allConverters;
+    vector<trxConnectionSlot*> allConnectionSlots;
     
     ofVec3f myTargetPosition;
     ofVec3f myScreenTargetPosition;
@@ -84,7 +85,7 @@ class trxStoryHandler {
     trxStoryButton messageButton;
     
     trxStoryHandler();
-    void setup(vector<trxFlock> * _allFLocks,vector<trxConverter> * _allConverters, vector<trxConnectionSlot> * _allConnections);
+    void setup(vector<trxFlock*> _allFLocks,vector<trxConverter*> _allConverters, vector<trxConnectionSlot*> _allConnections);
     void generateStories();
     
     void startStory(trxConnectionSlot * _activeConnection);

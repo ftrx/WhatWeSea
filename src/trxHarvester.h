@@ -29,6 +29,14 @@ public:
     ofVec3f unprojectedPosition;
     ofColor color;
     
+    bool longline = false;
+    vector<ofPoint*> longlinePoints;
+    vector<ofPoint*> longlineUnprojectedPoints;
+    vector<int> longlineHooks;
+    void clearLonglinePoints();
+    ofPoint pointToProjection(ofPoint _point);
+    void updateLongLineUnprojectedPosition(ofCamera * cam);
+    
     ofVbo vbo;
     ofShader shader;
     ofImage myImage;
@@ -49,6 +57,12 @@ public:
     void removeBoids();
     void moveBoidsToTarget(ofVec3f * _target, ofVec3f *_movment, float _targetRadius);
     void moveMyCatch(ofCamera * cam);
+    
+    void setPosition (ofVec3f _pos);
+    void setID (int _id);
+    void setUnprojectedPosition (ofVec3f _pos);
+    
+    ofCamera * myCamera;
     
     ofVec3f screenPosition(ofCamera * cam);
     ofVec3f movmentToBoidZ(ofCamera * cam,ofVec3f _pos);
