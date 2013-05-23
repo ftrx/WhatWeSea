@@ -48,6 +48,7 @@ void testApp::setup()
 	ofAddListener(tuioClient.objectRemoved,this,&testApp::tuioObjectRemoved);
 	ofAddListener(tuioClient.objectUpdated,this,&testApp::tuioObjectUpdated);
     
+    
    
     
     myObjectHandler->setup();
@@ -116,6 +117,9 @@ void testApp::draw()
     ofDisableAlphaBlending();
     
     myObjectHandler->draw();
+    
+    
+    
     
     if(debug)
     {

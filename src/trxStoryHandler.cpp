@@ -29,6 +29,8 @@ trxStoryHandler::trxStoryHandler() {
     messageButton = trxStoryButton(ofVec2f(ofGetWidth()/2.0, ofGetHeight()/2.0+40.0),100, 20, "schliessen");
     
     ship.loadImage("schiff.png");
+    
+    testbild.loadImage("winscreen/Test_Winscreen.png");
 }
 
 void trxStoryHandler::setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>& _allConverters, vector<trxConnectionSlot*>& _allConnections) {
@@ -167,7 +169,7 @@ void trxStoryHandler::update()
                         for (int i=0; i<activeFlock.size(); i++) {
                             tempCatchedQuantity += activeFlock.at(i)->countDead();
                         }
-                        catchedQuantity = int(tempCatchedQuantity/100.0 * myActiveTask->percent +0.5);
+                        catchedQuantity = int((tempCatchedQuantity/100.0 * myActiveTask->percent) +0.5);
                         bycatchQuantity = tempCatchedQuantity-catchedQuantity;
                         
                         for (int i=0; i<activeFlock.size(); i++) {
@@ -285,6 +287,7 @@ void trxStoryHandler::draw(){
     if (myActiveStory) {
         if (myActiveTask) {
             ofPushMatrix();
+            ofPushStyle();
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
             ofRotate(activeConnection->myConverter->rotation);
             ofSetColor(255, 255, 255);
@@ -333,6 +336,7 @@ void trxStoryHandler::draw(){
             //drawProgressBar(catchedQuantity);
             
             ofPopMatrix();
+            ofPopStyle();
             if (myActiveTask->finished) {
                 //drawMessage("Task Finished Message");
             }
@@ -347,6 +351,10 @@ void trxStoryHandler::draw(){
     if (showFingerHint) {
         fingerHint.draw();
     }
+    ofEnableAlphaBlending();
+    ofSetColor(255, 255, 255,255);
+    testbild.draw(0,0);
+    ofDisableAlphaBlending();
    
 }
 

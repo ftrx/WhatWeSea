@@ -85,6 +85,6 @@ class testApp : public ofBaseApp{
 
     ofxTuioClient   tuioClient;
     
-
+    
     
 };

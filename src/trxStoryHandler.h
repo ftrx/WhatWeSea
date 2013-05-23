@@ -166,6 +166,6 @@ class trxStoryHandler {
     trxStoryHint fingerHint;
     bool showFingerHint = false;
     
-
+    ofImage testbild;
 
 };
