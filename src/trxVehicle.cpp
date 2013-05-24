@@ -10,9 +10,13 @@
 
 
 void trxVehicle::update(){
+    //update position
+    SteeredVehicle::update();
+    
     vector<ofVec3f> bonesScaled;
     vector<ofVec3f> normals;
     float width = length*0.5*0.5; // texture ratio 100px:200px -> 0.5
+    
     if (isJellyFish) {
         int contractingTime = ofGetElapsedTimeMillis() - contractionTimestamp;
         if (contractingTime < expandSpeed+contractSpeed) {
@@ -31,7 +35,8 @@ void trxVehicle::update(){
         width = length*0.5; // texture ratio 100px:100px -> 1.0
         
     }
-
+    
+    // if JellyFish then use another bone structure
     if (isJellyFish) {
         bones[0] = position;
         for (int i=1; i<bones.size(); i++) {
@@ -54,11 +59,7 @@ void trxVehicle::update(){
             //direction.normalize();
             direction.scale(length*.5);
             bonesScaled[1] = middleBone+direction;
-            
-            
-            
         }
-        
         
         for (int i=0; i<bonesScaled.size()-1; i++) {
             ofVec3f dir0 = ofVec3f(0,0,1);
@@ -73,11 +74,10 @@ void trxVehicle::update(){
         ofVec3f dir1 = bonesScaled.at(bonesScaled.size()-1)- bonesScaled.at(bonesScaled.size()-2);
         ofVec3f norm =dir0.cross(dir1).normalize();
         normals.push_back(norm);
-
-        
-        
+  
     }
     else {
+        
         bones[0] = position;
         for (int i=1; i<bones.size(); i++) {
             ofVec3f direction = bones[i] - bones[i-1];
@@ -106,7 +106,7 @@ void trxVehicle::update(){
     
     boneNormals = normals;
 
-    
+    // create vertexpoints for texture
     vector<ofVec3f> vecs;
     
     if (!isJellyFish) {
@@ -121,12 +121,8 @@ void trxVehicle::update(){
             vecs.push_back(ofVec3f(bonesScaled[bone].x+boneNormals[bone].x*width,bonesScaled[bone].y+boneNormals[bone].y*width,bonesScaled[bone].z));
         }
     }
-    
-    
-    
     vertexes = vecs;
-    
-    SteeredVehicle::update();
+   
 }
 
 void trxVehicle::arriveTarget(ofVec3f* _target){

@@ -712,7 +712,7 @@ void trxObjectHandler::checkIfActiveSlot(){
         //if both members (flock&converter) of an aconnection ar active (on the Table) then set the state of the connection to active
         if(thisSlot->myFlock->isActive && thisSlot->myConverter->isActive)
         {
-            thisSlot->state = true;
+            //thisSlot->state = true;
             
             //check if theres an running(active) connection
             if (myActiveConnection) {
@@ -722,8 +722,9 @@ void trxObjectHandler::checkIfActiveSlot(){
                 //if the new connections distances ar shorter, then check if its not the existing connection, if not, set it to the existing.
                 if ( thisSlotDistance < activeSloteDistance) {
                     if (myActiveConnection != thisSlot) {
-                        
+                        myActiveConnection->deactivate();
                         myActiveConnection = thisSlot;
+                        myActiveConnection->activate();
                     }
                 }
             }
@@ -732,13 +733,14 @@ void trxObjectHandler::checkIfActiveSlot(){
             else
             {
                 myActiveConnection = thisSlot;
+                myActiveConnection->activate();
 
             }        
         }
         // if one member is not active the connection state should be false
         else
         {
-            thisSlot->state = false;
+            //thisSlot->state = false;
         }
     }
     // prevents multiple storystarting when only the existing connection is moved
@@ -756,6 +758,7 @@ void trxObjectHandler::checkIfStillActiveSlot(){
     if (myActiveConnection) {
         //if the current Connection is not valid (either the Flock or the Converter was removed from the Table) reset all, and stop the current Story.
         if (!myActiveConnection->myFlock->isActive || !myActiveConnection->myConverter->isActive) {
+            myActiveConnection->deactivate();
             myActiveConnection = NULL;
             myLastActiveConnection = NULL;
             myStoryHandler.stopStory();

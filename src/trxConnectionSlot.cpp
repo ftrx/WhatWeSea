@@ -19,6 +19,18 @@ bool trxConnectionSlot::isConnectionActive(){
     return state;
 }
 
+void trxConnectionSlot::activate(){
+    state = true;
+    myConverter->isActiveConnection = true;
+    myFlock->isActiveConnection = true;
+}
+
+void trxConnectionSlot::deactivate(){
+    state = false;
+    myConverter->isActiveConnection = false;
+    myFlock->isActiveConnection = false;
+}
+
 void trxConnectionSlot::connect(trxConverter * _myConverter){
     
     if(!state)
@@ -26,12 +38,16 @@ void trxConnectionSlot::connect(trxConverter * _myConverter){
         myConverter = _myConverter;
         //myFlock->hasConnection = true;
         state = true;
+        myConverter->isActiveConnection = true;
+        myFlock->isActiveConnection = true;
     }
     
 }
 
 void trxConnectionSlot::deletConnection(){
     if(state){
+        myConverter->isActiveConnection = false;
+        myFlock->isActiveConnection = false;
         myConverter = NULL;
         state = false;
     }

@@ -8,3 +8,5 @@ bin/WhatWeSeaDebug.app/Contents/MacOS/WhatWeSeaDebug
 bin/WhatWeSeaDebug.app/Contents/MacOS/WhatWeSeaDebug
 
 WhatWeSea.xcodeproj/xcuserdata/fabiantroxler.xcuserdatad/xcdebugger/Breakpoints.xcbkptlist
+
+bin/data/winscreen/.DS_Store

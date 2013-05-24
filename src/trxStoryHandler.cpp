@@ -508,7 +508,7 @@ void trxStoryHandler::drawProgressAmount(float _radius, float _barHeight, int _c
     ofPath progressCircle;
     
     progressCircle.setColor(color);
-    progressCircle.setArcResolution(40);
+    progressCircle.setArcResolution(80);
     progressCircle.arc(ofPoint(0,0), radius, radius, 0, 360, true);
     progressCircle.arc(ofPoint(0,0), radius+progressHeight, radius+progressHeight, 0, 360,true);
     progressCircle.close();

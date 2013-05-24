@@ -68,6 +68,7 @@ public:
     vector <ofVec3f> circlePaths;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
+        
 	}
     
     

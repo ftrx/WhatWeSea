@@ -21,6 +21,8 @@ trxObject::trxObject(float _x, float _y, float _z, int _id){
     
     ofTrueTypeFont::setGlobalDpi(72);
     
+    glow.loadImage("glow.png");
+    
 	HelveticaNeueRoman18.loadFont("fonts/NewsGot-Med.otf", 24, true, true);
 	HelveticaNeueRoman18.setLineHeight(28.0f);
 	HelveticaNeueRoman18.setLetterSpacing(1.037);
@@ -36,13 +38,17 @@ void trxObject::draw(){
     ofSetCircleResolution(100);
     ofEnableAlphaBlending();
     if(isActive){
+        /*
         ofSetColor(255, 255, 255, 50);
         ofCircle(0,0,radius);
+         */
         ofSetColor(255, 255, 255,255);
-        ofNoFill();
-        ofSetLineWidth(3.0);
-        ofCircle(0,0,radius);
-        ofFill();
+        //ofNoFill();
+        if (isActiveConnection) {
+            glow.draw(-glow.width/2,-glow.height/2,glow.width,glow.height);
+        }
+        
+        ofSetColor(255, 255, 255,10);
         myIcon->draw(-radius/2.0, -radius/2.0, 0, radius, radius);
         
 		//ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);

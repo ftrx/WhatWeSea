@@ -21,14 +21,16 @@ class trxObject : public ofVec3f {
     
 public:
     bool isActive;
+    bool isActiveConnection = false;
     string title;
     int topicNumber = NULL;
-    float radius= 80.0;
+    float radius= 40.0;
     ofVec3f position;
     ofVec3f unprojectedPosition;
     float rotation;
     int id;
     ofImage * myIcon;
+    ofImage glow;
     ofColor myColor;
     
 

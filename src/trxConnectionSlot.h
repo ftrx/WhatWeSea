@@ -34,6 +34,9 @@ public:
     void connect(trxConverter* _myConverter);
     void deletConnection();
     
+    void activate();
+    void deactivate();
+    
     void draw();
     void drawPossibleConnection(string _type, int _position);
     void drawWobbleLine(float _x1, float _y1,float _x2, float _y2);

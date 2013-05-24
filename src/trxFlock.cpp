@@ -152,9 +152,9 @@ void trxFlock::createNewBoid(float _x, float _y, float _z){
     trxVehicle* v = new trxVehicle(_x,_y,_z);
     v->velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v->lifeSpan = ofRandom(3.0f,6.0f);
-    v->maxSpeed = maxSpeed;
+    v->maxSpeed = maxSpeed + ofRandom(-maxSpeed*0.2,maxSpeed*0.2);
     v->maxStandardSpeed = maxSpeed;
-    v->length = length + ofRandom(-length/10.0,length/10.0);
+    v->length = length + ofRandom(-length*0.2,length*0.2);
     v->numberOfBones = numberOfBones;
     v->bonelength = v->length/(numberOfBones-1);
     v->standardLength = v->length;
@@ -185,7 +185,15 @@ void trxFlock::createNewBoid(float _x, float _y, float _z){
     color.b = b;
     v->color = color;
     
+    ofVec3f vel = v->velocity;
+    vel.normalize();
+    vel *= length;
     v->bones.assign(numberOfBones, ofVec3f(v->position));
+    for (int i=0; i<v->bones.size(); i++) {
+        v->bones[i] = v->position + vel*-i;
+    }
+    
+    //
     boids.push_back(v);
 }
 
