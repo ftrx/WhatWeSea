@@ -14,7 +14,7 @@ void testApp::setup()
     //ofSetBackgroundAuto(true);
     background.loadImage("background.png");
     
-	//ofSetFrameRate(20);
+	ofSetFrameRate(30);
 	//ofSetVerticalSync(true);
     
 	ofEnableSmoothing();

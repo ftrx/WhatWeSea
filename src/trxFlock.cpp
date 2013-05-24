@@ -34,11 +34,13 @@ bool sortOnZPosition(ofVec3f   point1, ofVec3f   point2)
 
 void trxFlock::update(){
     
-    int timeElapsed =  ofGetElapsedTimeMillis() - timeStamp;
+    
     
 	for (int i = 0; i < boids.size(); i++)
 	{
-        boids[i]->timeElapsed = timeElapsed;
+        //long long timeElapsed =  ofGetElapsedTimeMicros() - timeStamp;
+        //boids[i]->timeElapsed = timeElapsed;
+        //timeStamp = ofGetElapsedTimeMicros();
         if (boids[i]->caught) {
             boids[i]->catchFlock();
         }
@@ -50,7 +52,7 @@ void trxFlock::update(){
 		boids[i]->bounce(ofGetWidth(), ofGetHeight(), DEPTH);
 	}
     
-    timeStamp = ofGetElapsedTimeMillis();
+   
     
     if (growBack && ofGetElapsedTimeMillis()- growBackTimestamp > growBackTime) {
         if (boids.size() < maxBoidNum)

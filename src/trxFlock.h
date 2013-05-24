@@ -60,7 +60,7 @@ public:
     ofTexture  * texture;
 
 
-    int timeStamp = 0;
+    long long timeStamp = 0.0f;
     
     trxFlock(float _x, float _y, float _z, int _id, int _startBoidNum);
     void update();
