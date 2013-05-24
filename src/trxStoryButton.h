@@ -1,6 +1,6 @@
 //
 //  trxStoryButton.h
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 01.05.13.
 //

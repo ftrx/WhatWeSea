@@ -1,6 +1,6 @@
 //
 //  trxObjectHandler.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 24.04.13.
 //

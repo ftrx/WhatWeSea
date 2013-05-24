@@ -1,6 +1,6 @@
 //
 //  trxConnectionSlot.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 25.04.13.
 //

@@ -1,6 +1,6 @@
 //
 //  trxConverter.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 22.04.13.
 //

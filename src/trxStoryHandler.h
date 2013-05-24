@@ -1,6 +1,6 @@
 //
 //  trxStoryHandler.h
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 29.04.13.
 //

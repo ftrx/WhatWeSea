@@ -1,6 +1,6 @@
 //
 //  trxFloatingMessage.h
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 07.05.13.
 //

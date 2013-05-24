@@ -1,6 +1,6 @@
 //
 //  trxXML.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 17.04.13.
 //

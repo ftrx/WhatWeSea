@@ -1,6 +1,6 @@
 //
 //  trxVehicle.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 21.04.13.
 //

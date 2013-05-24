@@ -1,6 +1,6 @@
 //
 //  trxOscController.cpp
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 06.05.13.
 //

@@ -1,6 +1,6 @@
 //
 //  general.h
-//  BoidsAndTUIO
+//  WhatWeSea
 //
 //  Created by Fabian Troxler on 18.04.13.
 //
