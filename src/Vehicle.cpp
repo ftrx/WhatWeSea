@@ -31,7 +31,8 @@ int Vehicle::number = 0;
 
 void Vehicle::update()
 {
-	velocity.limit(maxSpeed);
+	//velocity.limit(maxSpeed);
+    velocity.limit(maxSpeed*timeElapsed/1000.0 * 30.0);
 	position += velocity;  // comment out to stand
 	
 	//trails.push_back(position);

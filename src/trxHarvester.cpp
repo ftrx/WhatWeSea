@@ -28,7 +28,7 @@ void trxHarvester::update(){
         if (longlinePoints.size()>0) {
             ofPoint * lastPoint = longlinePoints[longlinePoints.size()-1];
             if (positionPoint->distance(*lastPoint) >= 30.0) {
-                ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
+               ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
                 longlineUnprojectedPoints.push_back(projectedPoint);
                 longlinePoints.push_back(positionPoint);
                 longlineHooks.push_back(0);
@@ -90,7 +90,7 @@ void trxHarvester::draw(){
                 ofCurveVertex(*longlinePoints[i]);
             }
             
-            ofCircle(*longlinePoints[i], 10);
+            //ofCircle(*longlinePoints[i], 10);
         }
         ofCurveVertex(position.x, position.y,0);
         ofCurveVertex(position.x, position.y,0);

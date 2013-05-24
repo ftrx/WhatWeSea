@@ -41,6 +41,7 @@ private:
     
 public:
 	
+    int timeElapsed = 0;
 	ofVec3f position;
 	ofVec3f velocity;
 	vector<ofVec3f> trails;
