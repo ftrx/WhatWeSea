@@ -23,6 +23,11 @@ const float DISTANCE = 200; // distance between to tuio.points until its handled
 const float TIMER = 0.200; // time in seconds until the cursor is removed
 const float ADDTIMER = 0.100;
 
+
+// fish settings
+const int MAXFISHES = 1600;
+
+
 //fish colors
 const ofColor activColor = ofColor(250,255,255,255);
 const ofColor standardColor = ofColor(6,43,104,255);

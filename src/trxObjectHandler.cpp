@@ -36,8 +36,8 @@ void trxObjectHandler::update()
     int numberOfBoids = allMyBoids.size();
     int difference = numberOfBoids - jellyFishes;
     
-    if (numberOfBoids < 1500) {
-        for (int i=0; i< 1500-numberOfBoids; i++) {
+    if (numberOfBoids < MAXFISHES) {
+        for (int i=0; i< MAXFISHES-numberOfBoids; i++) {
             if(myFlocks.at(4) != NULL)
                 myFlocks.at(4)->createNewBoid(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0);
             else
@@ -45,7 +45,7 @@ void trxObjectHandler::update()
         }
         
     }
-    else if (numberOfBoids > 1500)
+    else if (numberOfBoids > MAXFISHES)
     {
         myFlocks.at(4)->removeFirstVehicle();
     }
@@ -66,13 +66,13 @@ void trxObjectHandler::update()
         }
         
     }
-
     myStoryHandler.update();
     if (myStoryHandler.myActiveTask) {
         myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
     }
     
     allMyBoids = getAllBoidsFromFlocks(myFlocks);
+
     
     for (int i=0; i<harvesters.size();i++){
         if (myStoryHandler.showFingerHint) {
@@ -88,7 +88,8 @@ void trxObjectHandler::update()
         }
     }
     
-        
+   
+    
     
     
     if(closeMessage){
@@ -203,6 +204,7 @@ void trxObjectHandler::draw()
 
 void trxObjectHandler::draw3D(){
     //drawAllBoids();
+    
     myStoryHandler.draw3D();
     if(debug){
         for (int i = 0; i<myFlocks.size(); i++) {

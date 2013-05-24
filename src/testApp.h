@@ -6,6 +6,7 @@
 #include "ofxBlur.h"
 #include "general.h"
 #include "trxObjectHandler.h"
+#include "trxFlock.h"
 
 
 class testApp : public ofBaseApp{
@@ -30,7 +31,7 @@ class testApp : public ofBaseApp{
     //ofMutex mutex;
 
     bool debug = false;
-
+    bool boidCounter = false;
     
     
     //float runningTime = 0.0f;

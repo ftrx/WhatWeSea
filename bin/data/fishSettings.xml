@@ -40,7 +40,7 @@
 			<CID>11</CID>
 		</Connections>
 		<growBack>1</growBack>
-		<growBackTime>1000</growBackTime>
+		<growBackTime>3000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>0.8</fleeSpeed>
 	</Object>
@@ -65,7 +65,7 @@
 			<CID>11</CID>
 		</Connections>
 		<growBack>1</growBack>
-		<growBackTime>1000</growBackTime>
+		<growBackTime>3000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
@@ -87,7 +87,7 @@
 			<CID>10</CID>
 		</Connections>
 		<growBack>1</growBack>
-		<growBackTime>2000</growBackTime>
+		<growBackTime>3000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
@@ -131,7 +131,7 @@
 		<Connections>
 		</Connections>
 		<growBack>1</growBack>
-		<growBackTime>1000</growBackTime>
+		<growBackTime>5000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
@@ -153,7 +153,7 @@
 		<Connections>
 		</Connections>
 		<growBack>1</growBack>
-		<growBackTime>1000</growBackTime>
+		<growBackTime>5000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>8.0</fleeSpeed>
 	</Object>

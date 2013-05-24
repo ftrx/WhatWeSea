@@ -58,8 +58,8 @@ void testApp::setup()
 //--------------------------------------------------------------
 void testApp::update()
 {
+    
     /*
-
     tuioClient.getMessage();
      
     mutex.lock();
@@ -87,7 +87,7 @@ void testApp::draw()
     myObjectHandler->update();
     
 
-    //mutex.lock();
+
     ofSetColor(255, 255, 255);
     
     background.draw(0,0, ofGetWidth(), ofGetHeight());
@@ -118,27 +118,36 @@ void testApp::draw()
     
     
     
-    if(debug)
+    if(debug || boidCounter)
     {
 
         ofPushStyle();
         
         camera.begin();
-        ofDrawGrid(1920, 10, true, true, true, true);
+        if(debug) ofDrawGrid(1920, 10, true, true, true, true);
         camera.end();
         
+        ofEnableAlphaBlending();
         ofSetColor(255,255,255, 100);
-        ofRect(0, 0, 250, 90);
+        ofRect(0, 0, 250, 180);
         ofSetColor(0);
-        string info = "FPS "+ofToString(ofGetFrameRate(), 0) + "\n";
-        info += "Total Points "+ofToString(myObjectHandler->allMyBoids.size())+"\n";
-        info += "ofGetElapsedTimef() "+ofToString(ofGetElapsedTimef())+"\n";
+        string info = "FPS "+ofToString(ofGetFrameRate(), 1) + "\n";
+        info += "Total Boids "+ofToString(myObjectHandler->allMyBoids.size())+"\n";
+        for (int i=0; i<myObjectHandler->myFlocks.size(); i++) {
+            trxFlock* flock = myObjectHandler->myFlocks[i];
+            info += ofToString(flock->title) + ": \t"+ofToString(flock->boids.size())+"\n";
+        }
+        info += "Time elapsed: "+ofToString(ofGetElapsedTimef(),2)+" seconds \n";
         info += "Press 'd' to debug\n";
         ofDrawBitmapString(info, 20, 20);
+        ofDisableAlphaBlending();
         ofPopStyle();
         
-        tuioClient.drawCursors();
-        tuioClient.drawObjects();
+        if (debug) {
+            tuioClient.drawCursors();
+            tuioClient.drawObjects();
+        }
+        
         
     }
 
@@ -170,7 +179,8 @@ void testApp::keyReleased(int key){
 
             break;
         }
-        case 'l':{
+        case 'b':{
+            boidCounter = !boidCounter;
             break;
         }
 

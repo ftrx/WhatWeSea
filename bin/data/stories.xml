@@ -168,7 +168,7 @@
 			<no>0</no>
 			<description>Aktion: Einfange der Hais</description>
 			<type>fraction</type>
-			<percent>4</percent>
+			<percent>20</percent>
 			<catchIDs>
 				<catchID>
 					<ID>0</ID>
