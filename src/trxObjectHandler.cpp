@@ -805,7 +805,7 @@ trxConverter* trxObjectHandler::getConverterWithID(int _id){
     }
     return NULL;
 }
-
+/*
 void trxObjectHandler::generatePredators(){
     myPredators.clear();
     myPrey.clear();
@@ -832,6 +832,18 @@ void trxObjectHandler::generatePredators(){
         }
     }
 
+}*/
+
+void trxObjectHandler::generatePredators(){
+    for (int i=0; i<allMyBoids.size();i++)
+    {
+        trxVehicle* tmpBoid = allMyBoids.at(i);
+        if (tmpBoid->myTypeID != 3) {
+            tmpBoid->predators=&myFlocks[2]->boids;
+        }
+
+    }
+    
 }
 
 void trxObjectHandler::randomPrey(){
@@ -840,9 +852,15 @@ void trxObjectHandler::randomPrey(){
         
         cout<<"new Prey found"<<endl;
         generatePredators();
-        for (int i=0; i<myPredators.size(); i++) {
-            int ranomdPrey = ofRandom(myPrey.size()-1);
-            myPredators[i]->addPrey(myPrey[ranomdPrey]);
+        for (int i=0; i<myFlocks[2]->boids.size(); i++) {
+            int preyID = ofRandom(myFlocks.size()-1);
+            while (preyID != 2) {
+                preyID = ofRandom(myFlocks.size()-1);
+            }
+                    int ranomdPrey = ofRandom(myFlocks[preyID]->boids.size()-1);
+                    myFlocks[2]->boids.at(i)->addPrey(myFlocks[preyID]->boids[ranomdPrey]);
+
+            
         }
         newPreyCounter = ofGetElapsedTimeMillis();
     }

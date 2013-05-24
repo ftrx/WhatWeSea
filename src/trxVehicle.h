@@ -61,7 +61,7 @@ public:
     float standardBoneLength = bonelength;
     
     vector <ofVec3f> fleeTargets;
-    vector <trxVehicle *> predators;
+    vector <trxVehicle *>* predators = NULL;
     vector <trxVehicle *> prey;
     
     vector <ofVec3f> paths;
@@ -75,7 +75,7 @@ public:
     virtual ~trxVehicle()
     {
         fleeTargets.clear();
-        predators.clear();
+        predators = NULL;
         prey.clear();
         target = NULL;
         
@@ -144,21 +144,24 @@ public:
                     }
             }
             
-            for (int i=0; i<predators.size(); i++){
-                if(predators.at(i))
-                {
-                    if (inSight(predators[i]->position) && !predators[i]->dead) {
-                        maxSpeed = fleeSpeed;
-                        evade(*predators[i]);
+            if (predators != NULL) {
+                for (int i=0; i<predators->size(); i++){
+                    if(predators->at(i))
+                    {
+                        if (inSight(predators->at(i)->position) && !predators->at(i)->dead) {
+                            maxSpeed = fleeSpeed;
+                            evade(*predators->at(i));
+                        }
                     }
                 }
             }
             
+            
             for (int i=0; i<prey.size(); i++){
                 //if (!inSight(prey[i]->position)) continue;
                 if (prey.at(i)) {
-                    if (!prey[i]->dead) {
-                        pursue(*prey[i]);
+                    if (!prey.at(i)->dead) {
+                        pursue(*prey.at(i));
                     }
                     else {
                         prey.clear();
@@ -211,8 +214,8 @@ public:
     }
     
     void addPredator(trxVehicle * _target){
-        predators.clear();
-        predators.push_back(_target);
+      //  predators.clear();
+       // predators.push_back(_target);
     }
     
     void addPrey(trxVehicle * _target){
