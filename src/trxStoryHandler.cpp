@@ -351,11 +351,12 @@ void trxStoryHandler::draw(){
     if (showFingerHint) {
         fingerHint.draw();
     }
+    /*
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255,255);
     testbild.draw(0,0);
     ofDisableAlphaBlending();
-   
+   */
 }
 
 void trxStoryHandler::draw3D(){

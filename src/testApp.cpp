@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void testApp::setup()
 {
-    ofSetLogLevel(OF_LOG_VERBOSE);
+   // ofSetLogLevel(OF_LOG_VERBOSE);
     ofHideCursor();
 
     myObjectHandler = new trxObjectHandler();
@@ -59,16 +59,15 @@ void testApp::setup()
 void testApp::update()
 {
     /*
-    mutex.lock();
-    //updateMouseRay();
-    
+
     tuioClient.getMessage();
-    
+     
+    mutex.lock();
     addNewCursor();
     removeDeadCursors();
     
-    myObjectHandler.debug = debug;
-    myObjectHandler.update();
+    myObjectHandler->debug = debug;
+    myObjectHandler->update();
     mutex.unlock();
 */
 }
@@ -76,21 +75,19 @@ void testApp::update()
 //--------------------------------------------------------------
 void testApp::draw()
 {
+    
     tuioClient.getMessage();
     
     mutex.lock();
    
-    //updateMouseRay();
-    
-    
     addNewCursor();
     removeDeadCursors();
     
     myObjectHandler->debug = debug;
     myObjectHandler->update();
     
-    
-    
+
+    //mutex.lock();
     ofSetColor(255, 255, 255);
     
     background.draw(0,0, ofGetWidth(), ofGetHeight());
