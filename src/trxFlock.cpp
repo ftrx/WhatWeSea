@@ -14,7 +14,7 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, int _startBoidNum) : t
 
    // myConnectionSlot = &trxConnectionSlot(this);
     
-	boidNum = 200;
+	maxBoidNum = 200;
     startBoidNum = _startBoidNum;
     maxSpeed = 2.0f;
 	target = ofVec3f(0, 0, 0);
@@ -22,7 +22,7 @@ trxFlock::trxFlock(float _x, float _y, float _z, int _id, int _startBoidNum) : t
     
    // flockUpdater = new trxFlockUpdater();
    // flockUpdater->flock = this;
-    
+    growBackTimestamp = ofGetElapsedTimeMillis();
    
 }
 
@@ -47,11 +47,16 @@ void trxFlock::update(){
 		boids[i]->update();
 		boids[i]->bounce(ofGetWidth(), ofGetHeight(), DEPTH);
 	}
-
-    if (boids.size() < boidNum)
-    {
-       //createNewBoid();
+    
+    
+    if (growBack && ofGetElapsedTimeMillis()- growBackTimestamp > growBackTime) {
+        if (boids.size() < maxBoidNum)
+        {
+            createNewBoid(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0);
+        }
+        growBackTimestamp = ofGetElapsedTimeMillis();
     }
+    
 
 }
 
@@ -101,6 +106,14 @@ void trxFlock::removeDeadBoids(){
      
 }
 
+void trxFlock::removeFirstVehicle(){
+    if (boids.size() > 0) {
+        delete boids[0];
+        boids.erase(boids.begin());
+    }
+    
+}
+
 
 void trxFlock::freeCatchedBoids(){
     for (int i=0; i < boids.size(); i++) {
@@ -131,19 +144,20 @@ int trxFlock::returnID(){return id;}
 void trxFlock::generateBoids(){
     for (int i = 0; i < startBoidNum; i++)
 	{
-		createNewBoid();
+		createNewBoid(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(50, DEPTH-50));
 	}
 }
 
-void trxFlock::createNewBoid(){
-    trxVehicle* v = new trxVehicle(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),ofRandom(50, DEPTH-50));
+void trxFlock::createNewBoid(float _x, float _y, float _z){
+    trxVehicle* v = new trxVehicle(_x,_y,_z);
     v->velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v->lifeSpan = ofRandom(3.0f,6.0f);
     v->maxSpeed = maxSpeed;
     v->maxStandardSpeed = maxSpeed;
-    v->length = length;
+    v->length = length + ofRandom(-length/10.0,length/10.0);
     v->numberOfBones = numberOfBones;
-    v->bonelength = length/(numberOfBones-1);
+    v->bonelength = v->length/(numberOfBones-1);
+    v->standardLength = v->length;
     v->maxForce = 0.5f;
     v->inSightDist = sightDistance;
     v->tooCloseDist = tooCloseDistance;
@@ -151,10 +165,21 @@ void trxFlock::createNewBoid(){
     v->myTypeID = id;
     v->pathThreshold = 20.0f;
     v->pathLoop = true;
+    v->fleeFromHarvester = fleeFromHarvester;
+    v->fleeSpeed = fleeSpeed;
+    
+    // jellyFishSettings
+    v->isJellyFish = isJellyFish;
+    v->contractScale = contractScale + ofRandom(-contractScale*0.1,contractScale*0.1);
+    v->contractSpeed = contractSpeed + ofRandom(-contractSpeed*0.1,contractSpeed*0.1);;
+    v->expandSpeed = expandSpeed + ofRandom(-expandSpeed*0.1,expandSpeed*0.1);;
+    v->contractionTimestamp = ofRandom(1000.0);
+    
+    
     ofColor color;
     int r = standardColor.r + int(ofRandom(-5.0, 10.0));
-    int g = standardColor.g + int(ofRandom(-5.0, 10.0));
-    int b = standardColor.b + int(ofRandom(-5.0, 10.0));
+    int g = standardColor.g + int(ofRandom(-10.0, 15.0));
+    int b = standardColor.b + int(ofRandom(-10.0, 15.0));
     color.r = r;
     color.g = g;
     color.b = b;

@@ -21,7 +21,7 @@ class trxFlock : public trxObject {
     
 public:
     
-    int boidNum;
+    int maxBoidNum;
     int startBoidNum;
     int generateNewTime;
     
@@ -32,14 +32,25 @@ public:
     float length;
     int numberOfBones;
     
+    bool fleeFromHarvester = true;
+    float fleeSpeed = 8.0;
     
     ofVec3f target;
 
     vector<trxVehicle*> boids;
     vector<trxVehicle*> deadBoids;
     
+    //growBack Settings
+    bool growBack = false;
+    int growBackTime = 0;
+    int growBackTimestamp = 0;
     
-
+    // Jellfish Settings
+    bool isJellyFish = false;
+    float contractScale = 0.5;
+    int contractSpeed = 200;
+    int expandSpeed = 100;
+    
     
     //trxFlockUpdater * flockUpdater;
     
@@ -56,6 +67,8 @@ public:
     void drawInfo();
     
     void removeDeadBoids();
+    void removeFirstVehicle();
+    
     void freeCatchedBoids();
     void sortDeadsOut();
     void removeVehicles(vector<trxVehicle*> _v);
@@ -64,7 +77,8 @@ public:
     int countOnWay();
     
     void generateBoids();
-    void createNewBoid();
+
+    void createNewBoid(float _x,float _y, float _z);
     
     int returnID();
 

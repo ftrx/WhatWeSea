@@ -54,7 +54,7 @@ void trxStoryHandler::setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>&
 void trxStoryHandler::startStory(trxConnectionSlot* _activeConnection){
     
     stopStory(); // stop any current running Story
-
+    
     if (getStoryWithConnection(_activeConnection)) {
         myActiveStory = getStoryWithConnection(_activeConnection);
         changeTopic(myActiveStory->topicNumber);
@@ -120,6 +120,9 @@ void trxStoryHandler::stopStory(){
         myActiveStory = NULL;
     
         showFingerHint = false;
+        
+        activeBycatchFlock.clear();
+        activeFlock.clear();
     }
     
 }
@@ -150,20 +153,15 @@ void trxStoryHandler::update()
                             bycatchQuantity += activeBycatchFlock.at(i)->countDead();
                             activeBycatchFlock.at(i)->removeDeadBoids();
                         }
-                        
                     }
-                    
                     for (int i=0; i<activeFlock.size(); i++) {
                         onWayQuantity += activeFlock.at(i)->countOnWay();
                     }
                     if (catchedQuantity >= myActiveTask->quantity) {
                         finishTask();
                     }
-
                 }
                 else if (myActiveTask->type == "fraction"){
-                    
-                    
                     if(myActiveTask->dieAfterCatch) {
                         int lastCatchedQuantity = catchedQuantity;
                         for (int i=0; i<activeFlock.size(); i++) {
@@ -186,7 +184,6 @@ void trxStoryHandler::update()
                         for (int i=0; i<activeFlock.size(); i++) {
                             catchedQuantity += activeFlock.at(i)->countDead();
                         }
-                        
                     }
                     if(activeBycatchFlock.size()>0){
                         for (int i=0; i<activeBycatchFlock.size(); i++) {
@@ -200,8 +197,6 @@ void trxStoryHandler::update()
                     if (catchedQuantity >= myActiveTask->quantity) {
                         finishTask();
                     }
-
-                    
                 }
             }
         }
@@ -218,8 +213,6 @@ void trxStoryHandler::update()
     }
     if(myActiveStory){ resetStoryAfterTimeout(IDLETIME);}
     
-    
-    
     if (ofGetElapsedTimeMillis() > messageTimer + 10000 ) {
       //  myFloatingMessageController.newRandomFact();
         messageTimer = ofGetElapsedTimeMillis();
@@ -230,8 +223,6 @@ void trxStoryHandler::update()
     
     myFloatingMessageController.update();
 }
-
-
 
 
 trxStoryHandler::task * trxStoryHandler::nextTask(){
@@ -251,16 +242,14 @@ trxStoryHandler::task * trxStoryHandler::nextTask(){
             //activeBycatchFlock->removeDeadBoids();
             activeBycatchFlock.at(i)->freeCatchedBoids();
         }
-        
     }
-    
     if(myActiveTask->no < myActiveStory->myTasks.size()-1){
         int newNo = myActiveTask->no + 1;
         return &myActiveStory->myTasks.at(newNo);
     }
     else return NULL;
-    
 }
+
 
 void trxStoryHandler::finishTask(){
     if (myActiveTask)
@@ -274,14 +263,15 @@ void trxStoryHandler::finishTask(){
     }
 }
 
+
 void trxStoryHandler::finishStory(){
     
     myActiveStory->finished = true;
    
     showMessage = true;
     myOsc.sendOscAction(7);
-    
 }
+
 
 void trxStoryHandler::draw(){
     if (myActiveStory) {
@@ -297,7 +287,6 @@ void trxStoryHandler::draw(){
             ofVec3f target = myActiveTask->targetPosition+randomWiggle;
             activeConnection->drawWobbleLine(0+activeConverter->radius, 0, target.x-myActiveTask->targetSize,target.y);
             ofTranslate(target);
-            
             
             //drawTarget();
             //ofTranslate(randomWiggle);
@@ -327,14 +316,9 @@ void trxStoryHandler::draw(){
                     drawProgressAmount(myActiveTask->targetSize, 100.0, bycatchQuantity);
                 }
 
-            }
-                
-                        
+            }            
             ofTranslate(0, -80);
             drawTaskMessage(myActiveTask->taskMessage);
-            
-            //drawProgressBar(catchedQuantity);
-            
             ofPopMatrix();
             ofPopStyle();
             if (myActiveTask->finished) {
@@ -351,17 +335,21 @@ void trxStoryHandler::draw(){
     if (showFingerHint) {
         fingerHint.draw();
     }
+    
     /*
     ofEnableAlphaBlending();
     ofSetColor(255, 255, 255,255);
     testbild.draw(0,0);
     ofDisableAlphaBlending();
-   */
+     */
+   
 }
+
 
 void trxStoryHandler::draw3D(){
   //  myFloatingMessageController.draw();
 }
+
 
 void trxStoryHandler::drawDebug()
 {
@@ -387,6 +375,7 @@ void trxStoryHandler::drawTaskMessage(string _message){
     HelveticaNeueRoman18.drawString(_message, 0, 0);
     ofPopStyle();
 }
+
 
 void trxStoryHandler::drawMessage(string _message){
     
@@ -512,7 +501,7 @@ void trxStoryHandler::drawProgressAmount(float _radius, float _barHeight, int _c
     float radius = _radius;
     float barHeight = _barHeight;
     float progressHeight = int(ofMap(_currentQuantity, 0, myActiveTask->quantity, 0, _barHeight));
-    ofColor color= PROGRESSBARCOLOR;
+    ofColor color= PROGRESSBARAMOUNTCOLOR;
     color.a = 100;
     
     

@@ -65,7 +65,7 @@ class trxStoryHandler {
     trxConnectionSlot* activeConnection = NULL;
     vector<trxFlock*> activeFlock;
     vector<trxFlock*> activeBycatchFlock;
-    trxConverter* activeConverter;
+    trxConverter* activeConverter = NULL;
     
     vector<trxFlock*> allFlocks;
     vector<trxConverter*> allConverters;
@@ -76,10 +76,10 @@ class trxStoryHandler {
     ofVec3f myLastScreenTargetPosition;
     ofVec3f myScreenTargetMovement;
     
-    int catchedQuantity;
-    int tempCatchedQuantity;
-    int bycatchQuantity;
-    int tempBycatchQuantity;
+    int catchedQuantity = 0;
+    int tempCatchedQuantity = 0;
+    int bycatchQuantity = 0;
+    int tempBycatchQuantity = 0;
     
     bool showMessage = false;
     trxStoryButton messageButton;
@@ -88,7 +88,7 @@ class trxStoryHandler {
     void setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>& _allConverters, vector<trxConnectionSlot*>& _allConnections);
     void generateStories();
     
-    void startStory(trxConnectionSlot * _activeConnection);
+    void startStory(trxConnectionSlot* _activeConnection);
     void stopStory();
     void draw();
     void draw3D();
@@ -97,7 +97,7 @@ class trxStoryHandler {
     
     void updateMyLastTargetScreenPosition();
     
-    task * nextTask();
+    task* nextTask();
     void finishTask();
     
     void finishStory();
@@ -139,8 +139,8 @@ class trxStoryHandler {
     
     trxXML xml;
     
-    story * myActiveStory;
-    task * myActiveTask;
+    story* myActiveStory;
+    task* myActiveTask;
     
     bool runningAction = false;
     

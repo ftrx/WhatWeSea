@@ -24,16 +24,16 @@ const float TIMER = 0.200; // time in seconds until the cursor is removed
 const float ADDTIMER = 0.100;
 
 //fish colors
-const ofColor activColor = ofColor(255,255,255,255);
+const ofColor activColor = ofColor(250,255,255,255);
 const ofColor standardColor = ofColor(6,43,104,255);
 
 
 // progress bar color
-const ofColor PROGRESSBARCOLOR = ofColor(0,20,70,255);
+const ofColor PROGRESSBARCOLOR = ofColor(6,60,144,255);
 
+const ofColor PROGRESSBARAMOUNTCOLOR = ofColor(2,40,104,255);
 
-
-#define trx_HOST "172.31.7.147"
+#define trx_HOST "172.31.7.210"
 #define trx_PORT 12000
 
 

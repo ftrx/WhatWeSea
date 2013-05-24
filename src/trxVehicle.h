@@ -30,6 +30,19 @@ public:
     bool onWay = false;
     bool dead = false;
     
+    bool fleeFromHarvester = true;
+    float fleeSpeed = 8.0;
+    
+    bool isJellyFish = false;
+    float contractScale = 0.5;
+    int contractSpeed = 100;
+    int expandSpeed = 200;
+    float scaleFactor = 1;
+    
+    int contractionTimestamp = 0;
+    
+    
+    
     ofColor color = standardColor;
     
     float pathRadius = 40.0;
@@ -39,10 +52,13 @@ public:
     vector<ofVec3f> bones;
     vector<ofVec3f> boneNormals;
     vector<ofVec3f> vertexes;
+    
     // size of the vehicle
     float length = 40.0;
+    float standardLength = 40.0;
     int numberOfBones = 4;
     float bonelength = length/(numberOfBones-1);
+    float standardBoneLength = bonelength;
     
     vector <ofVec3f> fleeTargets;
     vector <trxVehicle *> predators;
@@ -52,7 +68,6 @@ public:
     vector <ofVec3f> circlePaths;
 	
 	trxVehicle(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) : BiologicalVehicle(_x, _y, _z) {
-        
 	}
     
     
@@ -123,7 +138,7 @@ public:
             for (int i=0; i<fleeTargets.size(); i++) {
                     ofVec3f pos = ofVec3f(fleeTargets[i].x,fleeTargets[i].y,0);
                     if (position2D.distance(pos) < HARVESTER_RADIUS+20.0){
-                        maxSpeed = 8.0f;
+                        maxSpeed = fleeSpeed;
                         fleeTarget(&fleeTargets[i]);
                     }
             }
@@ -132,7 +147,7 @@ public:
                 if(predators.at(i))
                 {
                     if (inSight(predators[i]->position) && !predators[i]->dead) {
-                        maxSpeed = 8.0f;
+                        maxSpeed = fleeSpeed;
                         evade(*predators[i]);
                     }
                 }

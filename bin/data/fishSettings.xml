@@ -15,6 +15,10 @@
 		<Connections>
 			<CID>10</CID>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>6.0</fleeSpeed>
 	</Object>
 	
 	<Object>
@@ -35,6 +39,10 @@
 			<CID>10</CID>
 			<CID>11</CID>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>1.2</fleeSpeed>
 	</Object>
 	<Object>
 		<ID>2</ID>
@@ -56,6 +64,10 @@
 			<CID>10</CID>
 			<CID>11</CID>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
 	
 	<Object>
@@ -74,22 +86,32 @@
 		<Connections>
 			<CID>10</CID>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
 	<Object>
 		<ID>4</ID>
 		<Type>flock</Type>
 		<NAME>Qualle</NAME>
-		<MAX_BOIDS>20</MAX_BOIDS>
-		<START_BOIDS>20</START_BOIDS>
+		<MAX_BOIDS>800</MAX_BOIDS>
+		<START_BOIDS>800</START_BOIDS>
 		<TEXTURE_PATH>qualle.png</TEXTURE_PATH>
 		<ICON_PATH>qualle.png</ICON_PATH>
-		<MAX_SPEED>1.0</MAX_SPEED>
+		<MAX_SPEED>0.1</MAX_SPEED>
 		<sightDistance>20.0</sightDistance>
 		<tooCloseDistance>40.0</tooCloseDistance>
 		<length>20.0</length>
 		<numberOfBones>2</numberOfBones>
 		<Connections>
 		</Connections>
+		<growBack>0</growBack>
+		<growBackTime>1000</growBackTime>
+		<isJellyFish>1</isJellyFish>
+		<contractScale>0.5</contractScale>
+		<contractSpeed>200</contractSpeed>
+		<expandSpeed>800</expandSpeed>
 	</Object>
 	<Object>
 		<ID>5</ID>
@@ -108,6 +130,10 @@
 		<length>20.0</length>
 		<Connections>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
 	<Object>
 		<ID>6</ID>
@@ -120,12 +146,16 @@
 		<START_BOIDS>300</START_BOIDS>
 		<TEXTURE_PATH>feeding_fish.png</TEXTURE_PATH>
 		<ICON_PATH></ICON_PATH>
-		<MAX_SPEED>2.0</MAX_SPEED>
+		<MAX_SPEED>2.2</MAX_SPEED>
 		<sightDistance>100.0</sightDistance>
 		<tooCloseDistance>50.0</tooCloseDistance>
-		<length>20.0</length>
+		<length>15.0</length>
 		<Connections>
 		</Connections>
+		<growBack>1</growBack>
+		<growBackTime>1000</growBackTime>
+		<fleeFromHarvester>1</fleeFromHarvester>
+		<fleeSpeed>8.0</fleeSpeed>
 	</Object>
 	<Object>
 		<ID>10</ID>

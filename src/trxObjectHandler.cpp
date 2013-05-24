@@ -39,11 +39,15 @@ void trxObjectHandler::update()
     if (numberOfBoids < 1500) {
         for (int i=0; i< 1500-numberOfBoids; i++) {
             if(myFlocks.at(4) != NULL)
-                myFlocks.at(4)->createNewBoid();
+                myFlocks.at(4)->createNewBoid(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0);
             else
                 cout << "trxObjectHandler::update  null pointer !!!!" << endl;
         }
         
+    }
+    else if (numberOfBoids > 1500)
+    {
+        myFlocks.at(4)->removeFirstVehicle();
     }
     
     
@@ -281,7 +285,7 @@ void trxObjectHandler::generateObjects()
             trxFlock * thisFlock = new trxFlock(ofGetWidth()/2.0,ofGetHeight()/2.0,DEPTH,xml.getIntValue(i, "ID"),xml.getIntValue(0, "START_BOIDS"));
             //thisFlock.color = colors[i];
             thisFlock->title = xml.getString("noTitle", "NAME");
-            thisFlock->boidNum = xml.getIntValue(0, "MAX_BOIDS");
+            thisFlock->maxBoidNum = xml.getIntValue(0, "MAX_BOIDS");
             thisFlock->startBoidNum = xml.getIntValue(0, "START_BOIDS");
             thisFlock->maxSpeed = xml.getFloatValue(2.0, "MAX_SPEED");
             thisFlock->numberOfBones = xml.getIntValue(4, "numberOfBones");
@@ -292,6 +296,21 @@ void trxObjectHandler::generateObjects()
             thisFlock->texture = &textures.at(i);
             thisFlock->myIcon = &icons.at(i);
             thisFlock->myConnections = xml.getConnections(i);
+            int intToBool = xml.getIntValue(0, "growBack");
+            thisFlock->growBack = ( intToBool !=0);
+            thisFlock->growBackTime = xml.getIntValue(1000, "growBackTime");
+            
+            int fleeBool = xml.getIntValue(0, "fleeFromHarvester");
+            thisFlock->fleeFromHarvester = ( fleeBool !=0);
+            thisFlock->fleeSpeed = xml.getFloatValue(8.0, "fleeSpeed");
+            
+            // jellyishSettings
+            int jellyBool = xml.getIntValue(0, "isJellyFish");
+            thisFlock->isJellyFish =  (jellyBool !=0);
+            thisFlock->contractScale = xml.getFloatValue(0.5, "contractScale");
+            thisFlock->expandSpeed = xml.getIntValue(200, "expandSpeed");
+            thisFlock->contractSpeed = xml.getIntValue(100, "contractSpeed");
+            
             myFlocks.push_back(thisFlock);
         }
         else if(type == "converter")
@@ -337,9 +356,15 @@ vector<trxVehicle *> trxObjectHandler::getAllBoidsFromFlocks(const vector<trxFlo
                 cout<<"error nan"<<endl;
             }
             
+            
+            // add fleetarget on harvester position - now the finger on the screen will force the boids to flee
             thisVehicle->clearFleeTargets();
             for (int harvester = 0; harvester< harvesters.size(); harvester++) {
-                thisVehicle->addFleeTarget(harvesters.at(harvester)->position);
+                
+                if (thisVehicle->fleeFromHarvester) {
+                    thisVehicle->addFleeTarget(harvesters.at(harvester)->position);
+                }
+                
             }
             
             // check if dead, when dead then do not draw
