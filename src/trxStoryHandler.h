@@ -24,6 +24,16 @@
 class trxStoryHandler {
     
     public:
+    
+    struct factNumber {
+        ofVec2f position;
+        int number = 0;
+        float multiplier = 1.0;
+        int fontSize = 100;
+        
+        
+    };
+    
     struct task {
         bool finished = false;
         int no = NULL;
@@ -52,6 +62,7 @@ class trxStoryHandler {
         trxConverter * myStoryConverter;
         string finalMessage = "Story Finished Message";
         ofImage finalFactImage;
+        vector<factNumber> factNumbers;
         string description = "Story Comming soon";
         vector<string> messages;
     };
@@ -61,6 +72,9 @@ class trxStoryHandler {
 
     ofTrueTypeFont	HelveticaNeueRoman18;
     ofTrueTypeFont	HelveticaNeueRoman36;
+    
+    ofTrueTypeFont numberFontBig;
+    ofTrueTypeFont numberFontSmall;
     
     trxConnectionSlot* activeConnection = NULL;
     vector<trxFlock*> activeFlock;
@@ -77,6 +91,7 @@ class trxStoryHandler {
     ofVec3f myScreenTargetMovement;
     
     int catchedQuantity = 0;
+    int finishedCatchedQuantity = 0;
     int tempCatchedQuantity = 0;
     int bycatchQuantity = 0;
     int tempBycatchQuantity = 0;
@@ -128,6 +143,12 @@ class trxStoryHandler {
     
     string wrapString(string text, int width);
 
+    
+    // Winscreen
+    
+    void drawWinscreen();
+    
+    
     
     void updateTargetPosition ();
     

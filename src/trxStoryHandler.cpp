@@ -17,6 +17,15 @@ trxStoryHandler::trxStoryHandler() {
 	HelveticaNeueRoman36.setLineHeight(40.0f);
 	HelveticaNeueRoman36.setLetterSpacing(1.037);
     
+    
+    numberFontBig.loadFont("fonts/NewsGot-Bol.otf", 100,true,true);
+    numberFontBig.setLineHeight(104);
+    numberFontBig.setLetterSpacing(1.037);
+    
+    numberFontSmall.loadFont("fonts/NewsGot-Reg.otf", 60,true,true);
+    numberFontSmall.setLineHeight(64);
+    numberFontSmall.setLetterSpacing(1.037);
+    
     message_edge_topright.loadImage("message_background/edge_topright.png");
     message_edge_topleft.loadImage("message_background/edge_topleft.png");
     message_edge_bottomright.loadImage("message_background/edge_bottomright.png");
@@ -112,6 +121,7 @@ void trxStoryHandler::stopStory(){
         
         catchedQuantity = 0;
         bycatchQuantity = 0;
+        finishedCatchedQuantity = 0;
         
         tempBycatchQuantity = 0;
         tempCatchedQuantity = 0;
@@ -226,10 +236,7 @@ void trxStoryHandler::update()
 
 
 trxStoryHandler::task * trxStoryHandler::nextTask(){
-    catchedQuantity = 0;
-    tempCatchedQuantity = 0;
-    bycatchQuantity = 0;
-    tempBycatchQuantity = 0;
+   
     //activeFlock->removeDeadBoids();
     for (int i=0; i<activeFlock.size(); i++) {
         activeFlock.at(i)->freeCatchedBoids();
@@ -245,6 +252,14 @@ trxStoryHandler::task * trxStoryHandler::nextTask(){
     }
     if(myActiveTask->no < myActiveStory->myTasks.size()-1){
         int newNo = myActiveTask->no + 1;
+        
+        finishedCatchedQuantity = catchedQuantity;
+        catchedQuantity = 0;
+        tempCatchedQuantity = 0;
+        bycatchQuantity = 0;
+        tempBycatchQuantity = 0;
+        
+        
         return &myActiveStory->myTasks.at(newNo);
     }
     else return NULL;
@@ -274,8 +289,8 @@ void trxStoryHandler::finishStory(){
 
 
 void trxStoryHandler::draw(){
-    if (myActiveStory) {
-        if (myActiveTask) {
+    if (myActiveStory != NULL) {
+        if (myActiveTask != NULL) {
             ofPushMatrix();
             ofPushStyle();
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
@@ -325,9 +340,10 @@ void trxStoryHandler::draw(){
                 //drawMessage("Task Finished Message");
             }
         }
-        if (myActiveStory->finished) {
+        if (myActiveStory->finished == true) {
            //drawMessage(myActiveStory->finalMessage);
-            drawMessage(randomFact);
+            //drawMessage(randomFact);
+            drawWinscreen();
         }
     }
     myFloatingMessageController.draw();
@@ -444,6 +460,56 @@ void trxStoryHandler::drawMessage(string _message){
     ofPopStyle();
 }
 
+void trxStoryHandler::drawWinscreen(){
+    ofPushStyle();
+    ofSetColor(255,255,255);
+    ofEnableAlphaBlending();
+    myActiveStory->finalFactImage.draw(0,0,ofGetWidth(),ofGetHeight());
+    
+    for (int i=0; i<myActiveStory->factNumbers.size(); i++) {
+        factNumber tmpFactN = myActiveStory->factNumbers[i];
+        ofSetColor(WINSCREENTEXTCOLOR);
+        string textNumber = "0";
+        float number = 0.0;
+        switch (tmpFactN.number) {
+            case 0:
+                number = catchedQuantity;
+                break;
+            case 1:
+                number = bycatchQuantity;
+                break;
+            case 2:
+                number = finishedCatchedQuantity;
+                break;
+            default:
+                number = catchedQuantity;
+                break;
+        }
+        
+        textNumber = ofToString(number * tmpFactN.multiplier,0);
+        
+        switch (tmpFactN.fontSize) {
+            case 100:
+                numberFontBig.drawString(textNumber, tmpFactN.position.x, tmpFactN.position.y);
+                break;
+            case 60:
+                numberFontSmall.drawString(textNumber, tmpFactN.position.x, tmpFactN.position.y);
+                break;
+                
+            default:
+                break;
+        }      
+    }    
+    
+    ofDisableAlphaBlending();
+    
+    ofPopStyle();
+    
+    messageButton.setPosition(ofVec2f(ofGetWidth()/2,ofGetHeight()/2+400));
+    messageButton.draw();
+    
+}
+
 void trxStoryHandler::drawProgressBar(int _currentQuantity){
     float length = 200.0;
     float height = 5.0;
@@ -541,7 +607,8 @@ void trxStoryHandler::generateStories(){
         thisStory.finalMessage = xml.getString("", "finalMessage");
         thisStory.description = xml.getString("no Description found", "description");
         thisStory.topicNumber = xml.getIntValue(i, "topicNumber");
-        thisStory.finalFactImage.loadImage("facts/"+ xml.getString("", "finalFact"));
+        //thisStory.finalFactImage.loadImage("facts/"+ xml.getString("", "finalFact"));
+        thisStory.finalFactImage.loadImage("winscreen/"+ xml.getString("", "finalFactImage"));
         int numberOfTasks = xml.XML.getNumTags("task");
         
         for (int taskN=0; taskN < numberOfTasks; taskN++) {
@@ -584,7 +651,19 @@ void trxStoryHandler::generateStories(){
             thisStory.myTasks.push_back(thisTask);
             xml.XML.popTag();
         }
-
+        
+        int numberOfFacts = xml.XML.getNumTags("factNumber");
+        
+        for (int factN=0; factN < numberOfFacts; factN++) {
+            xml.XML.pushTag("factNumber",factN);
+            factNumber thisFactNumber;
+            thisFactNumber.position = ofVec2f(xml.getIntValue(0, "x"),xml.getIntValue(0, "y"));
+            thisFactNumber.number = xml.getIntValue(0, "number");
+            thisFactNumber.multiplier = xml.getFloatValue(1.0, "multiplier");
+            thisFactNumber.fontSize = xml.getIntValue(100, "fontSize");
+            thisStory.factNumbers.push_back(thisFactNumber);
+            xml.XML.popTag();
+        }
         xml.XML.popTag();
         xml.XML.popTag();
         myStories.push_back(thisStory);

@@ -24,7 +24,23 @@
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
 		<finalMessage>Gratulation/n Du hast 20 Tonnen Thunfische gefangen</finalMessage>
-		<finalFact>Thunfisch_Boot_Fact.png</finalFact>
+		<finalFactImage>Winscreen_Tuna_Boot.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>0.1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>876</x>
+			<y>708</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>125000</multiplier>
+			<fontSize>60</fontSize>
+		</factNumber>
+
+
 	</story>
 
 	<story>
@@ -75,7 +91,28 @@
 			<progress>amount</progress>
 		</task>
 		<finalMessage>Gratulation/n Du hast 50 Tonnen Futterfisch für 20 Tonnen Thunfisch benötigt!</finalMessage>
-		<finalFact>Thunfisch_Aqua_Fact.png</finalFact>
+		<finalFactImage>Winscreen_Tuna_Aquakultur.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>2</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>996</x>
+			<y>442</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>919</x>
+			<y>711</y>
+			<number>2</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>22</multiplier>
+			<fontSize>60</fontSize>
+		</factNumber>
 	</story>
 
 	<story>
@@ -85,7 +122,7 @@
 		<converter>10</converter>
 		<task>
 			<no>0</no>
-			<description>Aktion: Einfange der Shrimps</description>
+			<description>Aktion: Einfangen der Shrimps</description>
 			<actionNumber>2</actionNumber>
 			<catchIDs>
 				<catchID>
@@ -108,8 +145,29 @@
 			<targetSize>50.0</targetSize>
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
-		<finalMessage>Gratulation/n Du hast 20 Tonnen Thunfische gefangen</finalMessage>
-		<finalFact>Shrimp_Boot_Fact.png</finalFact>
+		<finalMessage>Gratulation/n Du hast 20 Tonnen Shrimps gefangen</finalMessage>
+		<finalFactImage>Winscreen_Shrimp_Aqua.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>1180</x>
+			<y>442</y>
+			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>814</x>
+			<y>711</y>
+			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>111</multiplier>
+			<fontSize>60</fontSize>
+		</factNumber>
 	</story>
 	<story>
 		<description>Story: Shrimp/Aquakultur</description>
@@ -157,7 +215,35 @@
 			<progress>amount</progress>
 		</task>
 		<finalMessage>Gratulation Du hast 20 Tonnen Shrimp produziert</finalMessage>
-		<finalFact>Shrimp_Aqua_Fact.png</finalFact>
+		<finalFactImage>Winscreen_Shrimp_Aquakultur.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>2</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>996</x>
+			<y>442</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>327</x>
+			<y>711</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1</multiplier>
+			<fontSize>60</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>105</x>
+			<y>780</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>4.5</multiplier>
+			<fontSize>60</fontSize>
+		</factNumber>
 	</story>
 	<story>
 		<description>Story: Hai/Schiff</description>
@@ -184,7 +270,21 @@
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
 		<finalMessage>Gratulation Du hast 20 Tonnen Haie gefangen</finalMessage>
-		<finalFact>Shark_Fact.png</finalFact>
+		<finalFactImage>Winscreen_Hai.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>1029</x>
+			<y>442</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>4</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
 	</story>
 	<story>
 		<description>Story: Delfin/Schiff</description>
@@ -211,6 +311,20 @@
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
 		<finalMessage>Gratulation Du hast 20 Tonnen Delfine gefangen</finalMessage>
-		<finalFact>Delfin_Fact.png</finalFact>
+		<finalFactImage>Winscreen_Delfin.png</finalFactImage>
+		<factNumber>
+			<x>444</x>
+			<y>322</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1.0</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>996</x>
+			<y>442</y>
+			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1.0</multiplier>
+			<fontSize>100</fontSize>
+		</factNumber>
 	</story>
 </stories>
