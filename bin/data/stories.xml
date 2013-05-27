@@ -17,7 +17,8 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>20</catchSize>
-			<taskMessage>Fange Thunfische</taskMessage>
+			<taskMessage>Ziehe eine Langleine</taskMessage>
+
 			<quantity>40</quantity>
 			<harvester>longline</harvester>
 			<targetSize>50.0</targetSize>
@@ -27,16 +28,18 @@
 		<finalFactImage>Winscreen_Tuna_Boot.png</finalFactImage>
 		<factNumber>
 			<x>444</x>
-			<y>322</y>
+			<y>355</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>0.1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>876</x>
-			<y>708</y>
+			<x>885</x>
+			<y>741</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>125000</multiplier>
+			<multiplier>12500</multiplier>
+			<unit></unit>
 			<fontSize>60</fontSize>
 		</factNumber>
 
@@ -83,7 +86,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Füttere Thunfische</taskMessage>
+			<taskMessage>Füttere die Thunfische</taskMessage>
 			<quantity>50</quantity>
 			<harvester>Net</harvester>
 			<targetSize>80.0</targetSize>
@@ -97,13 +100,16 @@
 			<y>322</y>
 			<number>2</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
 			<multiplier>1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
+
 		</factNumber>
 		<factNumber>
 			<x>996</x>
 			<y>442</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
@@ -111,6 +117,7 @@
 			<y>711</y>
 			<number>2</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>22</multiplier>
+			<unit></unit>
 			<fontSize>60</fontSize>
 		</factNumber>
 	</story>
@@ -146,12 +153,13 @@
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
 		<finalMessage>Gratulation/n Du hast 20 Tonnen Shrimps gefangen</finalMessage>
-		<finalFactImage>Winscreen_Shrimp_Aqua.png</finalFactImage>
+		<finalFactImage>Winscreen_Shrimp_Boot.png</finalFactImage>
 		<factNumber>
 			<x>444</x>
 			<y>322</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
-			<multiplier>1</multiplier>
+			<multiplier>0.1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
@@ -159,11 +167,12 @@
 			<y>442</y>
 			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
 			<x>814</x>
-			<y>711</y>
+			<y>708</y>
 			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>111</multiplier>
 			<fontSize>60</fontSize>
@@ -217,31 +226,35 @@
 		<finalMessage>Gratulation Du hast 20 Tonnen Shrimp produziert</finalMessage>
 		<finalFactImage>Winscreen_Shrimp_Aquakultur.png</finalFactImage>
 		<factNumber>
-			<x>444</x>
-			<y>322</y>
-			<number>2</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
-			<multiplier>1</multiplier>
+			<x>430</x>
+			<y>400</y>
+			<number>5</number> // 0 = catechedQuantity, 1 = byCatch,2 = finishedCatchedQuantity, 3 = weightCatchedQuantity, 4 = weightBycatch, 5 = weightFinished
+			<multiplier>1.0</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>996</x>
-			<y>442</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>1</multiplier>
+			<x>720</x>
+			<y>520</y>
+			<number>3</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>10</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>327</x>
-			<y>711</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>1</multiplier>
+			<x>315</x>
+			<y>648</y>
+			<number>3</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>10</multiplier>
+			<unit>t</unit>
 			<fontSize>60</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>105</x>
-			<y>780</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>4.5</multiplier>
+			<x>91</x>
+			<y>720</y>
+			<number>3</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>200.0</multiplier>
+			<unit>t</unit>
 			<fontSize>60</fontSize>
 		</factNumber>
 	</story>
@@ -263,9 +276,9 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Fange Hais</taskMessage>
+			<taskMessage>Ziehe eine Langleine</taskMessage>
 			<quantity>4</quantity>
-			<harvester>Net</harvester>
+			<harvester>longline</harvester>
 			<targetSize>50.0</targetSize>
 			<dieAfterCatch>1</dieAfterCatch>
 		</task>
@@ -276,13 +289,24 @@
 			<y>322</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
 			<multiplier>1</multiplier>
+			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>1029</x>
+			<x>958</x>
+			<y>324</y>
+			<number>1</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<multiplier>1</multiplier>
+			<unit></unit>
+			<fontSize>100</fontSize>
+		</factNumber>
+		<factNumber>
+			<x>1020</x>
 			<y>442</y>
 			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>4</multiplier>
+			<multiplier>0.04</multiplier>
+			<unit>t</unit>
+			<presicion>2</presicion>
 			<fontSize>100</fontSize>
 		</factNumber>
 	</story>
@@ -313,16 +337,17 @@
 		<finalMessage>Gratulation Du hast 20 Tonnen Delfine gefangen</finalMessage>
 		<finalFactImage>Winscreen_Delfin.png</finalFactImage>
 		<factNumber>
-			<x>444</x>
-			<y>322</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
+			<x>572</x>
+			<y>329</y>
+			<number>1</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
 			<multiplier>1.0</multiplier>
+			<unit></unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>996</x>
-			<y>442</y>
-			<number>1</number> // 0 = catechedQuantity - 1 = byCatch 
+			<x>448</x>
+			<y>448</y>
+			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>1.0</multiplier>
 			<fontSize>100</fontSize>
 		</factNumber>

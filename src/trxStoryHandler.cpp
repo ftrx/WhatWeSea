@@ -26,6 +26,19 @@ trxStoryHandler::trxStoryHandler() {
     numberFontSmall.setLineHeight(64);
     numberFontSmall.setLetterSpacing(1.037);
     
+    
+    taskFontBig.loadFont("fonts/NewsGot-Med.otf", 36,true,true);
+    taskFontBig.setLineHeight(40);
+    taskFontBig.setLetterSpacing(1.037);
+    
+    taskFontSmall.loadFont("fonts/NewsGot-Reg.otf", 24,true,true);
+    taskFontSmall.setLineHeight(28);
+    taskFontSmall.setLetterSpacing(1.037);
+    
+    netIcon.loadImage("actionIcons/Fangen.png");
+    longlineIcon.loadImage("actionIcons/Langleine.png");
+    
+    
     message_edge_topright.loadImage("message_background/edge_topright.png");
     message_edge_topleft.loadImage("message_background/edge_topleft.png");
     message_edge_bottomright.loadImage("message_background/edge_bottomright.png");
@@ -123,6 +136,11 @@ void trxStoryHandler::stopStory(){
         bycatchQuantity = 0;
         finishedCatchedQuantity = 0;
         
+        
+        weightBycatchQuantity = 0;
+        weightcatchedQuantity = 0;
+        weightFinishedCatchedQuantity = 0;
+        
         tempBycatchQuantity = 0;
         tempCatchedQuantity = 0;
         
@@ -140,6 +158,7 @@ void trxStoryHandler::stopStory(){
 void trxStoryHandler::update()
 {
     int onWayQuantity = 0;
+    float aquaCulturPercent = 0.1;
     updateMyLastTargetScreenPosition();
     if (myActiveStory) {
         if (myActiveTask) {
@@ -150,18 +169,24 @@ void trxStoryHandler::update()
                     if(myActiveTask->dieAfterCatch) {
                         for (int i=0; i<activeFlock.size(); i++) {
                             catchedQuantity += activeFlock.at(i)->countDead();
+                            weightcatchedQuantity = catchedQuantity*activeFlock.at(i)->weight;
+                            finishedCatchedQuantity += (activeFlock.at(i)->countDead())*aquaCulturPercent;
+                            weightFinishedCatchedQuantity += (activeFlock.at(i)->countDead())*aquaCulturPercent*activeFlock.at(i)->weight;
                             activeFlock.at(i)->removeDeadBoids();
                         }
                     }
                     else{
                         for (int i=0; i<activeFlock.size(); i++) {
                             catchedQuantity = activeFlock.at(i)->countDead();
+                            weightcatchedQuantity = catchedQuantity*activeFlock.at(i)->weight;
+                            
                         }
                     }
                     if(activeBycatchFlock.size()>0){
                         for (int i=0; i<activeBycatchFlock.size(); i++) {
                             bycatchQuantity += activeBycatchFlock.at(i)->countDead();
                             activeBycatchFlock.at(i)->removeDeadBoids();
+                            weightBycatchQuantity = bycatchQuantity * activeBycatchFlock.at(i)->weight;
                         }
                     }
                     for (int i=0; i<activeFlock.size(); i++) {
@@ -176,9 +201,16 @@ void trxStoryHandler::update()
                         int lastCatchedQuantity = catchedQuantity;
                         for (int i=0; i<activeFlock.size(); i++) {
                             tempCatchedQuantity += activeFlock.at(i)->countDead();
+                            
+                            
                         }
                         catchedQuantity = int((tempCatchedQuantity/100.0 * myActiveTask->percent) +0.5);
+                        weightcatchedQuantity = catchedQuantity*activeFlock.at(0)->weight;
+                        
+                        
+                        
                         bycatchQuantity = tempCatchedQuantity-catchedQuantity;
+                        weightBycatchQuantity = bycatchQuantity * activeFlock.at(1)->weight;
                         
                         for (int i=0; i<activeFlock.size(); i++) {
                             activeFlock.at(i)->removeDeadBoids();
@@ -193,11 +225,13 @@ void trxStoryHandler::update()
                         catchedQuantity = 0;
                         for (int i=0; i<activeFlock.size(); i++) {
                             catchedQuantity += activeFlock.at(i)->countDead();
+                            weightcatchedQuantity = catchedQuantity*activeFlock.at(i)->weight;
                         }
                     }
                     if(activeBycatchFlock.size()>0){
                         for (int i=0; i<activeBycatchFlock.size(); i++) {
                             bycatchQuantity += activeBycatchFlock.at(i)->countDead();
+                            weightBycatchQuantity = bycatchQuantity * activeBycatchFlock.at(i)->weight;
                             activeBycatchFlock.at(i)->removeDeadBoids();
                         }
                     }
@@ -209,6 +243,8 @@ void trxStoryHandler::update()
                     }
                 }
             }
+    
+            
         }
         else {
             if (!showMessage) {
@@ -254,6 +290,7 @@ trxStoryHandler::task * trxStoryHandler::nextTask(){
         int newNo = myActiveTask->no + 1;
         
         finishedCatchedQuantity = catchedQuantity;
+        weightFinishedCatchedQuantity = weightcatchedQuantity;
         catchedQuantity = 0;
         tempCatchedQuantity = 0;
         bycatchQuantity = 0;
@@ -294,7 +331,9 @@ void trxStoryHandler::draw(){
             ofPushMatrix();
             ofPushStyle();
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
+            
             ofRotate(activeConnection->myConverter->rotation);
+            drawTaskMessage(myActiveTask->taskMessage);
             ofSetColor(255, 255, 255);
             float maxAmplitude = 5.0;
             ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()),ofSignedNoise(ofGetElapsedTimef()),0)*maxAmplitude;
@@ -332,9 +371,10 @@ void trxStoryHandler::draw(){
                 }
 
             }            
-            ofTranslate(0, -80);
-            drawTaskMessage(myActiveTask->taskMessage);
+            ofTranslate(0, 0);
+            
             ofPopMatrix();
+            
             ofPopStyle();
             if (myActiveTask->finished) {
                 //drawMessage("Task Finished Message");
@@ -349,7 +389,7 @@ void trxStoryHandler::draw(){
     myFloatingMessageController.draw();
     
     if (showFingerHint) {
-        fingerHint.draw();
+       // fingerHint.draw();
     }
     
     /*
@@ -388,7 +428,31 @@ void trxStoryHandler::drawDebug()
 void trxStoryHandler::drawTaskMessage(string _message){
     ofPushStyle();
     ofSetColor(255, 255, 255);
-    HelveticaNeueRoman18.drawString(_message, 0, 0);
+    
+    string amount = "Gefangene Menge: ";
+    amount += ofToString(weightcatchedQuantity)+"t";
+    if (myActiveTask->no == 1) {
+        amount = "Produzierte Menge: ";
+        amount += ofToString(weightFinishedCatchedQuantity)+"t";
+    }
+    
+    
+    
+    
+    
+    ofRectangle bounds = taskFontBig.getStringBoundingBox(_message, 0, 0);
+    ofEnableAlphaBlending();
+    
+    if (myActiveTask->harvester == "longline") {
+        longlineIcon.draw(-(bounds.width+ 100.0f)-60,-25, 60, 60);
+    }
+    else {
+        netIcon.draw(-(bounds.width+ 100.0f)-60,-25, 60, 60);
+    }
+    ofDisableAlphaBlending();
+    taskFontBig.drawString(_message, -(bounds.width+ 100.0f), 0);
+    taskFontSmall.drawString(amount, -(bounds.width+ 100.0f), 30.0);
+    
     ofPopStyle();
 }
 
@@ -481,12 +545,21 @@ void trxStoryHandler::drawWinscreen(){
             case 2:
                 number = finishedCatchedQuantity;
                 break;
+            case 3:
+                number = weightcatchedQuantity;
+                break;
+            case 4:
+                number = weightBycatchQuantity;
+                break;
+            case 5:
+                number = weightFinishedCatchedQuantity;
+                break;
             default:
                 number = catchedQuantity;
                 break;
         }
         
-        textNumber = ofToString(number * tmpFactN.multiplier,0);
+        textNumber = ofToString(number * tmpFactN.multiplier,tmpFactN.presicion) + tmpFactN.unit;
         
         switch (tmpFactN.fontSize) {
             case 100:
@@ -661,6 +734,8 @@ void trxStoryHandler::generateStories(){
             thisFactNumber.number = xml.getIntValue(0, "number");
             thisFactNumber.multiplier = xml.getFloatValue(1.0, "multiplier");
             thisFactNumber.fontSize = xml.getIntValue(100, "fontSize");
+            thisFactNumber.unit = xml.getString("", "unit");
+            thisFactNumber.presicion = xml.getIntValue(0, "presicion");
             thisStory.factNumbers.push_back(thisFactNumber);
             xml.XML.popTag();
         }
@@ -772,8 +847,11 @@ void trxStoryHandler::updateMyLastTargetScreenPosition()
 }
 
 void trxStoryHandler::changeAction(int _actionNumber){
-    int currentAction = myActiveTask->no*2+_actionNumber;
-    myOsc.sendOscAction(currentAction);
+    if (myActiveTask) {
+        int currentAction = myActiveTask->no*2+_actionNumber;
+        myOsc.sendOscAction(currentAction);
+    }
+    
 }
 
 void trxStoryHandler::changeTopic(int _topicNumber){

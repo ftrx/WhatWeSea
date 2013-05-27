@@ -306,6 +306,8 @@ void trxObjectHandler::generateObjects()
             thisFlock->fleeFromHarvester = ( fleeBool !=0);
             thisFlock->fleeSpeed = xml.getFloatValue(8.0, "fleeSpeed");
             
+            thisFlock->weight = xml.getFloatValue(1.0, "weight");
+            
             // jellyishSettings
             int jellyBool = xml.getIntValue(0, "isJellyFish");
             thisFlock->isJellyFish =  (jellyBool !=0);

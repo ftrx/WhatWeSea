@@ -32,6 +32,8 @@ public:
     float length;
     int numberOfBones;
     
+    float weight = 1.0;
+    
     bool fleeFromHarvester = true;
     float fleeSpeed = 8.0;
     

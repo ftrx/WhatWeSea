@@ -30,6 +30,8 @@ class trxStoryHandler {
         int number = 0;
         float multiplier = 1.0;
         int fontSize = 100;
+        string unit = "";
+        int presicion = 0;
         
         
     };
@@ -76,6 +78,13 @@ class trxStoryHandler {
     ofTrueTypeFont numberFontBig;
     ofTrueTypeFont numberFontSmall;
     
+    ofTrueTypeFont taskFontBig;
+    ofTrueTypeFont taskFontSmall;
+    
+    
+    ofImage netIcon;
+    ofImage longlineIcon;
+    
     trxConnectionSlot* activeConnection = NULL;
     vector<trxFlock*> activeFlock;
     vector<trxFlock*> activeBycatchFlock;
@@ -90,10 +99,18 @@ class trxStoryHandler {
     ofVec3f myLastScreenTargetPosition;
     ofVec3f myScreenTargetMovement;
     
-    int catchedQuantity = 0;
-    int finishedCatchedQuantity = 0;
-    int tempCatchedQuantity = 0;
+    float catchedQuantity = 0;
+    float finishedCatchedQuantity = 0;
+    
+    float weightcatchedQuantity = 0.0f;
+    float weightFinishedCatchedQuantity = 0.0f;
+    
     int bycatchQuantity = 0;
+    float weightBycatchQuantity = 0.0f;
+    
+    
+    int tempCatchedQuantity = 0;
+    
     int tempBycatchQuantity = 0;
     
     bool showMessage = false;

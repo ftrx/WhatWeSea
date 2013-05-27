@@ -12,6 +12,7 @@
 		<sightDistance>160.0</sightDistance>
 		<tooCloseDistance>140.0</tooCloseDistance>
 		<length>50.0</length>
+		<weight>0.1</weight>
 		<Connections>
 			<CID>10</CID>
 		</Connections>
@@ -34,6 +35,7 @@
 		<sightDistance>40.0</sightDistance>
 		<tooCloseDistance>40.0</tooCloseDistance>
 		<length>20.0</length>
+		<weight>0.1</weight>
 		<numberOfBones>2</numberOfBones>
 		<Connections>
 			<CID>10</CID>
@@ -60,6 +62,7 @@
 		<sightDistance>140.0</sightDistance>
 		<tooCloseDistance>40.0</tooCloseDistance>
 		<length>35.0</length>
+		<weight>0.1</weight>
 		<Connections>
 			<CID>10</CID>
 			<CID>11</CID>
@@ -128,6 +131,7 @@
 		<sightDistance>100.0</sightDistance>
 		<tooCloseDistance>50.0</tooCloseDistance>
 		<length>20.0</length>
+		<weight>0.2</weight>
 		<Connections>
 		</Connections>
 		<growBack>1</growBack>
@@ -150,6 +154,7 @@
 		<sightDistance>100.0</sightDistance>
 		<tooCloseDistance>50.0</tooCloseDistance>
 		<length>15.0</length>
+		<weight>0.2</weight>
 		<Connections>
 		</Connections>
 		<growBack>1</growBack>

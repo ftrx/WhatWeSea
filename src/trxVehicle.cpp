@@ -137,6 +137,9 @@ void trxVehicle::isCaughtAt(ofVec3f _target){
     // generate path
     
     maxSpeed = 4.0f;
+    if (onWay){
+        maxSpeed = 8.0f;
+    }
     //tooCloseDist = 1.0f;
     wanderDistance = 0.5f;
     

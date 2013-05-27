@@ -45,7 +45,11 @@ void trxObject::draw(){
         ofSetColor(255, 255, 255,255);
         //ofNoFill();
         if (isActiveConnection) {
-            glow.draw(-glow.width/2,-glow.height/2,glow.width,glow.height);
+            glow.draw(-radius*2,-radius*2,radius*4,radius*4);
+        }
+        else {
+            ofSetColor(255, 255, 255,50);
+            glow.draw(-radius*2,-radius*2,radius*4,radius*4);
         }
         
         ofSetColor(255, 255, 255,100);
