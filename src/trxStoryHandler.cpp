@@ -292,6 +292,7 @@ trxStoryHandler::task * trxStoryHandler::nextTask(){
         finishedCatchedQuantity = catchedQuantity;
         weightFinishedCatchedQuantity = weightcatchedQuantity;
         catchedQuantity = 0;
+        weightcatchedQuantity = 0;
         tempCatchedQuantity = 0;
         bycatchQuantity = 0;
         tempBycatchQuantity = 0;
@@ -431,13 +432,17 @@ void trxStoryHandler::drawTaskMessage(string _message){
     
     string amount = "Gefangene Menge: ";
     amount += ofToString(weightcatchedQuantity)+"t";
-    if (myActiveTask->no == 1) {
+    if (myActiveTask->no == 1 && myActiveStory->unit == "t") {
         amount = "Produzierte Menge: ";
         amount += ofToString(weightFinishedCatchedQuantity)+"t";
     }
-    if (myActiveTask->type == "fraction") {
+    if (myActiveTask->type == "fraction" && myActiveStory->unit == "t") {
         amount = "Gefangene Menge: ";
-        amount += ofToString(weightcatchedQuantity)+"t";
+        amount += ofToString(weightcatchedQuantity + weightBycatchQuantity)+"t";
+    }
+    else if (myActiveTask->type == "fraction" && myActiveStory->unit == "stk"){
+        amount = "Gefangene Tiere: ";
+        amount += ofToString(catchedQuantity + bycatchQuantity)+" Stk.";
     }
     
     
@@ -692,6 +697,7 @@ void trxStoryHandler::generateStories(){
         thisStory.topicNumber = xml.getIntValue(i, "topicNumber");
         //thisStory.finalFactImage.loadImage("facts/"+ xml.getString("", "finalFact"));
         thisStory.finalFactImage.loadImage("winscreen/"+ xml.getString("", "finalFactImage"));
+        thisStory.unit = xml.getString("t", "unit");
         int numberOfTasks = xml.XML.getNumTags("task");
         
         for (int taskN=0; taskN < numberOfTasks; taskN++) {

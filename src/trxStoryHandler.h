@@ -66,6 +66,7 @@ class trxStoryHandler {
         ofImage finalFactImage;
         vector<factNumber> factNumbers;
         string description = "Story Comming soon";
+        string unit = "t";
         vector<string> messages;
     };
     
