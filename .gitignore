@@ -8,3 +8,5 @@ bin/WhatWeSeaDebug.app/Contents/MacOS/WhatWeSeaDebug
 bin/.DS_Store
 
 bin/data/winscreen/.DS_Store
+
+bin/WhatWeSea.app/Contents/MacOS/WhatWeSea
