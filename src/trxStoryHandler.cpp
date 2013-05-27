@@ -339,7 +339,7 @@ void trxStoryHandler::draw(){
             float maxAmplitude = 5.0;
             ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()),ofSignedNoise(ofGetElapsedTimef()),0)*maxAmplitude;
             
-            ofVec3f target = myActiveTask->targetPosition+randomWiggle;
+            target = myActiveTask->targetPosition+randomWiggle;
             activeConnection->drawWobbleLine(0+activeConverter->radius, 0, target.x-myActiveTask->targetSize,target.y);
             ofTranslate(target);
             

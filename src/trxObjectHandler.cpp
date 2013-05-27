@@ -78,6 +78,11 @@ void trxObjectHandler::update()
         if (myStoryHandler.showFingerHint) {
             myStoryHandler.showFingerHint = false;
         }
+        if (harvesters[i]->longline) {
+            if (harvesters[i]->longlinePoints.size()<=0) {
+                harvesters[i]->longlineTargetPosition = &myStoryHandler.myTargetPosition;
+            }
+        }
         
         harvesters[i]->update();
         if (harvesters[i]->longline) {
@@ -86,6 +91,7 @@ void trxObjectHandler::update()
         else {
             catchBoid(harvesters[i]);
         }
+        
     }
     
    
@@ -415,7 +421,7 @@ void trxObjectHandler::catchLongLineBoid(trxHarvester *_myHarverster){
             if (!boid->caught) {
                 if (isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->catchID)|| isIdAnCatch(boid->myTypeID, &myStoryHandler.myActiveTask->bycatchID)) {
                     ofVec3f bPos= boid->position2D;
-                    for (int j=0; j<_myHarverster->longlinePoints.size(); j++) {
+                    for (int j=0; j<_myHarverster->longlineUnprojectedPoints.size(); j++) {
                         if (!_myHarverster->longlineHooks[j]) {
                             ofVec3f hPos= ofVec3f (_myHarverster->longlinePoints[j]->x,_myHarverster->longlinePoints[j]->y,0);
                             float dist = hPos.distance(bPos);
@@ -572,6 +578,7 @@ void trxObjectHandler::removeCursor(ofxTuioCursor & tuioCursor)
             }
             thisHarvester->clearLonglinePoints();
             thisHarvester->longline = false;
+            thisHarvester->longlineTargetPosition = NULL;
             delete thisHarvester;
             //thisHarvester = NULL;
             harvesters.erase(harvesters.begin()+i);

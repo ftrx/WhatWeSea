@@ -29,6 +29,8 @@ public:
     ofVec3f unprojectedPosition;
     ofColor color;
     
+    
+    
     bool longline = false;
     vector<ofPoint*> longlinePoints;
     vector<ofPoint*> longlineUnprojectedPoints;
@@ -36,6 +38,8 @@ public:
     void clearLonglinePoints();
     ofPoint pointToProjection(ofPoint _point);
     void updateLongLineUnprojectedPosition(ofCamera * cam);
+    ofPoint* longlineTargetPosition = NULL;
+    
     
     ofVbo vbo;
     ofShader shader;

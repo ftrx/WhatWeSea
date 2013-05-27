@@ -100,6 +100,8 @@ class trxStoryHandler {
     ofVec3f myLastScreenTargetPosition;
     ofVec3f myScreenTargetMovement;
     
+    ofVec3f target;
+    
     float catchedQuantity = 0;
     float finishedCatchedQuantity = 0;
     

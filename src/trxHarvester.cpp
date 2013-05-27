@@ -36,8 +36,12 @@ void trxHarvester::update(){
         }
         else{
             ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
+            //ofPoint * targetPoint = new ofPoint(pointToProjection(*longlineTargetPosition));
+            //longlinePoints.push_back(longlineTargetPosition);
+            //longlinePoints.push_back(new ofPoint(longlineTargetPosition->x,longlineTargetPosition->y+40));
             longlineUnprojectedPoints.push_back(projectedPoint);
             longlinePoints.push_back(positionPoint);
+            
             longlineHooks.push_back(0);
         }
         for (int i=0; i<myCatch.size(); i++) {
