@@ -12,7 +12,7 @@
 		<sightDistance>160.0</sightDistance>
 		<tooCloseDistance>140.0</tooCloseDistance>
 		<length>50.0</length>
-		<weight>0.1</weight>
+		<weight>0.2</weight>
 		<Connections>
 			<CID>10</CID>
 		</Connections>
@@ -86,6 +86,7 @@
 		<sightDistance>140.0</sightDistance>
 		<tooCloseDistance>70.0</tooCloseDistance>
 		<length>60.0</length>
+		<weight>0.3</weight>
 		<Connections>
 			<CID>10</CID>
 		</Connections>

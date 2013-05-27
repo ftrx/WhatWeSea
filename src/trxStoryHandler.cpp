@@ -210,7 +210,7 @@ void trxStoryHandler::update()
                         
                         
                         bycatchQuantity = tempCatchedQuantity-catchedQuantity;
-                        weightBycatchQuantity = bycatchQuantity * activeFlock.at(1)->weight;
+                        weightBycatchQuantity = bycatchQuantity * activeFlock.at(0)->weight;
                         
                         for (int i=0; i<activeFlock.size(); i++) {
                             activeFlock.at(i)->removeDeadBoids();
@@ -435,6 +435,10 @@ void trxStoryHandler::drawTaskMessage(string _message){
         amount = "Produzierte Menge: ";
         amount += ofToString(weightFinishedCatchedQuantity)+"t";
     }
+    if (myActiveTask->type == "fraction") {
+        amount = "Gefangene Menge: ";
+        amount += ofToString(weightcatchedQuantity)+"t";
+    }
     
     
     
@@ -553,6 +557,12 @@ void trxStoryHandler::drawWinscreen(){
                 break;
             case 5:
                 number = weightFinishedCatchedQuantity;
+                break;
+            case 6:
+                number = catchedQuantity + bycatchQuantity;
+                break;
+            case 7:
+                number = weightcatchedQuantity + weightBycatchQuantity;
                 break;
             default:
                 number = catchedQuantity;

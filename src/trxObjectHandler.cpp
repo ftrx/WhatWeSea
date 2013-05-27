@@ -448,20 +448,24 @@ void trxObjectHandler::addObject(ofxTuioObject & tuioObject)
     if (thisFlock) {
         thisFlock->position = ofVec3f(loc.x,loc.y,thisFlock->position.z);
         thisFlock->isActive = true;
-        thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
-        myStoryHandler.changeTopic(thisFlock->topicNumber);
+        //thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
+        if (!myStoryHandler.activeConnection) {
+            myStoryHandler.changeTopic(thisFlock->topicNumber);
+        }
+        
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
         activeFlocks.push_back(thisFlock);
     }
     if (thisConverter) {
         thisConverter->position = ofVec3f(loc.x,loc.y,thisConverter->position.z);
         thisConverter->isActive = true;
-        thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
+        //thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         activeConverters.push_back(thisConverter);
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
     //checkIfActiveSlot();
     checkActiveSlots = true;
+    checkStillActiveSlots = true;
 }
 
 void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
@@ -472,7 +476,7 @@ void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
     if (thisFlock) {
         thisFlock->position = ofVec3f(loc.x,loc.y,thisFlock->position.z);
         thisFlock->unprojectedPosition = screenPosition(thisFlock->position, myCamera);
-        thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
+        //thisFlock->rotation = ofRadToDeg(tuioObject.getAngle());
         
         //cout << "Object n" << tuioObject.getSessionId() << " updated at " << loc << endl;
         //cout << "angle: " << tuioObject.getAngle() << endl;
@@ -480,7 +484,7 @@ void trxObjectHandler::updateObject(ofxTuioObject & tuioObject)
     if (thisConverter) {
         thisConverter->position = ofVec3f(loc.x,loc.y,thisConverter->position.z);
         thisConverter->unprojectedPosition = screenPosition(thisConverter->position, myCamera);
-        thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
+        //thisConverter->rotation = ofRadToDeg(tuioObject.getAngle());
         //cout << "Object n" << tuioObject.getSessionId() << " add at " << loc << endl;
     }
     //checkIfActiveSlot();
