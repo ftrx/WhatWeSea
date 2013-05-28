@@ -29,15 +29,15 @@
 		<factNumber>
 			<x>444</x>
 			<y>355</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
-			<multiplier>0.1</multiplier>
+			<number>3</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>1.0</multiplier>
 			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
 			<x>885</x>
 			<y>741</y>
-			<number>0</number> // 0 = catechedQuantity - 1 = byCatch 
+			<number>3</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>12500</multiplier>
 			<unit></unit>
 			<fontSize>60</fontSize>
@@ -103,10 +103,9 @@
 			<multiplier>1</multiplier>
 			<unit>t</unit>
 			<fontSize>100</fontSize>
-
 		</factNumber>
 		<factNumber>
-			<x>996</x>
+			<x>990</x>
 			<y>442</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>20</multiplier>
@@ -114,8 +113,16 @@
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
+			<x>242</x>
+			<y>708</y>
+			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
+			<multiplier>20</multiplier>
+			<unit>t</unit>
+			<fontSize>60</fontSize>
+		</factNumber>
+		<factNumber>
 			<x>919</x>
-			<y>711</y>
+			<y>708</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>2220</multiplier>
 			<unit></unit>

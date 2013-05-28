@@ -59,8 +59,8 @@
 		<TEXTURE_PATH>thuna.png</TEXTURE_PATH>
 		<ICON_PATH>thuna.png</ICON_PATH>
 		<MAX_SPEED>4.0</MAX_SPEED>
-		<sightDistance>140.0</sightDistance>
-		<tooCloseDistance>40.0</tooCloseDistance>
+		<sightDistance>120.0</sightDistance>
+		<tooCloseDistance>50.0</tooCloseDistance>
 		<length>35.0</length>
 		<weight>0.1</weight>
 		<Connections>
@@ -105,7 +105,7 @@
 		<ICON_PATH>qualle.png</ICON_PATH>
 		<MAX_SPEED>0.1</MAX_SPEED>
 		<sightDistance>20.0</sightDistance>
-		<tooCloseDistance>40.0</tooCloseDistance>
+		<tooCloseDistance>30.0</tooCloseDistance>
 		<length>20.0</length>
 		<numberOfBones>2</numberOfBones>
 		<Connections>
@@ -130,7 +130,7 @@
 		<ICON_PATH></ICON_PATH>
 		<MAX_SPEED>2.0</MAX_SPEED>
 		<sightDistance>100.0</sightDistance>
-		<tooCloseDistance>50.0</tooCloseDistance>
+		<tooCloseDistance>60.0</tooCloseDistance>
 		<length>20.0</length>
 		<weight>0.2</weight>
 		<Connections>
@@ -153,7 +153,7 @@
 		<ICON_PATH></ICON_PATH>
 		<MAX_SPEED>2.2</MAX_SPEED>
 		<sightDistance>100.0</sightDistance>
-		<tooCloseDistance>50.0</tooCloseDistance>
+		<tooCloseDistance>60.0</tooCloseDistance>
 		<length>15.0</length>
 		<weight>0.2</weight>
 		<Connections>

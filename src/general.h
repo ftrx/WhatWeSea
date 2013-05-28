@@ -40,7 +40,7 @@ const ofColor PROGRESSBARAMOUNTCOLOR = ofColor(2,40,104,255);
 
 const ofColor WINSCREENTEXTCOLOR = ofColor(45,127,219,255);
 
-#define trx_HOST "172.31.7.210"
+#define trx_HOST "172.31.7.236"
 #define trx_PORT 12000
 
 

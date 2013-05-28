@@ -157,9 +157,9 @@ void trxFlock::createNewBoid(float _x, float _y, float _z){
     trxVehicle* v = new trxVehicle(_x,_y,_z);
     v->velocity = ofVec3f(ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f),ofRandom(-1.0f,1.0f));
     v->lifeSpan = ofRandom(3.0f,6.0f);
-    v->maxSpeed = maxSpeed + ofRandom(-maxSpeed*0.2,maxSpeed*0.2);
+    v->maxSpeed = maxSpeed + ofRandom(-maxSpeed*0.3,maxSpeed*0.3);
     v->maxStandardSpeed = maxSpeed;
-    v->length = length + ofRandom(-length*0.2,length*0.2);
+    v->length = length + ofRandom(-length*0.3,length*0.4);
     v->numberOfBones = numberOfBones;
     v->bonelength = v->length/(numberOfBones-1);
     v->standardLength = v->length;

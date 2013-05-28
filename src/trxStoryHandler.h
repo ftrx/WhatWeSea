@@ -48,7 +48,8 @@ class trxStoryHandler {
         int catchSize = 10.0;
         float targetSize = 10.0;
         ofVec3f targetPosition = ofVec3f(200,0,0);
-        int    quantity = NULL;
+        int  quantity = NULL;
+        int standardQuantity = NULL;
         bool dieAfterCatch = false;
         string progress = "circle";
         string harvester = "net";

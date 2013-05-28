@@ -86,6 +86,7 @@ void trxStoryHandler::startStory(trxConnectionSlot* _activeConnection){
         if(myActiveStory->myTasks.size() > 0)
         {
             myActiveTask = &myActiveStory->myTasks.at(0);
+            myActiveTask->quantity = myActiveTask->standardQuantity+int(ofRandom(-myActiveTask->standardQuantity*0.2,myActiveTask->standardQuantity*0.9)+0.5);
             for (int i=0; i<myActiveTask->catchID.size(); i++) {
                 activeFlock.push_back(getFlockWithID(myActiveTask->catchID.at(i)));
             }
@@ -354,7 +355,7 @@ void trxStoryHandler::draw(){
                 
                 if (activeConverter->id == 10) {
                     ofEnableAlphaBlending();
-                    if (showFingerHint) {
+                    if (showFingerHint && myActiveTask->harvester == "longline") {
                         ofSetColor(255, 255, 255);
                         ofSetLineWidth(2.0);
                         ofLine(0, 0, 0+randomWiggle.x, 120+randomWiggle.y);
@@ -383,6 +384,7 @@ void trxStoryHandler::draw(){
                 }
                 else if (myActiveTask->progress == "amount"){
                     drawProgressAmount(myActiveTask->targetSize, 100.0, catchedQuantity);
+                    drawProgressCircle(myActiveTask->targetSize, 10.0, catchedQuantity, myActiveTask->quantity);
                 }
                 if (myActiveTask->bycatchID.size()>0 || myActiveTask->type == "fraction") {
                     drawProgressAmount(myActiveTask->targetSize, 100.0, bycatchQuantity);
@@ -747,6 +749,7 @@ void trxStoryHandler::generateStories(){
             thisTask.catchSize = xml.getIntValue(10, "catchSize");
             thisTask.taskMessage = xml.getString("No Task Message", "taskMessage");
             thisTask.quantity = xml.getIntValue(1, "quantity");
+            thisTask.standardQuantity = xml.getIntValue(1, "quantity");
             thisTask.targetSize = xml.getFloatValue(40.0, "targetSize");
             int intToBool = xml.getIntValue(0, "dieAfterCatch");
             thisTask.dieAfterCatch = ( intToBool !=0);
