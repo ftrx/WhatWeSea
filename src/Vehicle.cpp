@@ -107,25 +107,25 @@ void Vehicle::wrap(int w, int h, int d)
 
 void Vehicle::bounce(int w, int h, int d)
 {
-	if (position.x > w )
+	if (position.x > w + BORDERMARGIN )
 	{
-		position.x = w ;
+		position.x = w + BORDERMARGIN;
 		velocity.x *= -1;
 	}
-	else if (position.x < 0)
+	else if (position.x < 0 - BORDERMARGIN)
 	{
-		position.x = 0 ;
+		position.x = 0 - BORDERMARGIN;
 		velocity.x *= -1;
 	}
 	
-	if (position.y > h )
+	if (position.y > h + BORDERMARGIN)
 	{
-		position.y = h ;
+		position.y = h + BORDERMARGIN;
 		velocity.y *= -1;
 	}
-	else if (position.y < 0)
+	else if (position.y < 0 - BORDERMARGIN)
 	{
-		position.y = 0 ;
+		position.y = 0 - BORDERMARGIN;
 		velocity.y *= -1;
 	}
 	

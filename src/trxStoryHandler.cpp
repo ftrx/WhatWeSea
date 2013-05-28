@@ -629,6 +629,10 @@ void trxStoryHandler::drawProgressBar(int _currentQuantity){
 }
 void trxStoryHandler::drawProgressCircle(float _radius, float _barHeight,int _currentQuantity, int _numberOfSectors){
 
+    if (_numberOfSectors > 30) {
+        _numberOfSectors = 30;
+    }
+    
     ofPushStyle();
     ofSetLineWidth(0);
     

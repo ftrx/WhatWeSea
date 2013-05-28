@@ -114,7 +114,8 @@ public:
     bool closeMessage = false;
     
     bool isIdAnCatch(int _id, vector<int> * _catchIDs);
-
+    
+    int newPredatorCounter;
     void generatePredators();
     
     int newPreyCounter;

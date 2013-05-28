@@ -173,6 +173,8 @@ void trxFlock::createNewBoid(float _x, float _y, float _z){
     v->fleeFromHarvester = fleeFromHarvester;
     v->fleeSpeed = fleeSpeed;
     
+    v->maxGroupSize = maxGroupSize;
+    
     // jellyFishSettings
     v->isJellyFish = isJellyFish;
     v->contractScale = contractScale + ofRandom(-contractScale*0.1,contractScale*0.1);

@@ -32,6 +32,8 @@ public:
     float length;
     int numberOfBones;
     
+    int maxGroupSize = 500;
+    
     float weight = 1.0;
     
     bool fleeFromHarvester = true;

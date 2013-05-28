@@ -97,32 +97,32 @@
 		<finalMessage>Gratulation/n Du hast 50 Tonnen Futterfisch für 20 Tonnen Thunfisch benötigt!</finalMessage>
 		<finalFactImage>Winscreen_Tuna_Aquakultur.png</finalFactImage>
 		<factNumber>
-			<x>444</x>
-			<y>322</y>
+			<x>430</x>
+			<y>408</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
 			<multiplier>1</multiplier>
 			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>990</x>
-			<y>442</y>
+			<x>714</x>
+			<y>529</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>20</multiplier>
 			<unit>t</unit>
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>242</x>
-			<y>708</y>
+			<x>226</x>
+			<y>659</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>20</multiplier>
 			<unit>t</unit>
 			<fontSize>60</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>919</x>
-			<y>708</y>
+			<x>901</x>
+			<y>659</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>2220</multiplier>
 			<unit></unit>
@@ -234,7 +234,7 @@
 		<finalMessage>Gratulation Du hast 20 Tonnen Shrimp produziert</finalMessage>
 		<finalFactImage>Winscreen_Shrimp_Aquakultur.png</finalFactImage>
 		<factNumber>
-			<x>430</x>
+			<x>427</x>
 			<y>400</y>
 			<number>5</number> // 0 = catechedQuantity, 1 = byCatch,2 = finishedCatchedQuantity, 3 = weightCatchedQuantity, 4 = weightBycatch, 5 = weightFinished
 			<multiplier>1.0</multiplier>
@@ -242,7 +242,7 @@
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>720</x>
+			<x>715</x>
 			<y>520</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>20</multiplier>
@@ -250,7 +250,7 @@
 			<fontSize>100</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>315</x>
+			<x>312</x>
 			<y>648</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>20</multiplier>
@@ -258,7 +258,7 @@
 			<fontSize>60</fontSize>
 		</factNumber>
 		<factNumber>
-			<x>91</x>
+			<x>88</x>
 			<y>720</y>
 			<number>5</number> // 0 = catechedQuantity - 1 = byCatch 
 			<multiplier>90</multiplier>

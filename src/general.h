@@ -27,6 +27,8 @@ const float ADDTIMER = 0.100;
 // fish settings
 const int MAXFISHES = 1600;
 
+const int BORDERMARGIN = 100;
+
 
 //fish colors
 const ofColor activColor = ofColor(250,255,255,255);

@@ -41,6 +41,7 @@ public:
     
     int contractionTimestamp = 0;
     
+    int maxGroupSize = 500;
     
     
     ofColor color = standardColor;
@@ -78,6 +79,8 @@ public:
         predators = NULL;
         prey.clear();
         target = NULL;
+        paths.clear();
+        circlePaths.clear();
         
     }
     
@@ -104,7 +107,7 @@ public:
 			averagePosition += vehicles[i]->position;
 			inSightCnt++;
 			
-			if (tooClose(vehicles[i]->position))
+			if (tooClose(vehicles[i]->position) || inSightCnt > maxGroupSize)
 			{
 				flee(vehicles[i]->position);
 			}
@@ -151,6 +154,9 @@ public:
                         if (inSight(predators->at(i)->position) && !predators->at(i)->dead) {
                             maxSpeed = fleeSpeed;
                             evade(*predators->at(i));
+                            if (position.distance(predators->at(i)->position) < 10) {
+                                //dead = true;
+                            }
                         }
                     }
                 }
@@ -159,12 +165,12 @@ public:
             
             for (int i=0; i<prey.size(); i++){
                 //if (!inSight(prey[i]->position)) continue;
-                if (prey.at(i)) {
+                if (prey.at(i) != NULL) {
                     if (!prey.at(i)->dead) {
                         pursue(*prey.at(i));
                     }
                     else {
-                        prey.clear();
+                        prey.erase(prey.begin()+i);
                     }
                 }
             }

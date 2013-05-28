@@ -26,7 +26,7 @@
 #define _Vehicle_h
 
 #include "ofVec3f.h"
-
+#include "general.h"
 
 class Vehicle {
 

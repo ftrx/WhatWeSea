@@ -23,7 +23,7 @@ trxObjectHandler::trxObjectHandler()
 
 void trxObjectHandler::setup(){
     allMyBoids = getAllBoidsFromFlocks(myFlocks);
-    //generatePredators();
+    generatePredators();
     //randomPrey();
 }
 
@@ -108,7 +108,7 @@ void trxObjectHandler::update()
     
     
 
-    
+    generatePredators();
     //randomPrey();
     
     /*
@@ -317,7 +317,7 @@ void trxObjectHandler::generateObjects()
             thisFlock->fleeSpeed = xml.getFloatValue(8.0, "fleeSpeed");
             
             thisFlock->weight = xml.getFloatValue(1.0, "weight");
-            
+            thisFlock->maxGroupSize = xml.getIntValue(500, "maxGroupSize");
             // jellyishSettings
             int jellyBool = xml.getIntValue(0, "isJellyFish");
             thisFlock->isJellyFish =  (jellyBool !=0);
@@ -850,17 +850,37 @@ void trxObjectHandler::generatePredators(){
     }
 
 }*/
-
+/*
 void trxObjectHandler::generatePredators(){
-    for (int i=0; i<allMyBoids.size();i++)
-    {
-        trxVehicle* tmpBoid = allMyBoids.at(i);
-        if (tmpBoid->myTypeID != 3) {
-            tmpBoid->predators=&myFlocks[2]->boids;
-        }
+    if (ofGetElapsedTimeMillis() - newPreyCounter > 10000) {
+        for (int i=0; i<allMyBoids.size();i++)
+        {
+            trxVehicle* tmpBoid = allMyBoids.at(i);
+            if (tmpBoid->myTypeID != 3) {
+                tmpBoid->predators=&myFlocks[3]->boids;
+            }
 
+        }
+        newPreyCounter = ofGetElapsedTimeMillis();
     }
     
+}
+*/
+void trxObjectHandler::generatePredators(){
+    if (ofGetElapsedTimeMillis() - newPredatorCounter > 20000) {
+        for (int i=0; i<allMyBoids.size();i++)
+        {
+            trxVehicle* tmpBoid = allMyBoids.at(i);
+            if (tmpBoid->myTypeID != 3) {
+                tmpBoid->predators=&myFlocks[3]->boids;
+            }
+            if (tmpBoid->myTypeID == 3) {
+                tmpBoid->predators=&myFlocks[0]->boids;
+            }
+            
+        }
+        newPredatorCounter = ofGetElapsedTimeMillis();
+    }
 }
 
 void trxObjectHandler::randomPrey(){
@@ -868,14 +888,14 @@ void trxObjectHandler::randomPrey(){
     if (ofGetElapsedTimeMillis() - newPreyCounter > 10000) {
         
         cout<<"new Prey found"<<endl;
-        generatePredators();
-        for (int i=0; i<myFlocks[2]->boids.size(); i++) {
+
+        for (int i=0; i<myFlocks[3]->boids.size(); i++) {
             int preyID = ofRandom(myFlocks.size()-1);
-            while (preyID != 2) {
+            while (preyID == 3 && preyID == 4 && preyID == 1) {
                 preyID = ofRandom(myFlocks.size()-1);
             }
-                    int ranomdPrey = ofRandom(myFlocks[preyID]->boids.size()-1);
-                    myFlocks[2]->boids.at(i)->addPrey(myFlocks[preyID]->boids[ranomdPrey]);
+                    int randomPrey = ofRandom(myFlocks[preyID]->boids.size()-1);
+                    myFlocks[3]->boids.at(i)->addPrey(myFlocks[preyID]->boids[randomPrey]);
 
             
         }

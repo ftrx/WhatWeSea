@@ -6,6 +6,7 @@
 		<NAME>Hai</NAME>
 		<MAX_BOIDS>40</MAX_BOIDS>
 		<START_BOIDS>40</START_BOIDS>
+		<maxGroupSize>5</maxGroupSize>
 		<TEXTURE_PATH>shark.png</TEXTURE_PATH>
 		<ICON_PATH>shark.png</ICON_PATH>
 		<MAX_SPEED>3.0</MAX_SPEED>
@@ -80,12 +81,13 @@
 		<NAME>Delfin</NAME>
 		<MAX_BOIDS>150</MAX_BOIDS>
 		<START_BOIDS>150</START_BOIDS>
+		<maxGroupSize>5</maxGroupSize>
 		<TEXTURE_PATH>dolphin.png</TEXTURE_PATH>
 		<ICON_PATH>dolphin.png</ICON_PATH>
 		<MAX_SPEED>5.0</MAX_SPEED>
 		<sightDistance>140.0</sightDistance>
 		<tooCloseDistance>70.0</tooCloseDistance>
-		<length>60.0</length>
+		<length>50.0</length>
 		<weight>0.3</weight>
 		<Connections>
 			<CID>10</CID>
