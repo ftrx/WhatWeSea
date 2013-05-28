@@ -60,17 +60,23 @@ void trxObjectHandler::update()
         checkStillActiveSlots = false;
     }
     
+    if(closeMessage){
+        closeMessage = false;
+        myStoryHandler.closeMessage();
+        
+    }
+    
     for (int i = 0; i<myFlocks.size(); i++) {
         if (myFlocks[i] != NULL) {
             myFlocks[i]->update();
         }
         
     }
-    myStoryHandler.update();
+    
     if (myStoryHandler.myActiveTask) {
         myStoryHandler.myScreenTargetPosition = screenPosition(myStoryHandler.myTargetPosition,myCamera);
     }
-    
+    myStoryHandler.update();
     allMyBoids = getAllBoidsFromFlocks(myFlocks);
 
     
@@ -80,7 +86,7 @@ void trxObjectHandler::update()
         }
         if (harvesters[i]->longline) {
             if (harvesters[i]->longlinePoints.size()<=0) {
-                harvesters[i]->longlineTargetPosition = &myStoryHandler.myTargetPosition;
+                harvesters[i]->longlineTargetPosition = &myStoryHandler.myWobbleTargetPosition2D;
             }
         }
         
@@ -94,15 +100,13 @@ void trxObjectHandler::update()
         
     }
     
-   
-    
-    
-    
-    if(closeMessage){
-        closeMessage = false;
-        myStoryHandler.closeMessage();
-        
+    if (harvesters.size()<=0 && !myStoryHandler.showFingerHint){
+        myStoryHandler.showFingerHint = true;
     }
+    
+    
+    
+    
 
     
     //randomPrey();
@@ -681,7 +685,7 @@ void trxObjectHandler::drawAllVertexes(){
             }
             if (myStoryHandler.myActiveTask) {
                 //color.a = 0.2*255;
-                if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
+                if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID) || tmpBoid->dead) {
                     color = activColor;
                     color.a = 255;
                 }

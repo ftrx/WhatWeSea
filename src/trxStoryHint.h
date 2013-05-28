@@ -22,12 +22,12 @@ public:
     ofImage tapIcon;
     
     float radius;
-    float startRadius = 50;
+    float startRadius = 20;
     float fadeInDistance = 5;
     float maxRadius = 30;
     int lineWidth = 2;
     float timeStamp = 0;
-    float speed = .6f;
+    float speed = .3f;
     ofColor color = ofColor(255,255,255);
     int alpha = 255;
     ofVec2f position;

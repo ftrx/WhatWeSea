@@ -97,10 +97,15 @@ class trxStoryHandler {
     
     ofVec3f myTargetPosition;
     ofVec3f myScreenTargetPosition;
+    ofVec3f myTargetPosition2D;
+    ofVec3f myWobbleTargetPosition2D;
     ofVec3f myLastScreenTargetPosition;
     ofVec3f myScreenTargetMovement;
     
     ofVec3f target;
+    
+    ofVec3f randomWiggle;
+    float maxAmplitude = 5.0;
     
     float catchedQuantity = 0;
     float finishedCatchedQuantity = 0;

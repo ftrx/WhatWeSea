@@ -137,11 +137,12 @@ void trxVehicle::isCaughtAt(ofVec3f _target){
     // generate path
     
     maxSpeed = 4.0f;
+    wanderDistance = 0.5f;
     if (onWay){
         maxSpeed = 8.0f;
     }
     //tooCloseDist = 1.0f;
-    wanderDistance = 0.5f;
+    
     
 
         int pathCircleNumber = 8;
@@ -169,6 +170,7 @@ void trxVehicle::isCaughtAt(ofVec3f _target){
     float dist = position.distance(_target);
     if (dist <= pathRadius){
         maxSpeed = 2.0f;
+        wanderDistance = 0.0f;
         if (onWay) {
             dead=true;
         }

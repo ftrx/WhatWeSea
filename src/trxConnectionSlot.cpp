@@ -93,10 +93,10 @@ void trxConnectionSlot::drawPossibleConnection(string _type, int _position)
         ofTranslate(randomWiggle);
         ofRotate(myFlock->rotation+90.0*_position);
         //ofLine(0,0, dist, 0);
-        drawWobbleLine(myFlock->radius,0, dist-40, 0);
+        drawWobbleLine(myFlock->radius,0, dist-iconSize/2, 0);
         ofTranslate(dist, 0);
         ofRotate(-90.0*_position);
-        myConverter->myIcon->draw(-40, -40, 80,80);
+        myConverter->myIcon->draw(-iconSize/2, -iconSize/2, iconSize,iconSize);
         ofPopMatrix();
     }
     if(_type == "converter")
@@ -106,10 +106,10 @@ void trxConnectionSlot::drawPossibleConnection(string _type, int _position)
         ofTranslate(myConverter->position.x,myConverter->position.y,0);
         ofTranslate(randomWiggle);
         ofRotate(myConverter->rotation+90.0*_position);
-        drawWobbleLine(myConverter->radius,0, dist-40, 0);
+        drawWobbleLine(myConverter->radius,0, dist-iconSize/2, 0);
         ofTranslate(dist, 0);
         ofRotate(-90.0*_position);
-        myFlock->myIcon->draw(-40, -40, 80,80);
+        myFlock->myIcon->draw(-iconSize/2, -iconSize/2, iconSize,iconSize);
         
         ofPopMatrix();
     }

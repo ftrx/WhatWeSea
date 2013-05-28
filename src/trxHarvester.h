@@ -40,6 +40,9 @@ public:
     void updateLongLineUnprojectedPosition(ofCamera * cam);
     ofPoint* longlineTargetPosition = NULL;
     
+    ofVec3f randomWiggle;
+    float maxAmplitude = 7.0;
+    float wobbleSpeed = 0.5;
     
     ofVbo vbo;
     ofShader shader;

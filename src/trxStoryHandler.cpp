@@ -69,7 +69,7 @@ void trxStoryHandler::setup(vector<trxFlock*>& _allFLocks,vector<trxConverter*>&
     
     myFloatingMessageController.setup();
     
-    fingerHint.setPosition(ofVec2f(ofGetWidth()/2,ofGetHeight()/2));
+    //fingerHint.setPosition(ofVec2f(ofGetWidth()/2,ofGetHeight()/2));
     //myOsc.setup();
 }
 
@@ -108,8 +108,10 @@ void trxStoryHandler::startStory(trxConnectionSlot* _activeConnection){
         myActiveStory->finished = false;
         
         idleTimer = ofGetElapsedTimeMillis(); // Timer for resetting the Story (or end it)
+        if (myActiveTask->harvester == "longline") {
+            showFingerHint = true;
+        }
         
-        showFingerHint = true;
     }
         
 }
@@ -159,7 +161,10 @@ void trxStoryHandler::update()
 {
     int onWayQuantity = 0;
     float aquaCulturPercent = 0.1;
+    randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()),ofSignedNoise(ofGetElapsedTimef()),0)*maxAmplitude;
     updateMyLastTargetScreenPosition();
+    myTargetPosition2D = ofVec3f(myTargetPosition.x,myTargetPosition.y,0);
+    myWobbleTargetPosition2D = myTargetPosition2D + randomWiggle;
     if (myActiveStory) {
         if (myActiveTask) {
             updateTargetPosition();
@@ -336,8 +341,8 @@ void trxStoryHandler::draw(){
             ofRotate(activeConnection->myConverter->rotation);
             drawTaskMessage(myActiveTask->taskMessage);
             ofSetColor(255, 255, 255);
-            float maxAmplitude = 5.0;
-            ofVec3f randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()),ofSignedNoise(ofGetElapsedTimef()),0)*maxAmplitude;
+            
+            
             
             target = myActiveTask->targetPosition+randomWiggle;
             activeConnection->drawWobbleLine(0+activeConverter->radius, 0, target.x-myActiveTask->targetSize,target.y);
@@ -349,9 +354,21 @@ void trxStoryHandler::draw(){
                 
                 if (activeConverter->id == 10) {
                     ofEnableAlphaBlending();
+                    if (showFingerHint) {
+                        ofSetColor(255, 255, 255);
+                        ofSetLineWidth(2.0);
+                        ofLine(0, 0, 0+randomWiggle.x, 120+randomWiggle.y);
+                        ofPushMatrix();
+                        ofTranslate(0+randomWiggle.x, 120+randomWiggle.y);
+                        fingerHint.setPosition(ofVec2f(0,0));
+                        fingerHint.draw();
+                        ofPopMatrix();
+                    }
                     ofSetColor(0,30,80,255);
                     ship.draw(-10, -24, 160, 48);
                     ofDisableAlphaBlending();
+                    
+                    
                 }
                 
                 ofSetLineWidth(2);

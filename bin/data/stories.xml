@@ -286,7 +286,7 @@
 		<finalMessage>Gratulation Du hast 20 Tonnen Haie gefangen</finalMessage>
 		<finalFactImage>Winscreen_Hai.png</finalFactImage>
 		<factNumber>
-			<x>444</x>
+			<x>440</x>
 			<y>322</y>
 			<number>7</number> // 0 = catchedQuantity - 1 = byCatch - 2 = finishedCatchedQuantity
 			<multiplier>1</multiplier>

@@ -172,11 +172,6 @@ public:
         }
         
         //fleeTargets.clear();
-        
-        if (dead)
-        {
-        //wander();
-        }
         if (position.x != position.x) {
             cout<<"error nan"<<endl;
         }

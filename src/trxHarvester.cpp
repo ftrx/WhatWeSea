@@ -36,8 +36,8 @@ void trxHarvester::update(){
         }
         else{
             ofPoint * projectedPoint = new ofPoint(pointToProjection(*positionPoint));
-            //ofPoint * targetPoint = new ofPoint(pointToProjection(*longlineTargetPosition));
-            //longlinePoints.push_back(longlineTargetPosition);
+            
+            longlinePoints.push_back(longlineTargetPosition);
             //longlinePoints.push_back(new ofPoint(longlineTargetPosition->x,longlineTargetPosition->y+40));
             longlineUnprojectedPoints.push_back(projectedPoint);
             longlinePoints.push_back(positionPoint);
@@ -91,7 +91,9 @@ void trxHarvester::draw(){
                 ofCurveVertex(*longlinePoints[i]);
             }
             else {
-                ofCurveVertex(*longlinePoints[i]);
+                randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()*wobbleSpeed+2.222*i),ofSignedNoise(ofGetElapsedTimef()*wobbleSpeed+2.222*i),0)*maxAmplitude;
+                ofPoint point = ofPoint(*longlinePoints[i]+randomWiggle);
+                ofCurveVertex(point);
             }
             
             //ofCircle(*longlinePoints[i], 10);

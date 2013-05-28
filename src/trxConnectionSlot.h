@@ -26,6 +26,8 @@ public:
     trxFlock* myFlock;
     trxConverter* myConverter;
     
+    int iconSize = 60;
+    
     bool state = false;
     int inactiveFlockPosition = 0;
     int inactiveConverterPosition = 0;
