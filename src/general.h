@@ -42,7 +42,7 @@ const ofColor PROGRESSBARAMOUNTCOLOR = ofColor(2,40,104,255);
 
 const ofColor WINSCREENTEXTCOLOR = ofColor(45,127,219,255);
 
-#define trx_HOST "172.31.7.236"
+#define trx_HOST "192.168.1.130"
 #define trx_PORT 12000
 
 
@@ -53,10 +53,10 @@ const float SCREEN_X_MAX = 0.00;
 const float SCREEN_Y_MIN = 0.12;
 const float SCREEN_Y_MAX = 0.05;
 */
-const float SCREEN_X_MIN = -0.01;
-const float SCREEN_X_MAX = -0.03;
-const float SCREEN_Y_MIN = 0.03;
-const float SCREEN_Y_MAX = 0.13;
+const float SCREEN_X_MIN = 0.02;
+const float SCREEN_X_MAX = -0.04;
+const float SCREEN_Y_MIN = 0.16;
+const float SCREEN_Y_MAX = 0.06;
 
 
 struct drawBoidReturn {
