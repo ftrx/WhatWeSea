@@ -25,7 +25,7 @@ const float ADDTIMER = 0.100;
 
 
 // fish settings
-const int MAXFISHES = 1600;
+const int MAXFISHES = 1700;
 
 const int BORDERMARGIN = 100;
 

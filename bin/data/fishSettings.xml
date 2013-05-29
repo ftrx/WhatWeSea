@@ -101,8 +101,8 @@
 		<ID>4</ID>
 		<Type>flock</Type>
 		<NAME>Qualle</NAME>
-		<MAX_BOIDS>200</MAX_BOIDS>
-		<START_BOIDS>200</START_BOIDS>
+		<MAX_BOIDS>600</MAX_BOIDS>
+		<START_BOIDS>100</START_BOIDS>
 		<TEXTURE_PATH>qualle.png</TEXTURE_PATH>
 		<ICON_PATH>qualle.png</ICON_PATH>
 		<MAX_SPEED>0.1</MAX_SPEED>
@@ -164,6 +164,28 @@
 		<growBackTime>7000</growBackTime>
 		<fleeFromHarvester>1</fleeFromHarvester>
 		<fleeSpeed>8.0</fleeSpeed>
+	</Object>
+	<Object>
+		<ID>7</ID>
+		<Type>flock</Type>
+		<NAME>Qualle</NAME>
+		<MAX_BOIDS>600</MAX_BOIDS>
+		<START_BOIDS>100</START_BOIDS>
+		<TEXTURE_PATH>qualle.png</TEXTURE_PATH>
+		<ICON_PATH>qualle.png</ICON_PATH>
+		<MAX_SPEED>0.1</MAX_SPEED>
+		<sightDistance>20.0</sightDistance>
+		<tooCloseDistance>30.0</tooCloseDistance>
+		<length>22.0</length>
+		<numberOfBones>2</numberOfBones>
+		<Connections>
+		</Connections>
+		<growBack>0</growBack>
+		<growBackTime>500</growBackTime>
+		<isJellyFish>1</isJellyFish>
+		<contractScale>0.5</contractScale>
+		<contractSpeed>200</contractSpeed>
+		<expandSpeed>800</expandSpeed>
 	</Object>
 	<Object>
 		<ID>10</ID>

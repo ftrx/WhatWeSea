@@ -32,7 +32,7 @@ void trxObjectHandler::setup(){
 void trxObjectHandler::update()
 {
 
-    int jellyFishes = myFlocks.at(4)->boids.size();
+    int jellyFishes = myFlocks.at(4)->boids.size() + myFlocks.at(7)->boids.size();
     int numberOfBoids = allMyBoids.size();
     int difference = numberOfBoids - jellyFishes;
     
@@ -45,9 +45,22 @@ void trxObjectHandler::update()
         }
         
     }
-    else if (numberOfBoids > MAXFISHES)
+    if (numberOfBoids < MAXFISHES) {
+        for (int i=0; i< MAXFISHES-numberOfBoids; i++) {
+            if(myFlocks.at(7) != NULL)
+                myFlocks.at(7)->createNewBoid(ofRandom(0,ofGetWidth()),ofRandom(0,ofGetHeight()),0);
+            else
+                cout << "trxObjectHandler::update  null pointer !!!!" << endl;
+        }
+        
+    }
+    if (numberOfBoids > MAXFISHES)
     {
         myFlocks.at(4)->removeFirstVehicle();
+    }
+    if (numberOfBoids > MAXFISHES)
+    {
+        myFlocks.at(7)->removeFirstVehicle();
     }
     
     
