@@ -26,6 +26,7 @@
 		8027B881170AD617005032BF /* trxFlock.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B877170AD617005032BF /* trxFlock.cpp */; };
 		8027B882170AD617005032BF /* trxHarvester.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B879170AD617005032BF /* trxHarvester.cpp */; };
 		8027B883170AD617005032BF /* Vehicle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8027B87B170AD617005032BF /* Vehicle.cpp */; };
+		8029E95017580B6400BFD98E /* WhatWeSeaIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 8029E94F17580B6400BFD98E /* WhatWeSeaIcon.icns */; };
 		8034BC441727CA0900682AE8 /* trxObjectHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8034BC421727CA0800682AE8 /* trxObjectHandler.cpp */; };
 		8034BC481729134500682AE8 /* trxConnectionSlot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8034BC461729134500682AE8 /* trxConnectionSlot.cpp */; };
 		803C5BB91725D47500EB9608 /* trxConverter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 803C5BB71725D47400EB9608 /* trxConverter.cpp */; };
@@ -133,6 +134,9 @@
 		8027B87A170AD617005032BF /* trxHarvester.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxHarvester.h; sourceTree = "<group>"; };
 		8027B87B170AD617005032BF /* Vehicle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vehicle.cpp; sourceTree = "<group>"; };
 		8027B87C170AD617005032BF /* Vehicle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vehicle.h; sourceTree = "<group>"; };
+		8029E94A17580ABF00BFD98E /* WhatWeSeaIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = WhatWeSeaIcon.icns; path = bin/data/WhatWeSeaIcon.icns; sourceTree = "<group>"; };
+		8029E94C17580B0100BFD98E /* WhatWeSeaIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = WhatWeSeaIcon.icns; sourceTree = "<group>"; };
+		8029E94F17580B6400BFD98E /* WhatWeSeaIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = WhatWeSeaIcon.icns; path = bin/data/WhatWeSeaIcon.icns; sourceTree = "<group>"; };
 		8034BC421727CA0800682AE8 /* trxObjectHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxObjectHandler.cpp; sourceTree = "<group>"; };
 		8034BC431727CA0900682AE8 /* trxObjectHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trxObjectHandler.h; sourceTree = "<group>"; };
 		8034BC461729134500682AE8 /* trxConnectionSlot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trxConnectionSlot.cpp; sourceTree = "<group>"; };
@@ -397,6 +401,8 @@
 		E4B69B4A0A3A1720003C02F2 = {
 			isa = PBXGroup;
 			children = (
+				8029E94C17580B0100BFD98E /* WhatWeSeaIcon.icns */,
+				8029E94A17580ABF00BFD98E /* WhatWeSeaIcon.icns */,
 				E4B6FCAD0C3E899E008CF71C /* openFrameworks-Info.plist */,
 				E4EB6923138AFD0F00A09F29 /* Project.xcconfig */,
 				E4B69E1C0A3A1BDC003C02F2 /* src */,
@@ -404,6 +410,7 @@
 				BB4B014C10F69532006C3DED /* addons */,
 				E45BE5980E8CC70C009D7055 /* frameworks */,
 				E4B69B5B0A3A1756003C02F2 /* WhatWeSeaDebug.app */,
+				8029E94F17580B6400BFD98E /* WhatWeSeaIcon.icns */,
 			);
 			sourceTree = "<group>";
 		};
@@ -537,6 +544,7 @@
 				E4B69B590A3A1756003C02F2 /* Frameworks */,
 				E4B6FFFD0C3F9AB9008CF71C /* ShellScript */,
 				E4C2427710CC5ABF004149E2 /* CopyFiles */,
+				8029E94E17580B2600BFD98E /* Resources */,
 			);
 			buildRules = (
 			);
@@ -591,6 +599,17 @@
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8029E94E17580B2600BFD98E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8029E95017580B6400BFD98E /* WhatWeSeaIcon.icns in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
 		E4B6FFFD0C3F9AB9008CF71C /* ShellScript */ = {

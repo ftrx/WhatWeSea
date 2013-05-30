@@ -8,12 +8,16 @@
 	<string>English</string>
 	<key>CFBundleExecutable</key>
 	<string>WhatWeSea</string>
+	<key>CFBundleIconFile</key>
+	<string>WhatWeSeaIcon</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.openFrameworks</string>
+	<string>com.fabiantroxler.openFrameworks</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>0.5</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -32,5 +36,7 @@
 	<string>0462</string>
 	<key>DTXcodeBuild</key>
 	<string>4H1003</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.educational-games</string>
 </dict>
 </plist>
