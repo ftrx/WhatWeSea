@@ -10,3 +10,7 @@ bin/.DS_Store
 bin/data/winscreen/.DS_Store
 
 bin/WhatWeSea.app/Contents/MacOS/WhatWeSea
+
+.DS_Store
+
+*.xcuserstate
