@@ -53,10 +53,10 @@ const float SCREEN_X_MAX = 0.00;
 const float SCREEN_Y_MIN = 0.12;
 const float SCREEN_Y_MAX = 0.05;
 */
-const float SCREEN_X_MIN = 0.02;
-const float SCREEN_X_MAX = -0.04;
-const float SCREEN_Y_MIN = 0.16;
-const float SCREEN_Y_MAX = 0.06;
+const float SCREEN_X_MIN = -0.00;
+const float SCREEN_X_MAX = -0.0;
+const float SCREEN_Y_MIN = 0.0;
+const float SCREEN_Y_MAX = 0.0;
 
 
 struct drawBoidReturn {

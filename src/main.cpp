@@ -5,7 +5,7 @@
 int main( ){
 
     ofAppGlutWindow window;
-	ofSetupOpenGL(&window, 1920,1080, OF_WINDOW);			// <-------- setup the GL context  set to OF_GAME_MODE for nicer fullscreen
+	ofSetupOpenGL(&window, 1920,1080, OF_FULLSCREEN);			// <-------- setup the GL context  set to OF_GAME_MODE for nicer fullscreen
     window.setGlutDisplayString("rgba double samples>=4 alpha");
     
 	// this kicks off the running of my app
