@@ -550,13 +550,15 @@ void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
     thisHarvester->myCamera = myCamera;
     thisHarvester->setUnprojectedPosition(thisHarvester->screenPosition(myCamera));
     if (myStoryHandler.myActiveTask) {
-        if (myStoryHandler.myActiveTask->harvester == "longline") {
+        if (myStoryHandler.myActiveTask->harvester == "longline" && harvesters.size()<1 && loc.distance(myStoryHandler.myWobbleTargetPosition2D) < 100) {
             thisHarvester->longline = true;
+            harvesters.push_back(thisHarvester);
         }
 
     }
-        
-    harvesters.push_back(thisHarvester);
+    if (myStoryHandler.myActiveTask->harvester != "longline") {
+        harvesters.push_back(thisHarvester);
+    }
     
     if (harvesters.size()<=1) {
         firstCatch = true;
