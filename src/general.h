@@ -34,7 +34,8 @@ const int BORDERMARGIN = 100;
 const ofColor activColor = ofColor(250,255,255,255);
 const ofColor standardColor = ofColor(6,43,104,255);
 
-
+const ofColor catchedColor = ofColor(30,185,129,255);
+const ofColor deadColor = ofColor(1,145,87,255);
 // progress bar color
 const ofColor PROGRESSBARCOLOR = ofColor(6,60,144,255);
 

@@ -698,10 +698,19 @@ void trxObjectHandler::drawAllVertexes(){
             }
             if (myStoryHandler.myActiveTask) {
                 //color.a = 0.2*255;
-                if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID) || tmpBoid->dead) {
+                if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
                     color = activColor;
                     color.a = 255;
+                    if (tmpBoid->caught){
+                        color = catchedColor;
+                        color.a = 255;
+                    }
+                    if (tmpBoid->dead) {
+                        color = deadColor;
+                        color.a = 255;
+                    }
                 }
+                
             }
 
         }
