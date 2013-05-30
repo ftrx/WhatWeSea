@@ -112,8 +112,8 @@ void trxHarvester::draw(){
         
         ofSetColor(255, 255, 255, 30);
         ofCircle(0,0,radius);
-        ofSetColor(255, 255, 255, 50);
-        ofCircle(0, 0, 10);
+        //ofSetColor(255, 255, 255, 50);
+        //ofCircle(0, 0, 10);
         ofSetColor(255, 255, 255,255);
         
         ofNoFill();
