@@ -11,6 +11,9 @@
 #include "ofMain.h"
 
 // Harvester (finger)
+// LONGLINE
+
+const float LONGLINEDISTANCE = 200;
 const float HARVESTER_RADIUS = 100.0f;
 const float LONGLINE_RADIUS = 20.0f;
 
@@ -22,6 +25,8 @@ const int IDLETIME = 240*1000; // Time after which the Story resets.
 const float DISTANCE = 300; // distance between to tuio.points until its handled as a new event
 const float TIMER = 0.300; // time in seconds until the cursor is removed
 const float ADDTIMER = 0.150;
+
+
 
 
 // fish settings

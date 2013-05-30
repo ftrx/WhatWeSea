@@ -550,13 +550,18 @@ void trxObjectHandler::addCursor(ofxTuioCursor & tuioCursor)
     thisHarvester->myCamera = myCamera;
     thisHarvester->setUnprojectedPosition(thisHarvester->screenPosition(myCamera));
     if (myStoryHandler.myActiveTask) {
-        if (myStoryHandler.myActiveTask->harvester == "longline" && harvesters.size()<1 && loc.distance(myStoryHandler.myWobbleTargetPosition2D) < 100) {
-            thisHarvester->longline = true;
+        if (myStoryHandler.myActiveTask->harvester == "longline"){
+            if (harvesters.size()<1 && loc.distance(myStoryHandler.myWobbleTargetPosition2D) <= LONGLINEDISTANCE) {
+                thisHarvester->longline = true;
+                harvesters.push_back(thisHarvester);
+            }
+        }
+        else {
             harvesters.push_back(thisHarvester);
         }
-
+        
     }
-    if (myStoryHandler.myActiveTask->harvester != "longline") {
+    else {
         harvesters.push_back(thisHarvester);
     }
     
@@ -703,16 +708,15 @@ void trxObjectHandler::drawAllVertexes(){
                 if (isIdAnCatch(tmpBoid->myTypeID, &myStoryHandler.myActiveTask->catchID)) {
                     color = activColor;
                     color.a = 255;
-                    if (tmpBoid->caught){
-                        color = catchedColor;
-                        color.a = 255;
-                    }
-                    if (tmpBoid->dead) {
-                        color = deadColor;
-                        color.a = 255;
-                    }
                 }
-                
+                if (tmpBoid->caught){
+                    color = catchedColor;
+                    color.a = 255;
+                }
+                if (tmpBoid->dead) {
+                    color = deadColor;
+                    color.a = 255;
+                }
             }
 
         }
