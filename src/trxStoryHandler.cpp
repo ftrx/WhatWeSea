@@ -340,7 +340,11 @@ void trxStoryHandler::draw(){
             ofTranslate(activeConverter->position.x,activeConverter->position.y);
             
             ofRotate(activeConnection->myConverter->rotation);
+            
+            ofPushMatrix();
+            ofTranslate(randomWiggle);
             drawTaskMessage(myActiveTask->taskMessage);
+            ofPopMatrix();
             ofSetColor(255, 255, 255);
             
             
@@ -456,11 +460,11 @@ void trxStoryHandler::drawTaskMessage(string _message){
         amount += ofToString(weightFinishedCatchedQuantity)+"t";
     }
     if (myActiveTask->type == "fraction" && myActiveStory->unit == "t") {
-        amount = "Gefangene Menge: ";
+        amount = myActiveStory->taskText + ": ";
         amount += ofToString(weightcatchedQuantity + weightBycatchQuantity)+"t";
     }
     else if (myActiveTask->type == "fraction" && myActiveStory->unit == "stk"){
-        amount = "Gefangene Tiere: ";
+        amount = myActiveStory->taskText + ": ";
         amount += ofToString(catchedQuantity + bycatchQuantity)+" Stk.";
     }
     
@@ -472,10 +476,10 @@ void trxStoryHandler::drawTaskMessage(string _message){
     ofEnableAlphaBlending();
     
     if (myActiveTask->harvester == "longline") {
-        longlineIcon.draw(-(bounds.width+ 100.0f)-60,-25, 60, 60);
+        longlineIcon.draw(-(bounds.width+ 100.0f)-70,-25, 60, 60);
     }
     else {
-        netIcon.draw(-(bounds.width+ 100.0f)-60,-25, 60, 60);
+        netIcon.draw(-(bounds.width+ 100.0f)-70,-28, 60, 60);
     }
     ofDisableAlphaBlending();
     taskFontBig.drawString(_message, -(bounds.width+ 100.0f), 0);
@@ -612,7 +616,7 @@ void trxStoryHandler::drawWinscreen(){
     
     ofPopStyle();
     
-    messageButton.setPosition(ofVec2f(ofGetWidth()/2,ofGetHeight()/2+400));
+    messageButton.setPosition(ofVec2f(ofGetWidth()/2,ofGetHeight()/2+400)+randomWiggle);
     messageButton.draw();
     
 }
@@ -721,6 +725,7 @@ void trxStoryHandler::generateStories(){
         //thisStory.finalFactImage.loadImage("facts/"+ xml.getString("", "finalFact"));
         thisStory.finalFactImage.loadImage("winscreen/"+ xml.getString("", "finalFactImage"));
         thisStory.unit = xml.getString("t", "unit");
+        thisStory.taskText = xml.getString("Gefangene Menge", "taskText");
         int numberOfTasks = xml.XML.getNumTags("task");
         
         for (int taskN=0; taskN < numberOfTasks; taskN++) {

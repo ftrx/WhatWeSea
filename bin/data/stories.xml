@@ -5,6 +5,7 @@
 		<topicNumber>2</topicNumber>
 		<flock>2</flock>
 		<converter>10</converter>
+		<taskText>Gefangene Thunfische</taskText>
 		<task>
 			<no>0</no>
 			<description>Aktion: Einfange der Thunfische</description>
@@ -271,6 +272,7 @@
 		<topicNumber>8</topicNumber>
 		<flock>0</flock>
 		<converter>10</converter>
+		<taskText>Gefangene Haie</taskText>
 		<task>
 			<no>0</no>
 			<description>Aktion: Einfange der Hais</description>
@@ -324,6 +326,7 @@
 		<flock>3</flock>
 		<converter>10</converter>
 		<unit>stk</unit>
+		<taskText>Gefangene Delfine</taskText>
 		<task>
 			<no>0</no>
 			<type>fraction</type>

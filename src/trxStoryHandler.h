@@ -69,6 +69,7 @@ class trxStoryHandler {
         string description = "Story Comming soon";
         string unit = "t";
         vector<string> messages;
+        string taskText = "Gefangene Menge";
     };
     
     

@@ -34,6 +34,7 @@ public:
     ofColor myColor;
     
 
+    float randomWiggleInit = ofRandom(2000);
     
     ofTrueTypeFont	HelveticaNeueRoman18;
     

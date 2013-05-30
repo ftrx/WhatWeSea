@@ -14,6 +14,9 @@ trxObject::trxObject(float _x, float _y, float _z, int _id){
     title = "";
     id = _id;
     
+    
+    
+    
     position = ofVec3f(_x,_y,_z);
     unprojectedPosition = ofVec3f(_x,_y,_z);
     rotation = 0.0;
@@ -44,15 +47,18 @@ void trxObject::draw(){
          */
         ofSetColor(255, 255, 255,255);
         //ofNoFill();
+        
+        float pulsingRadius = radius + abs(ofSignedNoise(ofGetElapsedTimef()*.3+randomWiggleInit)* (radius*0.2));
+        
         if (isActiveConnection) {
-            glow.draw(-radius*2,-radius*2,radius*4,radius*4);
+            glow.draw(-pulsingRadius*2,-pulsingRadius*2,pulsingRadius*4,pulsingRadius*4);
         }
         else {
-            ofSetColor(255, 255, 255,50);
-            glow.draw(-radius*2,-radius*2,radius*4,radius*4);
+            ofSetColor(255, 255, 255,90);
+            glow.draw(-pulsingRadius*2,-pulsingRadius*2,pulsingRadius*4,pulsingRadius*4);
         }
         
-        ofSetColor(255, 255, 255,100);
+        ofSetColor(255, 255, 255,50);
         myIcon->draw(-radius/2.0, -radius/2.0, 0, radius, radius);
         
 		//ofRectangle bounds = HelveticaNeueRoman18.getStringBoundingBox(title, 0, 0);
