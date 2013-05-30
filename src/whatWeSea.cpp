@@ -1,8 +1,8 @@
-#include "testApp.h"
+#include "whatWeSea.h"
 
 
 //--------------------------------------------------------------
-void testApp::setup()
+void whatWeSea::setup()
 {
    // ofSetLogLevel(OF_LOG_VERBOSE);
     ofHideCursor();
@@ -40,13 +40,13 @@ void testApp::setup()
     tuioClient.start(3333);
     //----- Eventlistener
     //finger
-    ofAddListener(tuioClient.cursorAdded,this,&testApp::tuioCursorAdded);
-	ofAddListener(tuioClient.cursorRemoved,this,&testApp::tuioCursorRemoved);
-	ofAddListener(tuioClient.cursorUpdated,this,&testApp::tuioCursorUpdated);
+    ofAddListener(tuioClient.cursorAdded,this,&whatWeSea::tuioCursorAdded);
+	ofAddListener(tuioClient.cursorRemoved,this,&whatWeSea::tuioCursorRemoved);
+	ofAddListener(tuioClient.cursorUpdated,this,&whatWeSea::tuioCursorUpdated);
     //fiducials
-    ofAddListener(tuioClient.objectAdded,this,&testApp::tuioObjectAdded);
-	ofAddListener(tuioClient.objectRemoved,this,&testApp::tuioObjectRemoved);
-	ofAddListener(tuioClient.objectUpdated,this,&testApp::tuioObjectUpdated);
+    ofAddListener(tuioClient.objectAdded,this,&whatWeSea::tuioObjectAdded);
+	ofAddListener(tuioClient.objectRemoved,this,&whatWeSea::tuioObjectRemoved);
+	ofAddListener(tuioClient.objectUpdated,this,&whatWeSea::tuioObjectUpdated);
     
     
    
@@ -56,7 +56,7 @@ void testApp::setup()
 }
 
 //--------------------------------------------------------------
-void testApp::update()
+void whatWeSea::update()
 {
     
     /*
@@ -73,7 +73,7 @@ void testApp::update()
 }
 
 //--------------------------------------------------------------
-void testApp::draw()
+void whatWeSea::draw()
 {
     
     tuioClient.getMessage();
@@ -162,12 +162,12 @@ void testApp::draw()
 }
 
 //--------------------------------------------------------------
-void testApp::keyPressed(int key){
+void whatWeSea::keyPressed(int key){
 
 }
 
 //--------------------------------------------------------------
-void testApp::keyReleased(int key){
+void whatWeSea::keyReleased(int key){
 
     switch (key) {
         case 'd':{
@@ -193,33 +193,33 @@ void testApp::keyReleased(int key){
 
 //----- Eventlistener
 
-void testApp::tuioObjectAdded(ofxTuioObject & tuioObject)
+void whatWeSea::tuioObjectAdded(ofxTuioObject & tuioObject)
 {
     mutex.lock();
     myObjectHandler->addObject( tuioObject);
     mutex.unlock();
 }
 
-void testApp::tuioObjectUpdated(ofxTuioObject & tuioObject)
+void whatWeSea::tuioObjectUpdated(ofxTuioObject & tuioObject)
 {
     mutex.lock();
     myObjectHandler->updateObject(tuioObject);
     mutex.unlock();
 }
 
-void testApp::tuioObjectRemoved(ofxTuioObject & tuioObject){
+void whatWeSea::tuioObjectRemoved(ofxTuioObject & tuioObject){
     mutex.lock();
     myObjectHandler->removeObject(tuioObject);
     mutex.unlock();
 }
 
-void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
+void whatWeSea::tuioCursorAdded(ofxTuioCursor &tuioCursor){
     mutex.lock();
     //myObjectHandler.addCursor(tuioCursor);
     
     if (!isCursorStillThere(tuioCursor) && activeCursors.size()< 10) {
 
-        testApp::activeTuioCursor * tmpCursor = new testApp::activeTuioCursor();
+        whatWeSea::activeTuioCursor * tmpCursor = new whatWeSea::activeTuioCursor();
         tmpCursor->tuioCursor = tuioCursor;
         tmpCursor->lastTuioCursor = tuioCursor;
         tmpCursor->firstAdded = ofGetElapsedTimef();
@@ -235,7 +235,7 @@ void testApp::tuioCursorAdded(ofxTuioCursor &tuioCursor){
 	
 }
 
-void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
+void whatWeSea::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
     if (mutex.tryLock() == false) {
         cout<<"mutex locked"<<endl;
     }
@@ -244,7 +244,7 @@ void testApp::tuioCursorUpdated(ofxTuioCursor &tuioCursor){
     mutex.unlock();
 }
 
-void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
+void whatWeSea::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
     mutex.lock();
     //myObjectHandler.removeCursor(tuioCursor);
     addCursorToRemovable(tuioCursor);
@@ -253,46 +253,46 @@ void testApp::tuioCursorRemoved(ofxTuioCursor &tuioCursor){
 }
 
 //--------------------------------------------------------------
-void testApp::mouseMoved(int x, int y ){
+void whatWeSea::mouseMoved(int x, int y ){
     //light.setPosition(600,ofGetMouseY(),ofGetMouseX());
 }
 
 //--------------------------------------------------------------
-void testApp::mouseDragged(int x, int y, int button){
+void whatWeSea::mouseDragged(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mousePressed(int x, int y, int button){
+void whatWeSea::mousePressed(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::mouseReleased(int x, int y, int button){
+void whatWeSea::mouseReleased(int x, int y, int button){
 
 }
 
 //--------------------------------------------------------------
-void testApp::windowResized(int w, int h){
+void whatWeSea::windowResized(int w, int h){
 
 }
 
 //--------------------------------------------------------------
-void testApp::gotMessage(ofMessage msg){
+void whatWeSea::gotMessage(ofMessage msg){
 
 }
 
 //--------------------------------------------------------------
-void testApp::dragEvent(ofDragInfo dragInfo){ 
+void whatWeSea::dragEvent(ofDragInfo dragInfo){ 
 
 }
 
 
-bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
+bool whatWeSea::isCursorStillThere(ofxTuioCursor & tuioCursor){
     
     ofVec2f tuioPosition = ofVec2f(tuioCursor.getX(),tuioCursor.getY());
     for (int i=0; i < onRemoveCursors.size(); i++) {
-        testApp::activeTuioCursor *  tmpCursor = onRemoveCursors[i];
+        whatWeSea::activeTuioCursor *  tmpCursor = onRemoveCursors[i];
         ofVec2f tmpPosition = ofVec2f(tmpCursor->lastTuioCursor.getX(),tmpCursor->lastTuioCursor.getY());
         if (tuioPosition.distance(tmpPosition) < DISTANCE/ofGetWidth()) {
             if (ofGetElapsedTimef() - tmpCursor->lastTimeSeen <= TIMER) {
@@ -313,9 +313,9 @@ bool testApp::isCursorStillThere(ofxTuioCursor & tuioCursor){
 }
 
 
-void testApp::addNewCursor(){
+void whatWeSea::addNewCursor(){
     for (int i=0; i<activeCursors.size(); i++) {
-         testApp::activeTuioCursor * tmpCursor = activeCursors[i];
+         whatWeSea::activeTuioCursor * tmpCursor = activeCursors[i];
         if (!tmpCursor->active) {
             if (ofGetElapsedTimef() - tmpCursor->firstAdded > ADDTIMER) {
                 myObjectHandler->addCursor(tmpCursor->tuioCursor);
@@ -326,10 +326,10 @@ void testApp::addNewCursor(){
 }
 
 
-void testApp::addCursorToRemovable(ofxTuioCursor &tuioCursor){
+void whatWeSea::addCursorToRemovable(ofxTuioCursor &tuioCursor){
     for (int i=0; i<activeCursors.size(); i++) {
         if (activeCursors[i]->tuioCursor.getSessionId() == tuioCursor.getSessionId()) {
-            testApp::activeTuioCursor * tmpCursor = activeCursors[i];
+            whatWeSea::activeTuioCursor * tmpCursor = activeCursors[i];
             tmpCursor->lastTuioCursor = tuioCursor;
             tmpCursor->lastTimeSeen = ofGetElapsedTimef();
             onRemoveCursors.push_back(tmpCursor);
@@ -338,9 +338,9 @@ void testApp::addCursorToRemovable(ofxTuioCursor &tuioCursor){
     }
 }
 
-void testApp::removeDeadCursors(){
+void whatWeSea::removeDeadCursors(){
     for (int i=0; i<onRemoveCursors.size(); i++) {
-        testApp::activeTuioCursor * tmpCursor = onRemoveCursors[i];
+        whatWeSea::activeTuioCursor * tmpCursor = onRemoveCursors[i];
         if (ofGetElapsedTimef() - tmpCursor->lastTimeSeen > TIMER) {
             myObjectHandler->removeCursor(tmpCursor->lastTuioCursor);
             tmpCursor = NULL;

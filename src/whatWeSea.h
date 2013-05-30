@@ -9,7 +9,7 @@
 #include "trxFlock.h"
 
 
-class testApp : public ofBaseApp{
+class whatWeSea : public ofBaseApp{
 
 	public:    
     
