@@ -20,7 +20,7 @@ const float LONGLINE_RADIUS = 20.0f;
 const int VERTEXNUMBER = 6;
 const int DEPTH = 600; // Depth of the virtual water
 
-const int IDLETIME = 240*1000; // Time after which the Story resets.
+const int IDLETIME = 360*1000; // Time after which the Story resets.
 
 const float DISTANCE = 400; // distance between to tuio.points until its handled as a new event
 const float TIMER = 0.400; // time in seconds until the cursor is removed
