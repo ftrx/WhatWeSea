@@ -27,6 +27,7 @@ const float TIMER = 0.400; // time in seconds until the cursor is removed
 const float ADDTIMER = 0.150;
 
 
+const float DRAWTASKHINTHEIGHT = 150;
 
 
 // fish settings

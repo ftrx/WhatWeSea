@@ -41,7 +41,8 @@ void trxStoryHint::draw(){
     //tapIcon.draw(-width*(3.2/8.0), -height*(1.0/8.0),width,height);
     //tapIcon.draw(-width/2, -height/2,width,height);
     ofFill();
-    ofCircle(0, 0, 4);
+    ofSetColor(255, 255, 255,255);
+    //ofCircle(0, 0, 6);
     
     ofNoFill();
      //ofCircle(0, 0, 8);

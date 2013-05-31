@@ -341,11 +341,7 @@ void trxStoryHandler::draw(){
             
             ofRotate(activeConnection->myConverter->rotation);
             
-            ofPushMatrix();
-            ofTranslate(randomWiggle);
-            drawTaskMessage(myActiveTask->taskMessage);
             
-            ofPopMatrix();
             ofSetColor(255, 255, 255);
             
             
@@ -353,6 +349,12 @@ void trxStoryHandler::draw(){
             target = myActiveTask->targetPosition+randomWiggle;
             activeConnection->drawWobbleLine(0+activeConverter->radius, 0, target.x-myActiveTask->targetSize,target.y);
             ofTranslate(target);
+            
+            ofPushMatrix();
+            //ofTranslate(randomWiggle);
+            drawTaskMessage(myActiveTask->taskMessage);
+            
+            ofPopMatrix();
             
             //drawTarget();
             //ofTranslate(randomWiggle);
@@ -368,6 +370,9 @@ void trxStoryHandler::draw(){
                         ofTranslate(0+randomWiggle.x, 120+randomWiggle.y);
                         fingerHint.setPosition(ofVec2f(0,0));
                         fingerHint.draw();
+                        ofCircle(0, 0, 4);
+                        ofTranslate(0, 30);
+                        longlineIcon.draw(-30,0, 60, 60);
                         ofPopMatrix();
                     }
                     ofSetColor(0,30,80,255);
@@ -403,7 +408,7 @@ void trxStoryHandler::draw(){
             ofPopStyle();
             if (showFingerHint) {
                 ofPushMatrix();
-                ofTranslate(ofGetWidth()/2, ofGetHeight()-100);
+                ofTranslate(ofGetWidth()/2, ofGetHeight()-DRAWTASKHINTHEIGHT);
                 ofTranslate(randomWiggle);
                 drawTaskHint(myActiveTask->taskMessage);
                 ofPopMatrix();
@@ -480,7 +485,7 @@ void trxStoryHandler::drawTaskMessage(string _message){
     
     
     
-    ofRectangle bounds = taskFontBig.getStringBoundingBox(amount, 0, 0);
+    ofRectangle bounds = taskFontSmall.getStringBoundingBox(amount, 0, 0);
     ofEnableAlphaBlending();
     /*
     if (myActiveTask->harvester == "longline") {
@@ -492,7 +497,7 @@ void trxStoryHandler::drawTaskMessage(string _message){
      */
     ofDisableAlphaBlending();
     //taskFontBig.drawString(_message, -(bounds.width+ 100.0f), 0);
-    taskFontSmall.drawString(amount, -(bounds.width + 100.0f), 0.0);
+    taskFontSmall.drawString(amount, -(bounds.width/2), -100);
     
     ofPopStyle();
 }
@@ -504,11 +509,11 @@ void trxStoryHandler::drawTaskHint(string _message){
     ofEnableAlphaBlending();
     
     if (myActiveTask->harvester == "longline") {
-        longlineIcon.draw(-(bounds.width/2)-70,-40, 60, 60);
+        //longlineIcon.draw(30,-100, 60, 60);
     }
     else {
-        netIcon.draw(-(bounds.width/2)-70,-42, 60, 60);
-        fingerHint.setPosition(ofVec2f(0,-100));
+        netIcon.draw(-30,-100, 60, 60);
+        fingerHint.setPosition(ofVec2f(0,-150));
         fingerHint.draw();
     }
     taskFontBig.drawString(_message, -(bounds.width/2), 0);
