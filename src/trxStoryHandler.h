@@ -170,6 +170,7 @@ class trxStoryHandler {
     
     string wrapString(string text, int width);
 
+    void drawTaskHint(string _message);
     
     // Winscreen
     

@@ -344,6 +344,7 @@ void trxStoryHandler::draw(){
             ofPushMatrix();
             ofTranslate(randomWiggle);
             drawTaskMessage(myActiveTask->taskMessage);
+            
             ofPopMatrix();
             ofSetColor(255, 255, 255);
             
@@ -400,6 +401,15 @@ void trxStoryHandler::draw(){
             ofPopMatrix();
             
             ofPopStyle();
+            if (showFingerHint) {
+                ofPushMatrix();
+                ofTranslate(ofGetWidth()/2, ofGetHeight()-100);
+                ofTranslate(randomWiggle);
+                drawTaskHint(myActiveTask->taskMessage);
+                ofPopMatrix();
+                
+                // fingerHint.draw();
+            }
             if (myActiveTask->finished) {
                 //drawMessage("Task Finished Message");
             }
@@ -412,9 +422,7 @@ void trxStoryHandler::draw(){
     }
     myFloatingMessageController.draw();
     
-    if (showFingerHint) {
-       // fingerHint.draw();
-    }
+    
     
     /*
     ofEnableAlphaBlending();
@@ -472,18 +480,40 @@ void trxStoryHandler::drawTaskMessage(string _message){
     
     
     
-    ofRectangle bounds = taskFontBig.getStringBoundingBox(_message, 0, 0);
+    ofRectangle bounds = taskFontBig.getStringBoundingBox(amount, 0, 0);
     ofEnableAlphaBlending();
-    
+    /*
     if (myActiveTask->harvester == "longline") {
         longlineIcon.draw(-(bounds.width+ 100.0f)-70,-25, 60, 60);
     }
     else {
         netIcon.draw(-(bounds.width+ 100.0f)-70,-28, 60, 60);
     }
+     */
     ofDisableAlphaBlending();
-    taskFontBig.drawString(_message, -(bounds.width+ 100.0f), 0);
-    taskFontSmall.drawString(amount, -(bounds.width+ 100.0f), 30.0);
+    //taskFontBig.drawString(_message, -(bounds.width+ 100.0f), 0);
+    taskFontSmall.drawString(amount, -(bounds.width + 100.0f), 0.0);
+    
+    ofPopStyle();
+}
+
+void trxStoryHandler::drawTaskHint(string _message){
+    ofPushStyle();
+    ofSetColor(255, 255, 255);
+    ofRectangle bounds = taskFontBig.getStringBoundingBox(_message, 0, 0);
+    ofEnableAlphaBlending();
+    
+    if (myActiveTask->harvester == "longline") {
+        longlineIcon.draw(-(bounds.width/2)-70,-40, 60, 60);
+    }
+    else {
+        netIcon.draw(-(bounds.width/2)-70,-42, 60, 60);
+        fingerHint.setPosition(ofVec2f(0,-100));
+        fingerHint.draw();
+    }
+    taskFontBig.drawString(_message, -(bounds.width/2), 0);
+    
+    ofDisableAlphaBlending();
     
     ofPopStyle();
 }
