@@ -16,3 +16,7 @@ bin/WhatWeSea.app/Contents/MacOS/WhatWeSea
 *.xcuserstate
 
 *.xcuserstate
+
+WhatWeSea.xcodeproj/project.xcworkspace/xcuserdata/itz.xcuserdatad/UserInterfaceState.xcuserstate
+
+*.xcuserstate
