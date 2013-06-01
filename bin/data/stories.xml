@@ -18,7 +18,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>20</catchSize>
-			<taskMessage>Ziehe eine Langleine</taskMessage>
+			<taskMessage>Ziehe mit dem Finger eine Langleine</taskMessage>
 
 			<quantity>40</quantity>
 			<harvester>longline</harvester>
@@ -64,7 +64,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Fange Thunfische</taskMessage>
+			<taskMessage>Fange mit dem Finger Thunfische</taskMessage>
 			<finalMessage>10 Tonnen Thunfische gefangen</finalMessage>
 			<quantity>20</quantity>
 
@@ -155,7 +155,7 @@
 				</bycatchID>
 			</bycatchIDs>
 			<catchSize>20</catchSize>
-			<taskMessage>Fange Shrimps</taskMessage>
+			<taskMessage>Fange mit dem Finger Shrimps</taskMessage>
 			<quantity>40</quantity>
 			<harvester>Net</harvester>
 			<targetSize>50.0</targetSize>
@@ -204,7 +204,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Fange Shrimps</taskMessage>
+			<taskMessage>Fange mit dem Finger Shrimps</taskMessage>
 			<quantity>20</quantity>
 			<harvester>Net</harvester>
 			<targetSize>80.0</targetSize>
@@ -286,7 +286,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Ziehe eine Langleine</taskMessage>
+			<taskMessage>Ziehe mit dem Finger eine Langleine</taskMessage>
 			<quantity>4</quantity>
 			<harvester>longline</harvester>
 			<targetSize>50.0</targetSize>
@@ -340,7 +340,7 @@
 			<bycatchIDs>
 			</bycatchIDs>
 			<catchSize>10</catchSize>
-			<taskMessage>Fange Delfine</taskMessage>
+			<taskMessage>Fange mit dem Finger Delfine</taskMessage>
 			<quantity>3</quantity>
 			<harvester>Net</harvester>
 			<targetSize>40.0</targetSize>
