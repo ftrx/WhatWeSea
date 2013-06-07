@@ -48,14 +48,14 @@ void trxObject::draw(){
         ofSetColor(255, 255, 255,255);
         //ofNoFill();
         
-        float pulsingRadius = radius + abs(ofSignedNoise(ofGetElapsedTimef()*.3+randomWiggleInit)* (radius*0.2));
+        float pulsingRadius = radius + abs(ofSignedNoise(ofGetElapsedTimef()*.4+randomWiggleInit)* (radius*0.3));
         
         if (isActiveConnection) {
-            glow.draw(-pulsingRadius*2,-pulsingRadius*2,pulsingRadius*4,pulsingRadius*4);
+            glow.draw(-pulsingRadius*3,-pulsingRadius*3,pulsingRadius*6,pulsingRadius*6);
         }
         else {
-            ofSetColor(255, 255, 255,90);
-            glow.draw(-pulsingRadius*2,-pulsingRadius*2,pulsingRadius*4,pulsingRadius*4);
+            ofSetColor(255, 255, 255,130);
+            glow.draw(-pulsingRadius*3,-pulsingRadius*3,pulsingRadius*6,pulsingRadius*6);
         }
         
         ofSetColor(255, 255, 255,50);
