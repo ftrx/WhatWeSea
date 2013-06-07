@@ -161,10 +161,10 @@ void trxObjectHandler::draw()
                 ofSetColor(255, 255, 255,100);
                 
                 if (flock != myActiveConnection->myFlock && flock->isActive) {
-                    thisSlot->drawPossibleConnection("flock",objectsPositionArray.at(flock->id));
+                    //thisSlot->drawPossibleConnection("flock",objectsPositionArray.at(flock->id));
                 }
                 if (converter != myActiveConnection->myConverter && converter->isActive) {
-                    thisSlot->drawPossibleConnection("converter",objectsPositionArray.at(converter->id));
+                    //thisSlot->drawPossibleConnection("converter",objectsPositionArray.at(converter->id));
                 }
                 
                 objectsPositionArray[flock->id]++;

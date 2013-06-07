@@ -27,8 +27,8 @@ trxStoryHandler::trxStoryHandler() {
     numberFontSmall.setLetterSpacing(1.037);
     
     
-    taskFontBig.loadFont("fonts/NewsGot-Med.otf", 36,true,true);
-    taskFontBig.setLineHeight(40);
+    taskFontBig.loadFont("fonts/NewsGot-Med.otf", 30,true,true);
+    taskFontBig.setLineHeight(34);
     taskFontBig.setLetterSpacing(1.037);
     
     taskFontSmall.loadFont("fonts/NewsGot-Reg.otf", 24,true,true);
@@ -353,7 +353,11 @@ void trxStoryHandler::draw(){
             ofPushMatrix();
             //ofTranslate(randomWiggle);
             drawTaskMessage(myActiveTask->taskMessage);
-            
+            ofTranslate(0, 200);
+            if (showFingerHint) {
+                ofTranslate(0, 60);
+                drawTaskHint(myActiveTask->taskMessage);
+            }
             ofPopMatrix();
             
             //drawTarget();
@@ -373,6 +377,7 @@ void trxStoryHandler::draw(){
                         ofCircle(0, 0, 4);
                         ofTranslate(0, 30);
                         longlineIcon.draw(-30,0, 60, 60);
+                        
                         ofPopMatrix();
                     }
                     ofSetColor(0,30,80,255);
@@ -410,7 +415,7 @@ void trxStoryHandler::draw(){
                 ofPushMatrix();
                 ofTranslate(ofGetWidth()/2, ofGetHeight()-DRAWTASKHINTHEIGHT);
                 ofTranslate(randomWiggle);
-                drawTaskHint(myActiveTask->taskMessage);
+                //drawTaskHint(myActiveTask->taskMessage);
                 ofPopMatrix();
                 
                 // fingerHint.draw();

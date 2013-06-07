@@ -89,14 +89,26 @@ void trxHarvester::draw(){
             if (i == 0) {
                 ofCurveVertex(*longlinePoints[i]);
                 ofCurveVertex(*longlinePoints[i]);
+                
             }
             else {
                 randomWiggle = ofVec3f(ofSignedNoise(ofGetElapsedTimef()*wobbleSpeed+2.222*i),ofSignedNoise(ofGetElapsedTimef()*wobbleSpeed+2.222*i),0)*maxAmplitude;
                 ofPoint point = ofPoint(*longlinePoints[i]+randomWiggle);
                 ofCurveVertex(point);
+                /*
+                ofFill();
+                if (longlineHooks[i-1]) {
+                    ofSetColor(catchedColor);
+                }
+                else {
+                    ofSetColor(standardColor);
+                }
+                ofCircle(*longlinePoints[i]+randomWiggle, 5);
+                ofNoFill();
+                ofSetColor(255, 255, 255,255);
+                 */
             }
             
-            //ofCircle(*longlinePoints[i], 10);
         }
         ofCurveVertex(position.x, position.y,0);
         ofCurveVertex(position.x, position.y,0);

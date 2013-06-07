@@ -285,7 +285,7 @@
 			</catchIDs>
 			<bycatchIDs>
 			</bycatchIDs>
-			<catchSize>10</catchSize>
+			<catchSize>20</catchSize>
 			<taskMessage>Ziehe mit dem Finger eine Langleine</taskMessage>
 			<quantity>4</quantity>
 			<harvester>longline</harvester>
